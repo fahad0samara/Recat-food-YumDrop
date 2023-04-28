@@ -70,14 +70,6 @@ const images = [
 
 export default function App() {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [showButtons, setShowButtons] = useState(false);
-  const handleNext = () => {
-    setActiveIndex(prev => (prev === images.length - 1 ? 0 : prev + 1));
-  };
-
-  const handlePrev = () => {
-    setActiveIndex(prev => (prev === 0 ? images.length - 1 : prev - 1));
-  };
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -90,17 +82,9 @@ export default function App() {
   }, []);
 
   return (
-    <div
-      onMouseEnter={() => setShowButtons(true)}
-      onMouseLeave={() => setShowButtons(false)}
-      className="
-     
-           w-full h-full
-            
-       relative"
-    >
+    <div className="w-full h-full relative">
       <svg
-        className="h-full w-full"
+        className="h-full w-full bg-green"
         viewBox="0 0 200 200"
         xmlns="http://www.w3.org/2000/svg"
       >
@@ -123,43 +107,6 @@ export default function App() {
           transform="translate(100 100)"
         />
       </svg>
-
-      {showButtons && (
-        <div className="absolute top-1/2 transform -translate-y-1/2 flex justify-between w-full px-4">
-          <button onClick={handlePrev} className="bg-white rounded-full p-2">
-            <svg
-              className="w-6 h-6 text-gray-900"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M15 19l-7-7 7-7"
-              />
-            </svg>
-          </button>
-          <button onClick={handleNext} className="bg-white rounded-full p-2">
-            <svg
-              className="w-6 h-6 text-gray-900"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9 5l7 7-7 7"
-              />
-            </svg>
-          </button>
-        </div>
-      )}
     </div>
   );
 }
