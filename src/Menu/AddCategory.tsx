@@ -1,23 +1,48 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import {useState} from "react";
 import axios from "axios";
 
-function AddCategory({setCategories, setShowAddCategory}) {
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [error, setError] = useState("");
+interface Category {
+  id: string;
+  name: string;
+  description: string;
+}
+interface Props {
+  categories: Category[];
+  setShowAddCategory: React.Dispatch<React.SetStateAction<boolean>>;
+  setCategories: React.Dispatch<React.SetStateAction<Category[]>>;
+}
+interface Category {
+  id: number;
+  name: string;
+  description: string;
+}
 
-  const handleSubmit = async e => {
+const AddCategory: React.FC<Props> = ({
+  categories,
+  setShowAddCategory,
+  setCategories,
+}) => {
+  const [name, setName] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
+  const [error, setError] = useState<string>("");
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:1337/api/categories", {
-        name,
-        description,
-      });
+      const res = await axios.post<Category>(
+        "http://localhost:1337/api/categories",
+        {
+          name,
+          description,
+        }
+      );
       setCategories(categories => [...categories, res.data]);
       setName("");
       setDescription("");
       setShowAddCategory(false);
     } catch (error) {
+      //@ts-ignore
       if (error.response.status === 409) {
         setError("Category already exists.");
       } else {
@@ -88,6 +113,6 @@ function AddCategory({setCategories, setShowAddCategory}) {
       </div>
     </div>
   );
-}
+};
 
 export default AddCategory;

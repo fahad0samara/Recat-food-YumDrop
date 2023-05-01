@@ -123,9 +123,14 @@
 //   );
 // };
 
-import React, {useState, useEffect} from "react";
+import {useState, useEffect} from "react";
 import axios from "axios";
 import AddCategory from "./AddCategory";
+interface Category {
+  _id: string;
+  name: string;
+  description: string;
+}
 
 const AddMenuItem = () => {
   const [name, setName] = useState("");
@@ -133,13 +138,15 @@ const AddMenuItem = () => {
   const [category, setCategory] = useState("");
   const [price, setPrice] = useState("");
   const [image, setImage] = useState("");
-  const [categories, setCategories] = useState([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [showAddCategory, setShowAddCategory] = useState(false);
 
   useEffect(() => {
     async function fetchCategories() {
       try {
-        const res = await axios.get("http://localhost:1337/api/categories");
+        const res = await axios.get<Category[]>(
+          "http://localhost:1337/api/categories"
+        );
         setCategories(res.data);
       } catch (error) {
         console.error(error);
@@ -152,11 +159,7 @@ const AddMenuItem = () => {
     setShowAddCategory(true);
   };
 
-  const handleAddCategoryClose = () => {
-    setShowAddCategory(false);
-  };
-
-  const handleSubmit = async e => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     // check if the selected category exists in the categories array
@@ -165,9 +168,12 @@ const AddMenuItem = () => {
     if (!selectedCategory) {
       // if the category doesn't exist, add it to the categories array
       try {
-        const res = await axios.post("http://localhost:1337/api/categories", {
-          name: category,
-        });
+        const res = await axios.post<Category>(
+          "http://localhost:1337/api/categories",
+          {
+            name: category,
+          }
+        );
         setCategories(prevCategories => [...prevCategories, res.data]);
         setCategory(res.data._id); // set the category to the newly created category's ID
       } catch (error) {
@@ -240,6 +246,7 @@ const AddMenuItem = () => {
             className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             value={category}
             onChange={e => setCategory(e.target.value)}
+            aria-label="Select Category"
           >
             <option value="">--Select Category--</option>
             {categories.map(cat => (
@@ -248,6 +255,7 @@ const AddMenuItem = () => {
               </option>
             ))}
           </select>
+
           <button
             className="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-md ml-4"
             type="button"
@@ -295,9 +303,14 @@ const AddMenuItem = () => {
       </form>
       {showAddCategory && (
         <AddCategory
-          setCategories={setCategories}
           setShowAddCategory={setShowAddCategory}
-          handleAddCategoryClose={handleAddCategoryClose}
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          //@ts-ignore
+          setCategories={setCategories}
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          //@ts-ignore
+          categories={categories}
+          setCategory={setCategory}
         />
       )}
     </div>
