@@ -1,48 +1,3 @@
-// import {useState} from "react";
-
-// export default function App() {
-//   const [activeIndex, setActiveIndex] = useState(0);
-//   const handleNext = () => {
-//     setActiveIndex(prev => (prev === 2 ? 0 : prev + 1));
-//   };
-//   const handlePrev = () => {
-//     setActiveIndex(prev => (prev === 0 ? 2 : prev - 1));
-//   };
-//   return (
-//     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50">
-//       <div className="w-64 h-64 relative">
-//         <img
-//           src={`https://picsum.photos/id/${activeIndex + 1}/640/640`}
-//           alt=""
-//           className="w-full h-full object-cover rounded-lg"
-//         />
-//         <div className="absolute bottom-0 left-0 w-full flex justify-center">
-//           {[0, 1, 2].map(i => (
-//             <div
-//               key={i}
-//               className={`w-3 h-3 rounded-full mx-1 bg-white ${
-//                 i === activeIndex ? "opacity-100" : "opacity-60"
-//               }`}
-//             ></div>
-//           ))}
-//         </div>
-//         <button
-//           onClick={handlePrev}
-//           className="absolute top-1/2 left-0 transform -translate-y-1/2 px-4 py-2 bg-gray-900 text-white rounded-l-full hover:bg-gray-800 transition-all duration-300"
-//         >
-//           Prev
-//         </button>
-//         <button
-//           onClick={handleNext}
-//           className="absolute top-1/2 right-0 transform -translate-y-1/2 px-4 py-2 bg-gray-900 text-white rounded-r-full hover:bg-gray-800 transition-all duration-300"
-//         >
-//           Next
-//         </button>
-//       </div>
-//     </div>
-//   );
-// }
-
 import {useState, useEffect} from "react";
 
 const images = [
@@ -68,7 +23,7 @@ const images = [
   },
 ];
 
-export default function App() {
+const Swiper = () => {
   const [activeIndex, setActiveIndex] = useState(0);
 
   useEffect(() => {
@@ -109,4 +64,6 @@ export default function App() {
       </svg>
     </div>
   );
-}
+};
+
+export default Swiper;
