@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import {useState} from "react";
+import {useState, useEffect} from "react";
 import axios from "axios";
 
 interface Category {
@@ -17,8 +17,8 @@ const AddCategory: React.FC<Props> = ({setShowAddCategory, setCategories}) => {
   const [name, setName] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [error, setError] = useState<string>("");
-
-  const [loading, setLoading] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState<boolean>("");
+  const [successMessage, setSuccessMessage] = useState<boolean>(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -36,15 +36,25 @@ const AddCategory: React.FC<Props> = ({setShowAddCategory, setCategories}) => {
       setDescription("");
       setShowAddCategory(false);
       setError("");
-      setLoading(false);
-
+      setTimeout(() => {
+        setSuccessMessage(false);
+        setShowAddCategory(false);
+      }, 3000);
+      setIsLoading(false);
+      setSuccessMessage("Category added successfully!");
       setError("");
     } catch (error) {
       //@ts-ignore
       if (error.response.status === 409) {
-        setError("Category already exists.");
+        setError(
+          `A category with that name already exists.
+        please select it from the list 
+        or choose a different name.`
+        );
       } else {
-        setError("Error creating category.");
+        setError(
+          "Something went wrong. Please check your internet connection and try again."
+        );
       }
     }
   };
@@ -63,6 +73,11 @@ const AddCategory: React.FC<Props> = ({setShowAddCategory, setCategories}) => {
               {error}
             </div>
           )}
+          {successMessage && (
+            <div className="bg-green-200 text-green-800 p-2 mb-4 rounded-md">
+              {successMessage}
+            </div>
+          )}
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
               <label
@@ -72,11 +87,16 @@ const AddCategory: React.FC<Props> = ({setShowAddCategory, setCategories}) => {
                 Name:
               </label>
               <input
-                className="border border-gray-400 rounded-md p-2 w-full"
+                className={`appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${
+                  error ? "border-red-500" : ""
+                }`}
                 type="text"
                 id="name"
                 value={name}
-                onChange={e => setName(e.target.value)}
+                onChange={e => {
+                  setName(e.target.value);
+                  setError("");
+                }}
                 required
               />
             </div>
@@ -95,25 +115,17 @@ const AddCategory: React.FC<Props> = ({setShowAddCategory, setCategories}) => {
               />
             </div>
 
-            {
-              //loading
-
-              loading && (
-                <div className="flex items-center justify-center">
-                  <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-gray-900"></div>
-                </div>
-              )
-            }
-
             <button
               className="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-md"
               type="submit"
+              disabled={isLoading}
             >
-              Add category
+              {isLoading ? "Loading..." : "Add category"}
             </button>
             <button
               className="bg-gray-500 hover:bg-gray-600 text-white font-medium py-2 px-4 rounded-md ml-2"
               onClick={() => setShowAddCategory(false)}
+              disabled={isLoading}
             >
               Cancel
             </button>

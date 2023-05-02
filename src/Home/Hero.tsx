@@ -42,7 +42,7 @@ const Hero = () => {
             </div>
             <div className="flex flex-col items-center justify-center space-y-2 sm:flex-row sm:space-y-0 sm:space-x-2 lg:justify-start">
               <Link
-                to="/ Order"
+                to="/Order"
                 className="inline-flex h-12 w-full items-center justify-center rounded-full bg-green-500 px-6 font-medium tracking-wide text-white shadow-md outline-none transition duration-200 hover:bg-green-400 focus:ring sm:w-auto"
               >
                 <span className="relative inline-flex justify-center whitespace-nowrap font-bold mx-2">

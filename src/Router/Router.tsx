@@ -1,7 +1,9 @@
 import {Route, Routes} from "react-router-dom";
-import NotFound from "../Home/NotFound";
 import Hero from "../Home/Hero";
-import Menu from "../Menu/Menu";
+import AddMenuItem from "../Menu/AddMenuItem";
+import Menu from "../Home/Menu";
+import MenuItemsByCategory from "../Home/MenuItemsByCategory";
+import NotFound from "../Home/NotFound";
 import Header from "../Home/Header";
 
 const Router = (): JSX.Element => {
@@ -10,7 +12,9 @@ const Router = (): JSX.Element => {
       <Header />
       <Routes>
         <Route path="/" element={<Hero />} />
-        <Route path="/Menu" element={<Menu />} />
+        {/* <Route path="/Menuhh" element={<AddMenuItem />} /> */}
+        <Route path="/menu" element={<Menu />} />
+        <Route path="/menu/:categoryId" element={<MenuItemsByCategory />} />
 
         <Route path="*" element={<NotFound />} />
       </Routes>
