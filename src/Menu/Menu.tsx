@@ -140,6 +140,7 @@ const AddMenuItem = () => {
   const [image, setImage] = useState("");
   const [categories, setCategories] = useState<Category[]>([]);
   const [showAddCategory, setShowAddCategory] = useState(false);
+  const [error, setError] = useState<boolean>();
 
   useEffect(() => {
     async function fetchCategories() {
@@ -161,33 +162,12 @@ const AddMenuItem = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    // check if the selected category exists in the categories array
-    const selectedCategory = categories.find(cat => cat._id === category);
-
-    if (!selectedCategory) {
-      // if the category doesn't exist, add it to the categories array
-      try {
-        const res = await axios.post<Category>(
-          "http://localhost:1337/api/categories",
-          {
-            name: category,
-          }
-        );
-        setCategories(prevCategories => [...prevCategories, res.data]);
-        setCategory(res.data._id); // set the category to the newly created category's ID
-      } catch (error) {
-        console.error(error);
-        return;
-      }
-    }
-
     try {
       const res = await axios.post("http://localhost:1337/api/menu", {
         name,
         description,
         category,
-        price,
+        price: parseFloat(price),
         image,
       });
       console.log(res.data); // the newly created menu item object
@@ -206,11 +186,15 @@ const AddMenuItem = () => {
     <div className="flex flex-col items-center justify-center">
       <form onSubmit={handleSubmit} className="w-full max-w-md">
         <div className="mb-4">
+          {/* Enter the name of the item */}
           <label
             className="block text-gray-700 font-medium mb-2"
             htmlFor="name"
           >
-            Name:
+            Name of the Food:
+            <span className="text-gray-500 text-sm ml-2">
+              (e.g. Burger, Pizza, Salad)
+            </span>
           </label>
           <input
             className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -222,12 +206,17 @@ const AddMenuItem = () => {
           />
         </div>
         <div className="mb-4">
+          {/* Enter a brief description of the item */}
           <label
             className="block text-gray-700 font-medium mb-2"
             htmlFor="description"
           >
             Description:
+            <span className="text-gray-500 text-sm ml-2">
+              (e.g. A delicious burger with cheese and bacon)
+            </span>
           </label>
+
           <textarea
             className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             id="description"
@@ -236,12 +225,17 @@ const AddMenuItem = () => {
           />
         </div>
         <div className="mb-4">
+          {/* Select the category that the item belongs to */}
           <label
             className="block text-gray-700 font-medium mb-2"
             htmlFor="category"
           >
             Category:
+            <span className="text-gray-500 text-sm ml-2">
+              (e.g. Burgers, Salads, Drinks)
+            </span>
           </label>
+
           <select
             className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             value={category}
@@ -249,22 +243,51 @@ const AddMenuItem = () => {
             aria-label="Select Category"
           >
             <option value="">--Select Category--</option>
+
+            {/* Populate the dropdown with existing categories */}
             {categories.map(cat => (
               <option key={cat._id} value={cat._id}>
                 {cat.name}
               </option>
             ))}
           </select>
+          {/* If the category does not exist yet, click "Add Category" and enter the new category name in the prompt */}
+          {categories.length === 0 && (
+            <p className="text-gray-500 text-sm mt-2">
+              No categories found. Click "Add Category" to create a new
+              category.
+            </p>
+          )}
 
-          <button
-            className="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-md ml-4"
-            type="button"
-            onClick={handleAddCategory}
-          >
-            Add Category
-          </button>
+          {/* If the category does not exist yet, add it using the "Add Category" button */}
+
+          <p className="text-gray-500 text-sm mt-2">
+            Can't find the category you're looking for? Click
+            <span
+              className="text-blue-500 text-sm ml-2 cursor-pointer"
+              onClick={handleAddCategory}
+              aria-label="Add Category"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5 inline-block mr-2"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M10 2a8 8 0 100 16 8 8 0 000-16zM9 9V5a1 1 0 112 0v4h4a1 1 0 110 2h-4v4a1 1 0 11-2 0v-4H5a1 1 0 110-2h4z"
+                  clipRule="evenodd"
+                />
+              </svg>
+              Add Category
+            </span>
+            to create a new one. .
+          </p>
         </div>
+
         <div className="mb-4">
+          {/* Enter the price of the item in dollars and cents, without the currency symbol */}
           <label
             className="block text-gray-700 font-medium mb-2"
             htmlFor="price"
@@ -280,6 +303,7 @@ const AddMenuItem = () => {
           />
         </div>
         <div className="mb-4">
+          {/* Enter the URL of an image of the item, if desired */}
           <label
             className="block text-gray-700 font-medium mb-2"
             htmlFor="image"

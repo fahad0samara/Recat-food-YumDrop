@@ -12,20 +12,13 @@ interface Props {
   setShowAddCategory: React.Dispatch<React.SetStateAction<boolean>>;
   setCategories: React.Dispatch<React.SetStateAction<Category[]>>;
 }
-interface Category {
-  id: number;
-  name: string;
-  description: string;
-}
 
-const AddCategory: React.FC<Props> = ({
-  categories,
-  setShowAddCategory,
-  setCategories,
-}) => {
+const AddCategory: React.FC<Props> = ({setShowAddCategory, setCategories}) => {
   const [name, setName] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [error, setError] = useState<string>("");
+
+  const [loading, setLoading] = useState<boolean>(true);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -37,10 +30,15 @@ const AddCategory: React.FC<Props> = ({
           description,
         }
       );
+
       setCategories(categories => [...categories, res.data]);
       setName("");
       setDescription("");
       setShowAddCategory(false);
+      setError("");
+      setLoading(false);
+
+      setError("");
     } catch (error) {
       //@ts-ignore
       if (error.response.status === 409) {
@@ -96,6 +94,17 @@ const AddCategory: React.FC<Props> = ({
                 onChange={e => setDescription(e.target.value)}
               />
             </div>
+
+            {
+              //loading
+
+              loading && (
+                <div className="flex items-center justify-center">
+                  <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-gray-900"></div>
+                </div>
+              )
+            }
+
             <button
               className="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-md"
               type="submit"
