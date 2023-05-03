@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import {useState} from "react";
 import axios from "axios";
+import {toast} from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 interface MyErrorType {
   response: {
     status: number;
@@ -53,12 +55,37 @@ const AddCategory: React.FC<AddCategoryProps> = ({
       setName("");
       setDescription("");
       setShowAddCategory(false);
-      setSuccessMessage("Category added successfully!");
+      toast.success(
+        ` the
+        category ${res.data.name} was added successfully
+        you can see it in the list of categories in 
+        the menu`,
+
+        {
+          position: "top-right",
+          autoClose: 4000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        }
+      );
     } catch (error) {
-      if ((error as MyErrorType).response?.status === 409) {
-        setError(
-          `A category with that name already exists. Please select it from the list or choose a different name.`
-        );
+      if ((error as MyErrorType).response?.status === 400) {
+        const errorMessage = error.response.data.error;
+        setError(errorMessage);
+        toast.error(errorMessage, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
       } else {
         setError(
           "Something went wrong. Please check your internet connection and try again."
@@ -68,7 +95,7 @@ const AddCategory: React.FC<AddCategoryProps> = ({
       setIsLoading(false);
       setTimeout(() => {
         setSuccessMessage("");
-        setShowAddCategory(false);
+        setError("");
       }, 3000);
     }
   };

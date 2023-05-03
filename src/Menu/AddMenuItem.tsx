@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import axios, { AxiosError } from "axios";
 import AddCategory from "./AddCategory";
 import { AiOutlineFileAdd } from "react-icons/ai";
+import {toast} from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 interface Category {
   [x: string]: string | number | readonly string[] | undefined;
   _id: string;
@@ -29,7 +31,7 @@ const AddMenuItem = () => {
   const [image, setImage] = useState("");
   const [categories, setCategories] = useState<Category[]>([]);
   const [showAddCategory, setShowAddCategory] = useState(false);
-  const [error, setError] = useState<{ [key: string]: string | unknown }>({});
+  const [error, setError] = useState<{[key: string]: string | unknown}>({});
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -77,17 +79,53 @@ const AddMenuItem = () => {
       setImage("");
       setSubmitSuccess(true);
       setLoading(false);
+      toast.success("Menu item added successfully!", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
     } catch (error) {
-      const err = error as AxiosError<MyErrorType>;
-      if (err.response?.data) {
+      console.error(error, "error");
+      if ((error as MyErrorType).response?.status === 400) {
         console.log("====================================");
-        console.log(err.response.data.response);
+        console.log(error.response.data.error, "error.response.data");
         console.log("====================================");
-        setError(err.response.data.response);
+        const errorMessage = error.response.data.error;
+        setError({
+          message: "An error occurred while adding the menu item.",
+          error: errorMessage,
+        });
+        toast.error(`Error: ${errorMessage}`, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
       } else {
-        setError({ error: "Something went wrong" });
+        setError({
+          message: "An error occurred while adding the menu item.",
+          error: "Something went wrong.",
+        });
+        toast.error("An error occurred while adding the menu item.", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
       }
-
       setLoading(false);
     }
   };
@@ -123,6 +161,11 @@ const AddMenuItem = () => {
       <form onSubmit={handleSubmit} className="w-full max-w-md">
         <div className="mb-4">
           {/* Enter the name of the item */}
+          {error && (
+            <div className="error">
+              {error ? error.error : error.message ? error.message : ""}
+            </div>
+          )}
           <label
             className="block text-gray-700 font-medium mb-2"
             htmlFor="name"
@@ -132,12 +175,14 @@ const AddMenuItem = () => {
               (e.g. Burger, Pizza, Salad)
             </span>
           </label>
+
           <input
-            className={`appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${error.name ? "border-red-500" : ""
-              }`}
+            className={`appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${
+              error.name ? "border-red-500" : ""
+            }`}
             onChange={e => {
               setName(e.target.value);
-              setError(prevErrors => ({ ...prevErrors, name: "" }));
+              setError(prevErrors => ({...prevErrors, name: ""}));
             }}
             type="text"
             id="name"
@@ -145,7 +190,9 @@ const AddMenuItem = () => {
             placeholder="Enter the name of the food"
             required
           />
+          {error && <div className="error">{error.error}</div>}
         </div>
+
         <div className="mb-4">
           {/* Enter a brief description of the item */}
           <label
@@ -159,15 +206,16 @@ const AddMenuItem = () => {
           </label>
 
           <textarea
-            className={`appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${error.description ? "border-red-500" : ""
-              }`}
+            className={`appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${
+              error.description ? "border-red-500" : ""
+            }`}
             placeholder="Enter a brief description of the food"
             required
             id="description"
             value={description}
             onChange={e => {
               setDescription(e.target.value);
-              setError(prevErrors => ({ ...prevErrors, description: "" }));
+              setError(prevErrors => ({...prevErrors, description: ""}));
             }}
             rows={2}
             autoFocus
@@ -186,12 +234,12 @@ const AddMenuItem = () => {
           </label>
 
           <select
-            className={`block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline ${error.category ? "border-red-500" : ""
-              }`}
+            className={`block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline ${
+              error.category ? "border-red-500" : ""
+            }`}
             id="category"
             onChange={e => {
               setCategory(e.target.value);
-              setError(prevErrors => ({ ...prevErrors, category: "" }));
             }}
             value={category}
             aria-label="Select Category"
@@ -244,15 +292,16 @@ const AddMenuItem = () => {
           </label>
 
           <input
-            className={`appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${error.price ? "border-red-500" : ""
-              }`}
+            className={`appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${
+              error.price ? "border-red-500" : ""
+            }`}
             placeholder="Enter the price of the food"
             required
             id="price"
             value={price}
             onChange={e => {
               setPrice(e.target.value);
-              setError(prevErrors => ({ ...prevErrors, price: "" }));
+              setError(prevErrors => ({...prevErrors, price: ""}));
             }}
             type="number"
             step="0.01"
