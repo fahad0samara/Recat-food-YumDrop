@@ -5,6 +5,7 @@ import {toast} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 interface MyErrorType {
   response: {
+    [x: string]: any;
     status: number;
   };
 }
@@ -74,7 +75,7 @@ const AddCategory: React.FC<AddCategoryProps> = ({
       );
     } catch (error) {
       if ((error as MyErrorType).response?.status === 400) {
-        const errorMessage = error.response.data.error;
+        const errorMessage = (error as MyErrorType).response.data.error;
         setError(errorMessage);
         toast.error(errorMessage, {
           position: "top-right",

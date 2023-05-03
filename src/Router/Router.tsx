@@ -14,7 +14,7 @@ const Router = (): JSX.Element => {
         <Route path="/" element={<Hero />} />
         <Route path="/AddMenuItem" element={<AddMenuItem />} />
         <Route path="/menu" element={<Menu />} />
-        <Route path="/menu/:categoryId" element={<MenuItemsByCategory />} />
+        <Route path="/menu/:categoryId" element={<Menu />} />
 
         <Route path="*" element={<NotFound />} />
       </Routes>
