@@ -1,27 +1,46 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import {useState, useEffect} from "react";
+import {useState} from "react";
 import axios from "axios";
+interface MyErrorType {
+  response: {
+    status: number;
+  };
+}
 
 interface Category {
   id: string;
   name: string;
   description: string;
 }
-interface Props {
-  categories: Category[];
+
+interface AddCategoryProps {
   setShowAddCategory: React.Dispatch<React.SetStateAction<boolean>>;
-  setCategories: React.Dispatch<React.SetStateAction<Category[]>>;
+  setCategories: React.Dispatch<
+    React.SetStateAction<
+      Array<{
+        id: string;
+        name: string;
+        description: string;
+      }>
+    >
+  >;
 }
 
-const AddCategory: React.FC<Props> = ({setShowAddCategory, setCategories}) => {
+const AddCategory: React.FC<AddCategoryProps> = ({
+  setShowAddCategory,
+  setCategories,
+}) => {
   const [name, setName] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [error, setError] = useState<string>("");
-  const [isLoading, setIsLoading] = useState<boolean>("");
-  const [successMessage, setSuccessMessage] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [successMessage, setSuccessMessage] = useState<string>("");
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setIsLoading(true);
+    setError("");
+
     try {
       const res = await axios.post<Category>(
         "http://localhost:1337/api/categories",
@@ -30,32 +49,27 @@ const AddCategory: React.FC<Props> = ({setShowAddCategory, setCategories}) => {
           description,
         }
       );
-
-      setCategories(categories => [...categories, res.data]);
+      setCategories(prevState => [...prevState, res.data]);
       setName("");
       setDescription("");
       setShowAddCategory(false);
-      setError("");
-      setTimeout(() => {
-        setSuccessMessage(false);
-        setShowAddCategory(false);
-      }, 3000);
-      setIsLoading(false);
       setSuccessMessage("Category added successfully!");
-      setError("");
     } catch (error) {
-      //@ts-ignore
-      if (error.response.status === 409) {
+      if ((error as MyErrorType).response?.status === 409) {
         setError(
-          `A category with that name already exists.
-        please select it from the list 
-        or choose a different name.`
+          `A category with that name already exists. Please select it from the list or choose a different name.`
         );
       } else {
         setError(
           "Something went wrong. Please check your internet connection and try again."
         );
       }
+    } finally {
+      setIsLoading(false);
+      setTimeout(() => {
+        setSuccessMessage("");
+        setShowAddCategory(false);
+      }, 3000);
     }
   };
 
