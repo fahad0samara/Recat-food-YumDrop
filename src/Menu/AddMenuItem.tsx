@@ -28,7 +28,7 @@ const AddMenuItem = () => {
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
   const [price, setPrice] = useState("");
-  const [image, setImage] = useState("");
+  const [image, setImage] = useState();
   const [categories, setCategories] = useState<Category[]>([]);
   const [showAddCategory, setShowAddCategory] = useState(false);
   const [error, setError] = useState<{[key: string]: string | unknown}>({});
@@ -80,21 +80,46 @@ const AddMenuItem = () => {
     setSubmitSuccess(false);
 
     e.preventDefault();
+    const formData = new FormData();
+
+    formData.append("name", name);
+    formData.append("description", description);
+    formData.append("category", category);
+    formData.append("price", parseFloat(price));
+
+    if (image) {
+      formData.append("image", image);
+    }
+
+    // Debug: log the contents of the FormData object
+    for (let [key, value] of formData.entries()) {
+      console.log(key, value);
+    }
+    // Validate form fields and image file
+    if (!name || !description || !category || !price || !image) {
+      setError({
+        message: "Please fill in all fields and select an image.",
+        error: "Missing required fields or image.",
+      });
+      return;
+    }
+
     try {
-      const res = await axios.post("http://localhost:1337/api/menu", {
-        name,
-        description,
-        category,
-        price: parseFloat(price),
-        image,
+      const res = await axios.post("http://localhost:1337/api/menu", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
       });
 
+      console.log("====================================");
+      console.log("res.data", res.data);
+      console.log("====================================");
       // reset form fields
       setName("");
       setDescription("");
       setCategory("");
       setPrice("");
-      setImage("");
+      setImage(null);
       setSubmitSuccess(true);
       setLoading(false);
       toast.success("Menu item added successfully!", {
@@ -108,6 +133,9 @@ const AddMenuItem = () => {
         theme: "colored",
       });
     } catch (error) {
+      console.log("====================================");
+      console.log("error.response.status", error);
+      console.log("====================================");
       if ((error as MyErrorType).response?.status === 400) {
         const errorMessage = (error as MyErrorType).response.data.error;
         setError({
@@ -176,9 +204,17 @@ const AddMenuItem = () => {
     );
   }
 
+  const handleFileChange = e => {
+    setImage(e.target.files[0]);
+  };
+
   return (
     <div className="flex flex-col items-center justify-center">
-      <form onSubmit={handleSubmit} className="w-full max-w-md">
+      <form
+        onSubmit={handleSubmit}
+        encType="multipart/form-data"
+        className="w-full max-w-md"
+      >
         <div className="mb-4">
           {/* Enter the name of the item */}
 
@@ -339,12 +375,10 @@ const AddMenuItem = () => {
               "appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             }
             placeholder="Enter the URL of an image of the food"
-            required
             id="image"
-            value={image}
-            type="text"
-            aria-label="Enter the URL of an image of the food"
-            onChange={e => setImage(e.target.value)}
+            type="file"
+            accept="image/*"
+            onChange={event => setImage(event.target.files[0])}
           />
         </div>
         <button
