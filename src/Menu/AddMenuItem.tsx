@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 
-import { useState, useEffect } from "react";
-import axios, { AxiosError } from "axios";
+import {useState, useEffect} from "react";
+import axios, {AxiosError} from "axios";
 import AddCategory from "./AddCategory";
-import { AiOutlineFileAdd } from "react-icons/ai";
+import {AiOutlineCloudUpload, AiOutlineFileAdd} from "react-icons/ai";
 import {toast} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 interface Category {
@@ -34,6 +34,7 @@ const AddMenuItem = () => {
   const [error, setError] = useState<{[key: string]: string | unknown}>({});
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [loading, setLoading] = useState<boolean>(true);
+  const [imagePreview, setImagePreview] = useState<string>();
 
   useEffect(() => {
     async function fetchCategories() {
@@ -91,18 +92,44 @@ const AddMenuItem = () => {
       formData.append("image", image);
     }
 
-    // Debug: log the contents of the FormData object
-    for (let [key, value] of formData.entries()) {
-      console.log(key, value);
-    }
-    // Validate form fields and image file
+    // Check for missing required fields and image
     if (!name || !description || !category || !price || !image) {
-      setError({
-        message: "Please fill in all fields and select an image.",
-        error: "Missing required fields or image.",
-      });
+      {
+        setLoading(false);
+        setSubmitSuccess(false);
+        setShowAddCategory(false);
+
+        toast.error(
+          `
+          Error: Please fill in all required fields.
+
+          Missing fields:
+          ${!name ? "Name" : ""}
+          ${!description ? "Description" : ""}
+          ${!category ? "Category" : ""}
+          ${!price ? "Price" : ""}
+          ${!image ? "Image" : ""}
+          
+        `,
+          {
+            position: "top-left",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            className: "toast-light",
+          }
+        );
+      }
+
+      setLoading(false);
       return;
     }
+
+    setLoading(true);
 
     try {
       const res = await axios.post("http://localhost:1337/api/menu", formData, {
@@ -111,9 +138,6 @@ const AddMenuItem = () => {
         },
       });
 
-      console.log("====================================");
-      console.log("res.data", res.data);
-      console.log("====================================");
       // reset form fields
       setName("");
       setDescription("");
@@ -132,50 +156,53 @@ const AddMenuItem = () => {
         progress: undefined,
         theme: "colored",
       });
-    } catch (error) {
+    } catch (error: any) {
       console.log("====================================");
       console.log("error.response.status", error);
       console.log("====================================");
-      if ((error as MyErrorType).response?.status === 400) {
-        const errorMessage = (error as MyErrorType).response.data.error;
-        setError({
-          message: "An error occurred while adding the menu item.",
-          error: errorMessage,
-        });
-        toast.error(`Error: ${errorMessage}`, {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-        });
-        setLoading(false);
+      let errorMessage = "An error occurred while adding the menu item.";
+      if (error.response) {
+        if (error.response.status === 400) {
+          errorMessage = error.response.data.error;
+        } else {
+          errorMessage = "Something went wrong.";
+        }
+      } else if (error.request) {
+        errorMessage = "The request was made but no response was received.";
       } else {
-        setError({
-          message: "An error occurred while adding the menu item.",
-          error: "Something went wrong.",
-        });
-        toast.error("An error occurred while adding the menu item.", {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-        });
-        setLoading(false);
+        errorMessage = error.message;
       }
+      setError({
+        message: errorMessage,
+        error: true,
+      });
+      toast.error(errorMessage, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+      setLoading(false);
     } finally {
       setTimeout(() => {
         setLoading(false);
         setError({});
-      }, 9000);
+      }, 2000);
     }
+  };
+
+  const handleImageChange = event => {
+    const file = event.target.files[0];
+    if (file && !file.type.startsWith("image/")) {
+      toast.error("Only image files are allowed.");
+      return;
+    }
+    setImage(file);
+    setImagePreview(URL.createObjectURL(file));
   };
 
   if (submitSuccess) {
@@ -203,10 +230,6 @@ const AddMenuItem = () => {
       </div>
     );
   }
-
-  const handleFileChange = e => {
-    setImage(e.target.files[0]);
-  };
 
   return (
     <div className="flex flex-col items-center justify-center">
@@ -363,23 +386,51 @@ const AddMenuItem = () => {
           />
         </div>
         <div className="mb-4">
-          {/* Enter the URL of an image of the item, if desired */}
           <label
             className="block text-gray-700 font-medium mb-2"
             htmlFor="image"
           >
             Image:
           </label>
-          <input
-            className={
-              "appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            }
-            placeholder="Enter the URL of an image of the food"
-            id="image"
-            type="file"
-            accept="image/*"
-            onChange={event => setImage(event.target.files[0])}
-          />
+          <div className="relative border-dashed border-2 border-gray-400 rounded-lg h-44">
+            <input
+              className="h-full w-full opacity-0"
+              id="image"
+              type="file"
+              accept="image/*"
+              onChange={handleImageChange}
+            />
+            {imagePreview ? (
+              <div className="absolute top-0 left-0 h-full w-full">
+                <img
+                  src={imagePreview}
+                  alt="Selected image preview"
+                  className="h-full w-full object-cover rounded-lg"
+                />
+                <div className="absolute bottom-0 left-0 right-0 p-4 bg-opacity-75 bg-gray-700 rounded-b-lg">
+                  <button
+                    className="bg-red-500 hover:bg-red-600 text-white font-medium py-2 px-4 rounded-lg"
+                    onClick={() => {
+                      setImage(null);
+                      setImagePreview(null);
+                    }}
+                  >
+                    Cancel or Change
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                <div className="flex flex-col items-center justify-center">
+                  <AiOutlineCloudUpload className="text-gray-400 w-12 h-12" />
+
+                  <span className="block text-gray-400 font-normal">
+                    Select a file or drag and drop it here
+                  </span>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
         <button
           className={
