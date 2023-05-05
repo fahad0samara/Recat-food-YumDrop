@@ -3,6 +3,7 @@ import {useState} from "react";
 import axios from "axios";
 import {toast} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import {memo} from "react";
 interface MyErrorType {
   response: {
     [x: string]: any;
@@ -52,16 +53,18 @@ const AddCategory: React.FC<AddCategoryProps> = ({
           description,
         }
       );
-      setCategories(prevState => [...prevState, res.data]);
+
+      // Fetch the updated category list from the server
+      const categoryRes = await axios.get<Category[]>(
+        "http://localhost:1337/api/categories"
+      );
+
+      setCategories(categoryRes.data);
       setName("");
       setDescription("");
       setShowAddCategory(false);
       toast.success(
-        ` the
-        category ${res.data.name} was added successfully
-        you can see it in the list of categories in 
-        the menu`,
-
+        `The category ${res.data.name} was added successfully. You can see it in the list of categories in the menu.`,
         {
           position: "top-right",
           autoClose: 4000,
@@ -178,4 +181,7 @@ const AddCategory: React.FC<AddCategoryProps> = ({
   );
 };
 
-export default AddCategory;
+const NamedAddCategory = memo(AddCategory);
+export default NamedAddCategory;
+
+

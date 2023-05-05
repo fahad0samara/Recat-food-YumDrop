@@ -6,6 +6,10 @@ import AddCategory from "./AddCategory";
 import {AiOutlineCloudUpload, AiOutlineFileAdd} from "react-icons/ai";
 import {toast} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import {LRUCache} from "lru-cache";
+
+import {useCallback} from "react";
+import {MenuPreviewModal} from "./Model/MenuPreviewModal";
 interface Category {
   [x: string]: string | number | readonly string[] | undefined;
   _id: string;
@@ -23,6 +27,16 @@ interface MyErrorType {
   };
 }
 
+const getCachedCategories = (): Category[] | undefined => {
+  return cache.get("categories");
+};
+
+const setCachedCategories = (categories: Category[]): void => {
+  cache.set("categories", categories);
+};
+
+const cache = new LRUCache<string, Category[]>({max: 10});
+
 const AddMenuItem = () => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -35,15 +49,45 @@ const AddMenuItem = () => {
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [loading, setLoading] = useState<boolean>(true);
   const [imagePreview, setImagePreview] = useState<string>();
+  const [showPreviewModal, setShowPreviewModal] = useState(false);
+  const [menuPreview, setMenuPreview] = useState({});
+  const isFormEmpty = !name || !description || !price || !category || !image;
+  const handlePreview = () => {
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("description", description);
+    formData.append("category", category);
+    formData.append("price", parseFloat(price));
+    if (image) {
+      formData.append("image", image);
+    }
+    setMenuPreview(Object.fromEntries(formData));
+    setShowPreviewModal(true);
+  };
+
+  const handleClosePreviewModal = () => {
+    setShowPreviewModal(false);
+  };
 
   useEffect(() => {
     async function fetchCategories() {
       try {
-        const res = await axios.get<Category[]>(
-          "http://localhost:1337/api/categories"
-        );
+        let data;
+        const cacheKey = "categories";
 
-        setCategories(res.data);
+        if (cache.has(cacheKey)) {
+          console.log("Fetching categories from cache");
+          data = cache.get(cacheKey);
+        } else {
+          console.log("Fetching categories from server");
+          const res = await axios.get<Category[]>(
+            "http://localhost:1337/api/categories"
+          );
+          data = res.data;
+          cache.set(cacheKey, data);
+        }
+
+        setCategories(data);
         setLoading(false);
       } catch (error) {
         const errorMessage = error
@@ -71,36 +115,35 @@ const AddMenuItem = () => {
     }
     fetchCategories();
   }, []);
-
   const handleAddCategory = () => {
     setShowAddCategory(true);
   };
+  const handleSubmit = useCallback(
+    async (e: React.FormEvent<HTMLFormElement>) => {
+      setLoading(true);
+      setSubmitSuccess(false);
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    setLoading(true);
-    setSubmitSuccess(false);
+      e.preventDefault();
+      const formData = new FormData();
 
-    e.preventDefault();
-    const formData = new FormData();
+      formData.append("name", name);
+      formData.append("description", description);
+      formData.append("category", category);
+      formData.append("price", parseFloat(price));
 
-    formData.append("name", name);
-    formData.append("description", description);
-    formData.append("category", category);
-    formData.append("price", parseFloat(price));
+      if (image) {
+        formData.append("image", image);
+      }
 
-    if (image) {
-      formData.append("image", image);
-    }
+      // Check for missing required fields and image
+      if (!name || !description || !category || !price || !image) {
+        {
+          setLoading(false);
+          setSubmitSuccess(false);
+          setShowAddCategory(false);
 
-    // Check for missing required fields and image
-    if (!name || !description || !category || !price || !image) {
-      {
-        setLoading(false);
-        setSubmitSuccess(false);
-        setShowAddCategory(false);
-
-        toast.error(
-          `
+          toast.error(
+            `
           Error: Please fill in all required fields.
 
           Missing fields:
@@ -111,89 +154,95 @@ const AddMenuItem = () => {
           ${!image ? "Image" : ""}
           
         `,
+            {
+              position: "top-left",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "light",
+              className: "toast-light",
+            }
+          );
+        }
+
+        setLoading(false);
+        return;
+      }
+
+      setLoading(true);
+
+      try {
+        const res = await axios.post(
+          "http://localhost:1337/api/menu",
+          formData,
           {
-            position: "top-left",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-            className: "toast-light",
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
           }
         );
-      }
 
-      setLoading(false);
-      return;
-    }
-
-    setLoading(true);
-
-    try {
-      const res = await axios.post("http://localhost:1337/api/menu", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-
-      // reset form fields
-      setName("");
-      setDescription("");
-      setCategory("");
-      setPrice("");
-      setImage(null);
-      setSubmitSuccess(true);
-      setLoading(false);
-      toast.success("Menu item added successfully!", {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
-    } catch (error: any) {
-      console.log("====================================");
-      console.log("error.response.status", error);
-      console.log("====================================");
-      let errorMessage = "An error occurred while adding the menu item.";
-      if (error.response) {
-        if (error.response.status === 400) {
-          errorMessage = error.response.data.error;
-        } else {
-          errorMessage = "Something went wrong.";
-        }
-      } else if (error.request) {
-        errorMessage = "The request was made but no response was received.";
-      } else {
-        errorMessage = error.message;
-      }
-      setError({
-        message: errorMessage,
-        error: true,
-      });
-      toast.error(errorMessage, {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
-      setLoading(false);
-    } finally {
-      setTimeout(() => {
+        // reset form fields
+        setName("");
+        setDescription("");
+        setCategory("");
+        setPrice("");
+        setImage(null);
+        setSubmitSuccess(true);
         setLoading(false);
-        setError({});
-      }, 2000);
-    }
-  };
+        toast.success("Menu item added successfully!", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
+      } catch (error: any) {
+        console.log("====================================");
+        console.log("error.response.status", error);
+        console.log("====================================");
+        let errorMessage = "An error occurred while adding the menu item.";
+        if (error.response) {
+          if (error.response.status === 400) {
+            errorMessage = error.response.data.error;
+          } else {
+            errorMessage = "Something went wrong.";
+          }
+        } else if (error.request) {
+          errorMessage = "The request was made but no response was received.";
+        } else {
+          errorMessage = error.message;
+        }
+        setError({
+          message: errorMessage,
+          error: true,
+        });
+        toast.error(errorMessage, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
+        setLoading(false);
+      } finally {
+        setTimeout(() => {
+          setLoading(false);
+          setError({});
+        }, 2000);
+      }
+    },
+    [name, description, category, price, image]
+  );
 
   const handleImageChange = event => {
     const file = event.target.files[0];
@@ -432,21 +481,49 @@ const AddMenuItem = () => {
             )}
           </div>
         </div>
-        <button
-          className={
-            "bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-md"
-          }
-          type="submit"
-          disabled={loading}
+        <div
+          className={`flex justify-between items-center ${
+            showAddCategory ? "mb-4" : "mb-8"
+          }`}
         >
-          {loading ? "Loading..." : "Add food"}
-        </button>
+          <button
+            onClick={handlePreview}
+            disabled={isFormEmpty}
+            className={`
+          ${
+            isFormEmpty
+              ? "bg-gray-300 cursor-not-allowed text-white font-medium py-2 px-4 rounded-md"
+              : "bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-md"
+          }
+        `}
+            type="button"
+          >
+            Preview
+          </button>
+          <button
+            className={
+              "bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-md"
+            }
+            type="submit"
+            disabled={loading}
+          >
+            {loading ? "Loading..." : "Add food"}
+          </button>
+        </div>
       </form>
+
       {showAddCategory && (
         <AddCategory
           setShowAddCategory={setShowAddCategory}
           //@ts-ignore
           setCategories={setCategories}
+        />
+      )}
+
+      {showPreviewModal && (
+        <MenuPreviewModal
+          previewData={menuPreview}
+          onClose={handleClosePreviewModal}
         />
       )}
     </div>

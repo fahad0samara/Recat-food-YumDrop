@@ -141,6 +141,12 @@
 import {useState, useEffect} from "react";
 import {Link, useParams} from "react-router-dom";
 import axios from "axios";
+import {LRUCache} from "lru-cache";
+
+const cache = new LRUCache({
+  max: 10,
+  maxAge: 1000 * 60 * 60, // 1 hour
+});
 
 function Menu() {
   const {categoryId} = useParams();
@@ -150,28 +156,33 @@ function Menu() {
   const [searchQuery, setSearchQuery] = useState("");
   const [sortOption, setSortOption] = useState("name");
 
-  async function fetchData() {
+  async function fetchData(categoryId) {
     try {
-      const response = await axios.get("http://localhost:1337/api/categories");
-      setCategories(response.data);
+      let response;
+      const cacheKey = categoryId ? `menu_${categoryId}` : "menu_all";
 
-      if (categoryId) {
-        const response = await axios.get(
-          `http://localhost:1337/api/menu/${categoryId}`
-        );
-        setMenuItems(response.data);
+      if (cache.has(cacheKey)) {
+        console.log("Fetching menu items from cache...");
+        response = cache.get(cacheKey);
       } else {
-        const response = await axios.get("http://localhost:1337/api/menu");
-        setMenuItems(response.data);
+        console.log("Fetching menu items from server...");
+        if (categoryId) {
+          response = await axios.get(
+            `http://localhost:1337/api/menu/${categoryId}`
+          );
+        } else {
+          response = await axios.get("http://localhost:1337/api/menu");
+        }
+        cache.set(cacheKey, response);
       }
 
+      setMenuItems(response.data);
       setLoading(false);
     } catch (error) {
       console.log(error);
       setLoading(false);
     }
   }
-
   useEffect(() => {
     fetchData();
   }, [categoryId]);
