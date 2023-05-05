@@ -1,6 +1,20 @@
-import {memo} from "react";
+import {FC, memo} from "react";
 
-const MenuPreviewModal = ({previewData, onClose}) => {
+interface MenuPreviewModalProps {
+  previewData: {
+    name: string;
+    description: string;
+    category: string;
+    price: number;
+    image?: File;
+  };
+  onClose: () => void;
+}
+
+const MenuPreviewModal: FC<MenuPreviewModalProps> = ({
+  previewData,
+  onClose,
+}) => {
   return (
     <div className="fixed z-10 inset-0 overflow-y-auto">
       <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">

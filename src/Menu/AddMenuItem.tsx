@@ -27,13 +27,7 @@ interface MyErrorType {
   };
 }
 
-const getCachedCategories = (): Category[] | undefined => {
-  return cache.get("categories");
-};
 
-const setCachedCategories = (categories: Category[]): void => {
-  cache.set("categories", categories);
-};
 
 const cache = new LRUCache<string, Category[]>({max: 10});
 

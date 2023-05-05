@@ -138,51 +138,87 @@
 
 // export default Menu;
 
-import {useState, useEffect} from "react";
+interface Category {
+  _id: Key | null | undefined;
+  id: number;
+  name: string;
+}
+
+interface MenuItem {
+  _id: Key | null | undefined;
+  isNew: JSX.Element;
+  image: string | undefined;
+  description: ReactNode;
+  id: number;
+  name: string;
+  price: number;
+  createdAt: string;
+}
+import {useState, useEffect, Key, ReactNode} from "react";
 import {Link, useParams} from "react-router-dom";
 import axios from "axios";
 import {LRUCache} from "lru-cache";
-
 const cache = new LRUCache({
-  max: 10,
-  maxAge: 1000 * 60 * 60, // 1 hour
+  max: 100, // maximum size of cache
 });
 
 function Menu() {
-  const {categoryId} = useParams();
-  const [categories, setCategories] = useState([]);
-  const [menuItems, setMenuItems] = useState([]);
+  const {categoryId} = useParams<{categoryId?: string}>();
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
-  const [sortOption, setSortOption] = useState("name");
+  const [sortOption, setSortOption] = useState<"name" | "price" | "new">(
+    "name"
+  );
 
-  async function fetchData(categoryId) {
+  async function fetchData() {
     try {
-      let response;
-      const cacheKey = categoryId ? `menu_${categoryId}` : "menu_all";
-
-      if (cache.has(cacheKey)) {
-        console.log("Fetching menu items from cache...");
-        response = cache.get(cacheKey);
+      let categoriesData: Category[];
+      if (cache.has("categories")) {
+        categoriesData = cache.get("categories") as Category[];
+        console.log("Fetching categories from cache");
       } else {
-        console.log("Fetching menu items from server...");
+        const response = await axios.get<Category[]>(
+          "http://localhost:1337/api/categories"
+        );
+        categoriesData = response.data;
+        cache.set("categories", categoriesData);
+        console.log("Fetching categories from API");
+      }
+      setCategories(categoriesData);
+
+      let menuItemsData: MenuItem[];
+      const menuCacheKey = `menuItems-${categoryId || ""}`;
+      if (cache.has(menuCacheKey)) {
+        menuItemsData = cache.get(menuCacheKey) as MenuItem[];
+        console.log(
+          `Fetching menu items for category ${categoryId} from cache`
+        );
+      } else {
         if (categoryId) {
-          response = await axios.get(
+          const response = await axios.get<MenuItem[]>(
             `http://localhost:1337/api/menu/${categoryId}`
           );
+          menuItemsData = response.data;
         } else {
-          response = await axios.get("http://localhost:1337/api/menu");
+          const response = await axios.get<MenuItem[]>(
+            "http://localhost:1337/api/menu"
+          );
+          menuItemsData = response.data;
         }
-        cache.set(cacheKey, response);
+        cache.set(menuCacheKey, menuItemsData, (5 * 60 * 1000) as never);
+        console.log(`Fetching menu items for category ${categoryId} from API`);
       }
+      setMenuItems(menuItemsData);
 
-      setMenuItems(response.data);
       setLoading(false);
     } catch (error) {
       console.log(error);
       setLoading(false);
     }
   }
+
   useEffect(() => {
     fetchData();
   }, [categoryId]);
@@ -191,18 +227,19 @@ function Menu() {
     menuItem.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  function handleSortOptionChange(event) {
-    setSortOption(event.target.value);
+  function handleSortOptionChange(event: React.ChangeEvent<HTMLSelectElement>) {
+    setSortOption(event.target.value as "name" | "price" | "new");
   }
 
-  function sortMenuItems(items, option) {
+  function sortMenuItems(items: MenuItem[], option: "name" | "price" | "new") {
     if (option === "name") {
       return items.sort((a, b) => a.name.localeCompare(b.name));
     } else if (option === "price") {
       return items.sort((a, b) => a.price - b.price);
     } else if (option === "new") {
       return items.sort(
-        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+        (a, b) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
       );
     }
     return items;
