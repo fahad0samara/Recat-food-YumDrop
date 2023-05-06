@@ -28,16 +28,20 @@ const Header = () => {
           <li className="md:mr-12">
             <Link to="/menu">Menu</Link>
           </li>
-          <li className="md:mr-12">
-            <Link to="/menu">MenuItemsByCategory </Link>
-          </li>
+
           <li className="md:mr-12">
             <Link to="/AddMenuItem">AddMenuItem </Link>
           </li>
           <li className="md:mr-12">
-            <button className="rounded-full border-2 border-green-500 px-6 py-1 text-green-600 transition-colors hover:bg-green-500 hover:text-white">
+            <Link to="/Register">Register </Link>
+          </li>
+          <li className="md:mr-12">
+            <Link
+              to="/Login"
+              className="rounded-full border-2 border-green-500 px-6 py-1 text-green-600 transition-colors hover:bg-green-500 hover:text-white"
+            >
               Login
-            </button>
+            </Link>
           </li>
         </ul>
       </nav>
