@@ -1,5 +1,29 @@
 import {Link} from "react-router-dom";
+import {useDispatch, useSelector} from "react-redux";
+import {logout} from "../Redux/authThunks";
+import {useNavigate} from "react-router-dom";
 const Header = () => {
+  const {user, isAuthenticated, isAdmin} = useSelector(
+    (state: any) => state.auth
+  );
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const handleLogout = async () => {
+    try {
+      await dispatch(logout());
+      navigate("/Login");
+      console.log("====================================");
+      console.log(
+        "🚀 ~ file: Header.tsx ~ line 64 ~ handleLogout ~ user",
+        user
+      );
+      console.log("====================================");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <header className="relative flex max-w-screen-xl flex-col overflow-hidden px-4 py-4 text-slate-700 md:mx-auto md:flex-row md:items-center">
       <Link
@@ -28,21 +52,36 @@ const Header = () => {
           <li className="md:mr-12">
             <Link to="/menu">Menu</Link>
           </li>
-
-          <li className="md:mr-12">
-            <Link to="/AddMenuItem">AddMenuItem </Link>
-          </li>
-          <li className="md:mr-12">
-            <Link to="/Register">Register </Link>
-          </li>
-          <li className="md:mr-12">
-            <Link
-              to="/Login"
-              className="rounded-full border-2 border-green-500 px-6 py-1 text-green-600 transition-colors hover:bg-green-500 hover:text-white"
-            >
-              Login
-            </Link>
-          </li>
+          {isAuthenticated && isAdmin && (
+            <li className="md:mr-12">
+              <Link to="/AddMenuItem">AddMenuItem</Link>
+            </li>
+          )}
+          {!isAuthenticated && (
+            <>
+              <li className="md:mr-12">
+                <Link to="/Register">Register</Link>
+              </li>
+              <li className="md:mr-12">
+                <Link
+                  to="/Login"
+                  className="rounded-full border-2 border-green-500 px-6 py-1 text-green-600 transition-colors hover:bg-green-500 hover:text-white"
+                >
+                  Login
+                </Link>
+              </li>
+            </>
+          )}
+          {isAuthenticated && (
+            <li className="md:mr-12">
+              <button
+                onClick={handleLogout}
+                className="rounded-full border-2 border-red-500 px-6 py-1 text-red-600 transition-colors hover:bg-red-500 hover:text-white"
+              >
+                Logout
+              </button>
+            </li>
+          )}
         </ul>
       </nav>
     </header>

@@ -1,5 +1,7 @@
 import {useState} from "react";
 import axios from "axios";
+import {useDispatch, useSelector} from "react-redux";
+import {register} from "../Redux/authThunks";
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -10,36 +12,45 @@ const Register = () => {
     role: "user", // Default role is 'user'
   });
 
-  const handleChange = e => {
+  const dispatch = useDispatch();
+  const {error, loading} = useSelector((state: any) => state.auth);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    dispatch(register(formData));
+  };
+
+  const handleChange = (e: {target: {name: any; value: any}}) => {
     setFormData({...formData, [e.target.name]: e.target.value});
   };
 
-  const handleSubmit = async e => {
-    e.preventDefault();
+  // const handleSubmit = async e => {
+  //   e.preventDefault();
 
-    try {
-      // Make a POST request to your server's registration route
-      const response = await axios.post(
-        "/http://localhost:1337/auth/register",
-        formData
-      );
-      console.log(response.data); // Registration successful message
+  //   try {
+  //     // Make a POST request to your server's registration route
+  //     const response = await axios.post(
+  //       "http://localhost:1337/auth/register",
+  //       formData
+  //     );
+  //     console.log(response.data); // Registration successful message
 
-      // Reset the form fields
-      setFormData({
-        firstName: "",
-        lastName: "",
-        email: "",
-        password: "",
-        role: "user",
-      });
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  //     // Reset the form fields
+  //     setFormData({
+  //       firstName: "",
+  //       lastName: "",
+  //       email: "",
+  //       password: "",
+  //       role: "user",
+  //     });
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   return (
     <form onSubmit={handleSubmit}>
+      <div>{error && <p style={{color: "red"}}>{error.message}</p>}</div>
       <label>
         First Name:
         <input
@@ -83,7 +94,7 @@ const Register = () => {
           <option value="admin">Admin</option>
         </select>
       </label>
-      <button type="submit">Register</button>
+      <button type="submit">{loading ? "Loading..." : "Register"}</button>
     </form>
   );
 };

@@ -1,5 +1,5 @@
-import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {login, register} from "./authThunks";
+import {createSlice} from "@reduxjs/toolkit";
+import {login, register, fetchUserData, logout} from "./authThunks";
 
 interface AuthState {
   user: any | null;
@@ -7,6 +7,7 @@ interface AuthState {
   isAuthenticated: boolean;
   loading: boolean;
   error: string | null;
+  isAdmin: boolean;
 }
 
 const initialState: AuthState = {
@@ -15,6 +16,7 @@ const initialState: AuthState = {
   isAuthenticated: false,
   loading: false,
   error: null,
+  isAdmin: false,
 };
 
 const authSlice = createSlice({
@@ -33,8 +35,16 @@ const authSlice = createSlice({
       })
       .addCase(login.fulfilled, (state, action) => {
         state.loading = false;
+        state.user = action.payload.user;
+        state.token = action.payload.token;
+        localStorage.setItem("token", action.payload.token);
         state.isAuthenticated = true;
-        state.user = action.payload;
+        state.isAdmin = action.payload.isAdmin;
+        console.log(
+          //thees data from the login
+          action.payload,
+          action.payload.isAdmin
+        );
       })
       .addCase(login.rejected, (state, action) => {
         state.loading = false;
@@ -52,11 +62,45 @@ const authSlice = createSlice({
       })
       .addCase(register.rejected, (state, action) => {
         state.loading = false;
-        state.error =
-          action.payload && action.payload.message
-            ? action.payload.message
-            : "An error occurred";
-        console.error(state.error); // log the error message to the console
+        state.error = action.payload as string | null;
+      })
+      .addCase(fetchUserData.pending, state => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchUserData.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload.user;
+        state.isAuthenticated = true;
+        state.isAdmin = action.payload.isAdmin; // Set isAdmin based on user role
+
+        console.log(
+          //thees data from the fetchUserData
+          action.payload,
+          action.payload.isAdmin
+        );
+      })
+      .addCase(fetchUserData.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string | null;
+      })
+      //logout
+      .addCase(logout.pending, state => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(logout.fulfilled, state => {
+        state.loading = false;
+        state.user = null;
+        state.token = null;
+
+        state.isAuthenticated = false;
+        state.isAdmin = false;
+        localStorage.removeItem("token");
+      })
+      .addCase(logout.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string | null;
       });
   },
 });
