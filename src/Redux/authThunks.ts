@@ -1,101 +1,140 @@
 import {createAsyncThunk} from "@reduxjs/toolkit";
 import axios from "axios";
+import {clearUserData} from "./authSlice";
 
-
-interface UserData {
-  _id: string;
+export interface UserData {
+  _id?: string;
   firstName: string;
   lastName: string;
   email: string;
-}
+  password: string;
+  role: string;
 
-interface FetchUserDataResponse {
-  user: UserData;
+
+}
+interface LoginResponse {
+  user: any;
   isAdmin: boolean;
+  token: string;
 }
 
-export const register = createAsyncThunk(
-  "auth/register",
-  async (userData, {rejectWithValue}) => {
-    try {
-      const response = await axios.post(
-        "http://localhost:1337/auth/register",
-        userData
-      );
-      return response.data;
-    } catch (error) {
-      if (error.response && error.response.data) {
-        // Extract the error message and status code from the response data
-        const {message} = error.response.data;
-        const statusCode = error.response.status;
-        console.log("An error occurred:", message, "Status code:", statusCode);
+interface User {
+  user: any;
+  isAdmin: boolean;
+  id: number;
+  email: string;
+  name: string;
+}
 
-        // Return an object with the error message and status code as the rejected value
-        return rejectWithValue({message, statusCode});
-      }
-      // Rethrow the error if there's no error payload
-      throw error;
+// Register user
+export const register = createAsyncThunk<
+  User,
+  UserData,
+  {rejectValue: {message: string; statusCode: number}}
+>("auth/register", async (userData, {rejectWithValue}) => {
+  try {
+    const response = await axios.post<User>(
+      "http://localhost:1337/auth/register",
+      userData
+    );
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response?.data?.message) ||
+        "Failed to fetch user data";
+      return rejectWithValue(message);
     }
+    throw error;
   }
-);
+});
 
-export const login = createAsyncThunk(
-  "auth/login",
-  async (credentials: any, {rejectWithValue}) => {
-    try {
-      const response = await axios.post(
-        "http://localhost:1337/auth/login",
-        credentials
-      );
-      console.log("====================================");
-      console.log();
-      console.log("====================================");
-      return response.data;
-    } catch (error: any) {
-      return rejectWithValue(error.response.data);
+// Login user
+export const login = createAsyncThunk<
+  LoginResponse,
+  UserData,
+  {rejectValue: string}
+>("auth/login", async (credentials, {rejectWithValue}) => {
+  try {
+    const response = await axios.post<LoginResponse>(
+      "http://localhost:1337/auth/login",
+      credentials
+    );
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response?.data?.message) ||
+        "Failed to fetch user data";
+      return rejectWithValue(message);
     }
+    throw error;
   }
-);
+});
 
-//logout
-export const logout = createAsyncThunk(
+// Logout user
+export const logout = createAsyncThunk<void, void, {rejectValue: string}>(
   "auth/logout",
-  async (_, {rejectWithValue, getState}) => {
-    const {token} = getState().auth;
+  async (_, {dispatch, rejectWithValue}) => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      console.log("User is already logged out");
+      return;
+    }
     try {
       await axios.post("http://localhost:1337/auth/logout", null, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
+      dispatch(clearUserData());
       return;
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      if (axios.isAxiosError(error)) {
+        const message =
+          error.response?.data?.message || "Failed to fetch user data";
+        return rejectWithValue(message);
+      }
+      throw error;
     }
   }
 );
+export const fetchUserData = createAsyncThunk<
+  User,
+  void,
+  {rejectValue: {message: string; error: string}}
+>("auth/fetchUserData", async (_, thunkAPI) => {
+  const token = localStorage.getItem("token");
 
-export const fetchUserData = createAsyncThunk(
-  "auth/fetchUserData",
-  async (token: string, thunkAPI) => {
-    try {
-      const response = await axios.get<FetchUserDataResponse>(
-        "http://localhost:1337/auth/me",
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
-      return response.data;
-    } catch (err) {
-      return thunkAPI.rejectWithValue({
-        message: "Failed to fetch user data",
-        error: err.message,
-      });
-    }
+  if (!token) {
+    return thunkAPI.rejectWithValue({
+      message: "User is not authenticated",
+      error: "",
+    });
   }
-);
+
+  try {
+    const response = await axios.get<User>("http://localhost:1337/auth/me", {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      const message =
+        error.response?.data?.message || "Failed to fetch user data";
+      const err = error.response?.data?.error || error.message;
+      return thunkAPI.rejectWithValue({message, error: err});
+    }
+    throw error;
+  }
+});
 
 

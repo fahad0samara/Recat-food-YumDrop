@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {useState, useEffect} from "react";
 
 import {useDispatch, useSelector} from "react-redux";
 import {login} from "../Redux/authThunks";
@@ -16,12 +16,14 @@ const LoginForm = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    dispatch(login({email, password}));
+    await dispatch(login({email, password}));
+  };
 
+  useEffect(() => {
     if (isAuthenticated) {
       navigate("/dashboard");
     }
-  };
+  }, [isAuthenticated, navigate]);
 
   return (
     <div>
@@ -60,7 +62,7 @@ const LoginForm = () => {
             />
           </label>
           <br />
-          {error && <p>{error.message}</p>}
+          {error && <p>{error}</p>}
           <button type="submit">Login</button>
         </form>
       </div>

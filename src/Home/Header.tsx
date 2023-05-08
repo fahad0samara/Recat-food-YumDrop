@@ -13,12 +13,6 @@ const Header = () => {
     try {
       await dispatch(logout());
       navigate("/Login");
-      console.log("====================================");
-      console.log(
-        "🚀 ~ file: Header.tsx ~ line 64 ~ handleLogout ~ user",
-        user
-      );
-      console.log("====================================");
     } catch (error) {
       console.log(error);
     }
