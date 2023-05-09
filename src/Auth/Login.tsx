@@ -1,7 +1,7 @@
 import {useState, useEffect} from "react";
 
 import {useDispatch, useSelector} from "react-redux";
-import {login} from "../Redux/Auth/authThunks";
+
 import {useNavigate} from "react-router-dom";
 import {
   FaCoffee,
@@ -12,6 +12,7 @@ import {
 } from "react-icons/fa";
 import {RiUserSettingsFill, RiGitRepositoryPrivateFill} from "react-icons/ri";
 import {AiOutlineWarning} from "react-icons/ai";
+import {login} from "../Redux/Auth/authThunks";
 interface data {
   email: string;
   password: string;
@@ -43,7 +44,7 @@ const LoginForm = () => {
 
   useEffect(() => {
     if (isAuthenticated) {
-      navigate("/dashboard");
+      navigate("/menu");
     }
   }, [isAuthenticated, navigate]);
 

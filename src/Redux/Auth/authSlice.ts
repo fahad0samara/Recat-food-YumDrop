@@ -69,6 +69,7 @@ const authSlice = createSlice({
       .addCase(fetchUserData.fulfilled, (state, action) => {
         state.loading = false;
         state.user = action.payload.user;
+
         state.isAuthenticated = true;
         state.isAdmin = action.payload.isAdmin;
       })

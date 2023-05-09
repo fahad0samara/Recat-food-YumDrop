@@ -22,7 +22,7 @@ const Router = (): JSX.Element => {
       <Routes>
         <Route path="/" element={<Hero />} />
         <Route path="/Register" element={<Register />} />
-        <Route path="/dashboard" element={<Dashboard />} />
+
         <Route path="/Login" element={<Login />} />
 
         <Route path="/cart" element={<Cart />} />
