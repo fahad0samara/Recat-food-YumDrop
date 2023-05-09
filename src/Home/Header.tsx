@@ -1,11 +1,23 @@
 import {Link} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
-import {logout} from "../Redux/authThunks";
+import {logout} from "../Redux/Auth/authThunks";
 import {useNavigate} from "react-router-dom";
+import {RootState} from "../Redux/store";
 const Header = () => {
   const {user, isAuthenticated, isAdmin} = useSelector(
     (state: any) => state.auth
   );
+  const cartItems = useSelector((state: RootState) => state.cart.items);
+
+  const cartItemsCount = cartItems.reduce((total, item) => {
+    if (typeof item.quantity === "number") {
+      return total + item.quantity;
+    } else {
+      console.error(`Invalid quantity for item ${item.id}: ${item.quantity}`);
+      return total;
+    }
+  }, 0);
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -51,6 +63,12 @@ const Header = () => {
               <Link to="/AddMenuItem">AddMenuItem</Link>
             </li>
           )}
+          <li>
+            <Link to="/cart">
+              {" "}
+              Cart ({isNaN(cartItemsCount) ? 0 : cartItemsCount})
+            </Link>
+          </li>
           {!isAuthenticated && (
             <>
               <li className="md:mr-12">

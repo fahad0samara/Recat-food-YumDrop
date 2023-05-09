@@ -1,12 +1,17 @@
 import {useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {register, UserData} from "../Redux/authThunks";
+import {register, UserData} from "../Redux/Auth/authThunks";
 import {RootState} from "../Redux/store";
+import {FaCheck, FaGoogle} from "react-icons/fa";
+import {RiGitRepositoryPrivateFill} from "react-icons/ri";
+import {RiUserFill} from "react-icons/ri";
+
+import {MdAlternateEmail} from "react-icons/md";
+import {AiOutlineWarning} from "react-icons/ai";
 
 const Register = () => {
   const [formData, setFormData] = useState<UserData>({
     firstName: "",
-    lastName: "",
     email: "",
     password: "",
     role: "user",
@@ -27,81 +32,176 @@ const Register = () => {
   };
 
   return (
-    <section class="relative py-10 bg-gray-900 sm:py-16 lg:py-24">
-      <div class="absolute inset-0">
-        <img
-          class="object-center w-full h-screen"
-          src="https://images.unsplash.com/photo-1517433367423-c7e5b0f35086?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=401&q=80"
-          alt=""
-        />
-      </div>
-      <div class="absolute inset-0 bg-gray-900/20"></div>
+    <section className="bg-white">
+      <div className="grid grid-cols-1 lg:grid-cols-2">
+        <div className="relative flex items-end px-4 pb-10 pt-60 sm:pb-16 md:justify-center lg:pb-24 bg-gray-50 sm:px-6 lg:px-8">
+          <div className="absolute inset-0">
+            <img
+              className="object-cover object-top w-full h-full"
+              src="https://images.unsplash.com/photo-1518675219903-c682c4b16b1d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=580&q=80"
+              alt=""
+            />
+          </div>
+          <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent"></div>
 
-      <div class="relative max-w-lg px-4 mx-auto sm:px-0">
-        <div class="overflow-hidden bg-white rounded-md shadow-md">
-          <div class="px-4 py-6 sm:px-8 sm:py-7">
-            <div class="text-center">
-              <h2 class="text-3xl font-bold text-gray-900">
-                Create an account
-              </h2>
-              <p class="mt-2 text-base text-gray-600">
-                Already joined?{" "}
-                <a
-                  href="#"
-                  title=""
-                  class="text-blue-600 transition-all duration-200 hover:underline hover:text-blue-700"
-                >
-                  Sign in now
-                </a>
-              </p>
-            </div>
-
-            <form action="#" method="POST" class="mt-8">
-              <div class="space-y-5">
-                <div>
-                  <label for="" class="text-base font-medium text-gray-900">
+          <div className="relative">
+            <div className="w-full max-w-xl xl:w-full xl:mx-auto xl:pr-24 xl:max-w-xl">
+              <h3 className="text-4xl font-bold text-white">
+                Discover Exquisite Cuisine <br className="hidden xl:block" />
+                From Around the World
+              </h3>
+              <ul className="grid grid-cols-1 mt-10 sm:grid-cols-2 gap-x-8 gap-y-4">
+                <li className="flex items-center space-x-3">
+                  <div className="inline-flex items-center justify-center flex-shrink-0 w-5 h-5 bg-blue-500 rounded-full">
+                    <FaCheck className="w-3.5 h-3.5 text-white" />
+                  </div>
+                  <span className="text-lg font-medium text-white">
                     {" "}
-                    First & Last name{" "}
+                    Experience Delicious Flavors{" "}
+                  </span>
+                </li>
+                <li className="flex items-center space-x-3">
+                  <div className="inline-flex items-center justify-center flex-shrink-0 w-5 h-5 bg-blue-500 rounded-full">
+                    <FaCheck className="w-3.5 h-3.5 text-white" />
+                  </div>
+                  <span className="text-lg font-medium text-white">
+                    {" "}
+                    Wide Range of Menu Options{" "}
+                  </span>
+                </li>
+                <li className="flex items-center space-x-3">
+                  <div className="inline-flex items-center justify-center flex-shrink-0 w-5 h-5 bg-blue-500 rounded-full">
+                    <FaCheck className="w-3.5 h-3.5 text-white" />
+                  </div>
+                  <span className="text-lg font-medium text-white">
+                    {" "}
+                    Exquisite Culinary Creations{" "}
+                  </span>
+                </li>
+                <li className="flex items-center space-x-3">
+                  <div className="inline-flex items-center justify-center flex-shrink-0 w-5 h-5 bg-blue-500 rounded-full">
+                    <FaCheck className="w-3.5 h-3.5 text-white" />
+                  </div>
+                  <span className="text-lg font-medium text-white">
+                    {" "}
+                    Cozy and Welcoming Ambiance{" "}
+                  </span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div className="flex items-center justify-center px-4 py-10 bg-white sm:px-6 lg:px-8 sm:py-16 lg:py-24">
+          <div className="xl:w-full xl:max-w-sm 2xl:max-w-md xl:mx-auto">
+            <h2 className="text-3xl font-bold leading-tight text-black sm:text-4xl">
+              Sign up to Celebration
+            </h2>
+            <p className="mt-2 text-base text-gray-600">
+              Already have an account?{" "}
+              <a
+                href="#"
+                title=""
+                className="font-medium text-blue-600 transition-all duration-200 hover:text-blue-700 focus:text-blue-700 hover:underline"
+              >
+                Login
+              </a>
+            </p>
+            {error ? (
+              <div className="mt-4">
+                <div className="flex items-center justify-between w-full p-4 mb-4 text-sm font-bold text-white bg-red-500 rounded-lg shadow-md focus:outline-none focus:shadow-outline-red">
+                  <div className="flex items-center">
+                    <AiOutlineWarning className="w-5 h-5 mr-2" />
+                    <span>{error}</span>
+                  </div>
+                </div>
+              </div>
+            ) : null}
+
+            <form onSubmit={handleSubmit} className="mt-8">
+              <div className="space-y-5">
+                <div>
+                  <label
+                    htmlFor=""
+                    className="text-base font-medium text-gray-900"
+                  >
+                    {" "}
+                    Fast & Last name{" "}
                   </label>
-                  <div class="mt-2.5">
+                  <div className="mt-2.5 relative text-gray-400 focus-within:text-gray-600">
+                    <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                      <RiUserFill className="w-5 h-5" />
+                    </div>
+
                     <input
                       type="text"
-                      name=""
-                      id=""
+                      name="firstName"
+                      id="full-name"
                       placeholder="Enter your full name"
-                      class="block w-full p-4 text-black placeholder-gray-500 transition-all duration-200 bg-white border border-gray-200 rounded-md focus:outline-none focus:border-blue-600 caret-blue-600"
+                      className="block w-full py-4 pl-10 pr-4 text-black placeholder-gray-500 transition-all duration-200 border border-gray-200 rounded-md bg-gray-50 focus:outline-none focus:border-blue-600 focus:bg-white caret-blue-600"
+                      required
+                      value={formData.firstName}
+                      onChange={handleChange}
                     />
                   </div>
                 </div>
-
                 <div>
-                  <label for="" class="text-base font-medium text-gray-900">
+                  <label
+                    htmlFor=""
+                    className="text-base font-medium text-gray-900"
+                  >
                     {" "}
                     Email address{" "}
                   </label>
-                  <div class="mt-2.5">
+                  <div className="mt-2.5 relative text-gray-400 focus-within:text-gray-600">
+                    <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                      <MdAlternateEmail className="w-5 h-5" />
+                    </div>
+
                     <input
                       type="email"
-                      name=""
-                      id=""
+                      name="email"
+                      id="email"
                       placeholder="Enter email to get started"
-                      class="block w-full p-4 text-black placeholder-gray-500 transition-all duration-200 bg-white border border-gray-200 rounded-md focus:outline-none focus:border-blue-600 caret-blue-600"
+                      className="block w-full py-4 pl-10 pr-4 text-black placeholder-gray-500 transition-all duration-200 border border-gray-200 rounded-md bg-gray-50 focus:outline-none focus:border-blue-600 focus:bg-white caret-blue-600"
+                      required
+                      onChange={handleChange}
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label for="" class="text-base font-medium text-gray-900">
-                    {" "}
-                    Password{" "}
-                  </label>
-                  <div class="mt-2.5">
+                  <div className="flex items-center justify-between">
+                    <label
+                      htmlFor=""
+                      className="text-base font-medium text-gray-900"
+                    >
+                      {" "}
+                      Password{" "}
+                    </label>
+
+                    <a
+                      href="#"
+                      title=""
+                      className="text-sm font-medium text-blue-600 transition-all duration-200 hover:text-blue-700 focus:text-blue-700 hover:underline"
+                    >
+                      {" "}
+                      Forgot password?{" "}
+                    </a>
+                  </div>
+                  <div className="mt-2.5 relative text-gray-400 focus-within:text-gray-600">
+                    <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                      <RiGitRepositoryPrivateFill className="w-5 h-5" />
+                    </div>
+
                     <input
                       type="password"
-                      name=""
-                      id=""
+                      name="password"
+                      id="password"
                       placeholder="Enter your password"
-                      class="block w-full p-4 text-black placeholder-gray-500 transition-all duration-200 bg-white border border-gray-200 rounded-md focus:outline-none focus:border-blue-600 caret-blue-600"
+                      className="block w-full py-4 pl-10 pr-4 text-black placeholder-gray-500 transition-all duration-200 border border-gray-200 rounded-md bg-gray-50 focus:outline-none focus:border-blue-600 focus:bg-white caret-blue-600"
+                      required
+                      onChange={handleChange}
                     />
                   </div>
                 </div>
@@ -109,59 +209,38 @@ const Register = () => {
                 <div>
                   <button
                     type="submit"
-                    class="inline-flex items-center justify-center w-full px-4 py-4 text-base font-semibold text-white transition-all duration-200 bg-blue-600 border border-transparent rounded-md focus:outline-none hover:bg-blue-700 focus:bg-blue-700"
+                    className="inline-flex items-center justify-center w-full px-4 py-4 text-base font-semibold text-white transition-all duration-200 border border-transparent rounded-md bg-gradient-to-r from-fuchsia-600 to-blue-600 focus:outline-none hover:opacity-80 focus:opacity-80"
                   >
-                    Sign up
-                  </button>
-                </div>
-
-                <div>
-                  <button
-                    type="button"
-                    class="
-                                    relative
-                                    inline-flex
-                                    items-center
-                                    justify-center
-                                    w-full
-                                    px-4
-                                    py-4
-                                    text-base
-                                    font-semibold
-                                    text-gray-700
-                                    transition-all
-                                    duration-200
-                                    bg-white
-                                    border-2 border-gray-200
-                                    rounded-md
-                                    hover:bg-gray-100
-                                    focus:bg-gray-100
-                                    hover:text-black
-                                    focus:text-black focus:outline-none
-                                "
-                  >
-                    <div class="absolute inset-y-0 left-0 p-4">
-                      <svg
-                        class="w-6 h-6 text-blue-600"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        fill="currentColor"
-                      >
-                        <path d="M20.283 10.356h-8.327v3.451h4.792c-.446 2.193-2.313 3.453-4.792 3.453a5.27 5.27 0 0 1-5.279-5.28 5.27 5.27 0 0 1 5.279-5.279c1.259 0 2.397.447 3.29 1.178l2.6-2.599c-1.584-1.381-3.615-2.233-5.89-2.233a8.908 8.908 0 0 0-8.934 8.934 8.907 8.907 0 0 0 8.934 8.934c4.467 0 8.529-3.249 8.529-8.934 0-.528-.081-1.097-.202-1.625z"></path>
-                      </svg>
-                    </div>
-                    Sign up with Google
+                    {loading ? (
+                      <div className="flex items-center justify-center">
+                        <div className="w-4 h-4 mr-2 border-2 border-t-2 border-gray-200 rounded-full animate-spin"></div>
+                        <span>Signing up...</span>
+                      </div>
+                    ) : (
+                      <span>Sign up</span>
+                    )}
                   </button>
                 </div>
               </div>
             </form>
 
-            <p class="max-w-xs mx-auto mt-5 text-sm text-center text-gray-600">
+            <div className="mt-3 space-y-3">
+              <button
+                type="button"
+                className="relative inline-flex items-center justify-center w-full px-4 py-4 text-base font-semibold text-gray-700 transition-all duration-200 bg-white border-2 border-gray-200 rounded-md hover:bg-gray-100 focus:bg-gray-100 hover:text-black focus:text-black focus:outline-none"
+              >
+                <div className="absolute inset-y-0 left-0 p-4">
+                  <FaGoogle className="w-6 h-6 text-rose-500" />
+                </div>
+                Sign in with Google
+              </button>
+            </div>
+            <p className="mt-5 text-sm text-gray-600">
               This site is protected by reCAPTCHA and the Google{" "}
               <a
                 href="#"
                 title=""
-                class="text-blue-600 transition-all duration-200 hover:underline hover:text-blue-700"
+                className="text-blue-600 transition-all duration-200 hover:underline hover:text-blue-700"
               >
                 Privacy Policy
               </a>{" "}
@@ -169,7 +248,7 @@ const Register = () => {
               <a
                 href="#"
                 title=""
-                class="text-blue-600 transition-all duration-200 hover:underline hover:text-blue-700"
+                className="text-blue-600 transition-all duration-200 hover:underline hover:text-blue-700"
               >
                 Terms of Service
               </a>
@@ -182,3 +261,5 @@ const Register = () => {
 };
 
 export default Register;
+
+

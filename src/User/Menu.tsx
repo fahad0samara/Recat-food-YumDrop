@@ -154,6 +154,8 @@ interface MenuItem {
   price: number;
   createdAt: string;
 }
+import {useDispatch} from "react-redux";
+import {addItem} from "../Redux/cart/cartSlice";
 import {useState, useEffect, Key, ReactNode} from "react";
 import {Link, useParams} from "react-router-dom";
 import axios from "axios";
@@ -247,6 +249,15 @@ function Menu() {
 
   const sortedMenuItems = sortMenuItems(filteredMenuItems, sortOption);
 
+  ///////////////////////////////////////////////////////////
+  const dispatch = useDispatch();
+
+  const handleAddToCart = menuItem => {
+    console.log("Selected menuItem:", menuItem);
+    if (menuItem && menuItem._id) {
+      dispatch(addItem(menuItem));
+    }
+  };
   return (
     <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
       <h1 className="text-3xl font-extrabold text-gray-900">Menu</h1>
@@ -339,7 +350,10 @@ function Menu() {
                     {menuItem.description}
                   </p>
                   <div className="flex items-center justify-between">
-                    <button className="hover:bg-green-200 hover:text-green-900 bg-green-900 text-white px-4 py-2 rounded-md transition-colors duration-300">
+                    <button
+                      onClick={() => handleAddToCart(menuItem)}
+                      className="hover:bg-green-200 hover:text-green-900 bg-green-900 text-white px-4 py-2 rounded-md transition-colors duration-300"
+                    >
                       Add to Cart
                     </button>
                     <span className="text-lg font-bold text-gray-900">

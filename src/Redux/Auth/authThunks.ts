@@ -5,12 +5,10 @@ import {clearUserData} from "./authSlice";
 export interface UserData {
   _id?: string;
   firstName: string;
-  lastName: string;
+
   email: string;
   password: string;
   role: string;
-
-
 }
 interface LoginResponse {
   user: any;
@@ -136,5 +134,3 @@ export const fetchUserData = createAsyncThunk<
     throw error;
   }
 });
-
-
