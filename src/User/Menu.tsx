@@ -154,12 +154,14 @@ interface MenuItem {
   price: number;
   createdAt: string;
 }
-import {useDispatch} from "react-redux";
-import {addItem} from "../Redux/cart/cartSlice";
+import {useDispatch, useSelector} from "react-redux";
+
 import {useState, useEffect, Key, ReactNode} from "react";
 import {Link, useParams} from "react-router-dom";
 import axios from "axios";
 import {LRUCache} from "lru-cache";
+import {addItemToCart} from "../Redux/cart/cartThunks";
+
 const cache = new LRUCache({
   max: 100, // maximum size of cache
 });
@@ -250,13 +252,21 @@ function Menu() {
   const sortedMenuItems = sortMenuItems(filteredMenuItems, sortOption);
 
   ///////////////////////////////////////////////////////////
+  // Component code
+  const {userId} = useSelector(state => state.auth);
+  console.log("userId from store:", userId);
+
   const dispatch = useDispatch();
 
-  const handleAddToCart = menuItem => {
-    console.log("Selected menuItem:", menuItem);
-    if (menuItem && menuItem._id) {
-      dispatch(addItem(menuItem));
-    }
+  const handleAddToCart = product => {
+    console.log("userId from store:", userId);
+    dispatch(
+      addItemToCart({
+        itemId: product._id,
+        quantity: 1,
+        userId, // Make sure to pass the correct userId
+      })
+    );
   };
   return (
     <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">

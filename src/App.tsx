@@ -10,21 +10,15 @@ import {fetchUserData} from "./Redux/Auth/authThunks";
 const App = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const {loading} = useSelector(state => state.auth);
 
   useEffect(() => {
-    dispatch(fetchUserData());
-  }, [dispatch]);
-
-  //  useEffect(() => {
-  //   const token = localStorage.getItem("token");
-  //   if (token) {
-  //     dispatch(fetchUserData(token));
-  //   } else {
-  //     navigate("/Login");
-  //   }
-
-  // }, [dispatch]);
+    const token = localStorage.getItem("token");
+    if (token) {
+      dispatch(fetchUserData(token));
+    } else {
+      alert("You are not logged in. Please log in to access the application.");
+    }
+  }, [dispatch, navigate]);
 
   return (
     <div>

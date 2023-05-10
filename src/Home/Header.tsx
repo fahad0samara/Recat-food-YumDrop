@@ -25,25 +25,25 @@ const Header = () => {
     }
   };
 
-  useEffect(() => {
-    const currentCount = cartItems.reduce((total, item) => {
-      if (typeof item.quantity === "number") {
-        return total + item.quantity;
-      } else {
-        console.error(`Invalid quantity for item ${item.id}: ${item.quantity}`);
-        return total;
-      }
-    }, 0);
+  // useEffect(() => {
+  //   const currentCount = cartItems.reduce((total, item) => {
+  //     if (typeof item.quantity === "number") {
+  //       return total + item.quantity;
+  //     } else {
+  //       console.error(`Invalid quantity for item ${item.id}: ${item.quantity}`);
+  //       return total;
+  //     }
+  //   }, 0);
 
-    if (currentCount !== cartItemsCount) {
-      setIsAnimating(true);
-      setTimeout(() => {
-        setIsAnimating(false);
-      }, 1000);
-    }
+  //   if (currentCount !== cartItemsCount) {
+  //     setIsAnimating(true);
+  //     setTimeout(() => {
+  //       setIsAnimating(false);
+  //     }, 1000);
+  //   }
 
-    setCartItemsCount(currentCount);
-  }, [cartItems, cartItemsCount]);
+  //   setCartItemsCount(currentCount);
+  // }, [cartItems, cartItemsCount]);
 
   return (
     <header
