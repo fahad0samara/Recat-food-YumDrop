@@ -307,37 +307,51 @@
 //     </div>
 //   );
 // };
-import {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import {useSelector, useDispatch} from "react-redux";
-import {fetchCart} from "../Redux/cart/cartThunks";
+import {fetchCart, removeItemFromCart} from "../Redux/cart/cartThunks";
 
 function Cart() {
   const {userId} = useSelector(state => state.auth);
   const dispatch = useDispatch();
 
+  const [cartItems, setCartItems] = useState([]);
+  const [itemImageUrls, setItemImageUrls] = useState([]);
+
   useEffect(() => {
+    console.log("userId in Cart component:", userId);
     dispatch(fetchCart(userId));
   }, [dispatch, userId]);
-
   const cart = useSelector(state => state.cart);
-  console.log("====================================");
-  console.log(cart.items.cart.items);
-  console.log("====================================");
+  useEffect(() => {
+    if (cart.items && cart.items.cart && cart.items.cart.items) {
+      setCartItems(cart.items.cart.items);
+      setItemImageUrls(
+        cart.items.cart.items.map(cartItem => cartItem.item.image)
+      );
+    }
+  }, [cart]);
+
+  const handleRemoveItem = itemId => {
+    if (userId) {
+      dispatch(removeItemFromCart({userId, itemId}));
+    }
+  };
+
 
   return (
     <div>
       <h2>Your Cart</h2>
-      {cart &&
-      cart.items &&
-      cart.items.cart &&
-      cart.items.cart.items &&
-      cart.items.cart.items.length > 0 ? (
-        cart.items.cart.items.map(cartItem => (
+      {cart && cartItems && cartItems.length > 0 ? (
+        cartItems.map((cartItem, index) => (
           <div key={cartItem._id}>
             <h3>{cartItem.item.name}</h3>
             <p>Quantity: {cartItem.quantity}</p>
             <p>Price: {cartItem.item.price}</p>
-            <img src={cartItem.item.image} alt={cartItem.item.name} />
+            <img src={itemImageUrls[index]} alt={cartItem.item.name} />
+            <button onClick={() => handleRemoveItem(cartItem._id)}>
+              Remove
+            </button>
           </div>
         ))
       ) : (
@@ -348,3 +362,89 @@ function Cart() {
 }
 
 export default Cart;
+
+
+// import {useEffect} from "react";
+// import {useSelector, useDispatch} from "react-redux";
+// import { addItemToCart, fetchCart, removeItemFromCart } from "../Redux/cart/cartThunks";
+
+
+// function Cart() {
+//   const {userId} = useSelector(state => state.auth);
+//   const cart = useSelector(state => state.cart.items);
+//   const dispatch = useDispatch();
+
+//   useEffect(() => {
+//     dispatch(fetchCart(userId));
+//   }, [dispatch, userId]);
+
+//   // const handleQuantityChange = (itemId, newQuantity) => {
+//   //   dispatch(updateItemQuantity({userId, itemId, quantity: newQuantity}));
+//   // };
+
+//   const handleRemoveItem = itemId => {
+//     dispatch(removeItemFromCart({userId, itemId}));
+//   };
+
+//   const handleAddToCart = (itemId, quantity) => {
+//     dispatch(addItemToCart({userId, itemId, quantity}));
+//   };
+
+//   return (
+//     <div>
+//       <h2>Your Cart</h2>
+//       {cart &&
+//       cart.items &&
+//       cart.items.cart &&
+//       cart.items.cart.items &&
+//       cart.items.cart.items.length > 0 ? (
+//         cart.items.cart.items.map(cartItem => (
+//           <div key={cartItem._id}>
+//             <h3>{cartItem.item.name}</h3>
+//             <p>Quantity: {cartItem.quantity}</p>
+//             <p>Price: {cartItem.item.price}</p>
+//             <img src={cartItem.item.image} alt={cartItem.item.name} />
+//             {/* <button
+//               onClick={() =>
+//                 handleQuantityChange(cartItem._id, cartItem.quantity - 1)
+//               }
+//             >
+//               -
+//             </button> */}
+//             {/* <input
+//               type="number"
+//               value={cartItem.quantity}
+//               onChange={e =>
+//                 handleQuantityChange(cartItem._id, parseInt(e.target.value, 10))
+//               }
+//             />
+//             <button
+//               onClick={() =>
+//                 handleQuantityChange(cartItem._id, cartItem.quantity + 1)
+//               }
+//             >
+//               +
+//             </button> */}
+//             <button onClick={() => handleRemoveItem(cartItem._id)}>
+//               Remove
+//             </button>
+//           </div>
+//         ))
+//       ) : (
+//         <p>No items in the cart.</p>
+//       )}
+//       <h3>Add Item to Cart</h3>
+//       {/* <input
+//         type="number"
+//         value={quantity}
+//         onChange={e => setQuantity(parseInt(e.target.value, 10))}
+//       />
+//       <button onClick={() => handleAddToCart(itemId, quantity)}>
+//         Add to Cart
+//       </button> */}
+//     </div>
+//   );
+// }
+
+// export default Cart;
+

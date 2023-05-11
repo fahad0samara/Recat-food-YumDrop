@@ -48,3 +48,29 @@ export const fetchCart = createAsyncThunk(
     }
   }
 );
+
+// // Remove item from cart
+export const removeItemFromCart = createAsyncThunk(
+  "cart/removeItemFromCart",
+  async ({userId, itemId}, {rejectWithValue}) => {
+    console.log(userId, "userId", itemId, "itemId");
+
+    try {
+      const response = await axios.delete(
+        `http://localhost:1337/cart/delete/${userId}/${itemId}`
+      );
+      console.log(userId);
+
+      return response.data;
+    } catch (error) {
+      console.log(error.response);
+
+      if (axios.isAxiosError(error)) {
+        const message =
+          error.response?.data?.message || "Failed to remove item from cart";
+        return rejectWithValue(message);
+      }
+      throw error;
+    }
+  }
+);
