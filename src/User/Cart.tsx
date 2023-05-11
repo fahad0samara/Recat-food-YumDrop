@@ -307,49 +307,274 @@
 //     </div>
 //   );
 // };
-import React, {useEffect, useState} from "react";
+// import {useEffect} from "react";
+// import {useSelector, useDispatch} from "react-redux";
+// import {fetchCart, removeItemFromCart} from "../Redux/cart/cartThunks";
+
+// function Cart() {
+//   const {userId} = useSelector(state => state.auth);
+//   const dispatch = useDispatch();
+//   const cart = useSelector(state => state.cart);
+//   console.log("====================================");
+//   console.log(cart);
+//   console.log("====================================");
+
+//   useEffect(() => {
+//     console.log("userId in Cart component:", userId); // Add this line to log the value of userId
+//     dispatch(fetchCart(userId));
+//   }, [dispatch, userId]);
+
+//   const handleRemoveItem = itemId => {
+//     if (userId) {
+//       console.log("====================================");
+//       console.log(userId, "userId");
+//       console.log("====================================");
+//       //Check that userId is defined and has a valid value
+//       dispatch(removeItemFromCart({userId, itemId: itemId}));
+//     }
+//   };
+
+//   return (
+//     <div>
+//       <h2>Your Cart</h2>
+//       {cart &&
+//       cart.items &&
+//       cart.items.cart &&
+//       cart.items.cart.items &&
+//       cart.items.cart.items.length > 0 ? (
+//         cart.items.cart.items.map(cartItem => (
+//           <div key={cartItem._id}>
+//             <h3>{cartItem.item.name}</h3>
+//             <p>Quantity: {cartItem.quantity}</p>
+//             <p>Price: {cartItem.item.price}</p>
+//             <img src={cartItem.item.image} alt={cartItem.item.name} />
+//             <button onClick={() => handleRemoveItem(cartItem.item._id)}>
+//               Remove
+//             </button>
+//           </div>
+//         ))
+//       ) : (
+//         <p>No items in the cart.</p>
+//       )}
+//     </div>
+//   );
+// }
+
+// export default Cart;
+
+// import React, {useEffect} from "react";
+// import {useSelector, useDispatch} from "react-redux";
+// import {fetchCart, removeItemFromCart} from "../Redux/cart/cartThunks";
+
+// function Cart() {
+//   const {userId} = useSelector(state => state.auth);
+//   const dispatch = useDispatch();
+//   const cart = useSelector(state => state.cart);
+//   console.log('====================================');
+//   console.log(cart);
+//   console.log('====================================');
+
+//   useEffect(() => {
+//     dispatch(fetchCart(userId));
+//   }, [dispatch, userId]);
+
+//   const handleRemoveItem = itemId => {
+//     if (userId) {
+//       dispatch(removeItemFromCart({userId, itemId}));
+//     }
+//   };
+
+//   return (
+//     <div>
+//       <h2>Your Cart</h2>
+//       {cart && cart.items && cart.items.length > 0 ? (
+//         cart.items.map(cartItem => (
+//           <div key={cartItem._id}>
+//             <h3>{cartItem.item.name}</h3>
+//             <p>Quantity: {cartItem.quantity}</p>
+//             <p>Price: {cartItem.item.price}</p>
+//             <img src={cartItem.item.image} alt={cartItem.item.name} />
+//             <button onClick={() => handleRemoveItem(cartItem._id)}>
+//               Remove
+//             </button>
+//           </div>
+//         ))
+//       ) : (
+//         <p>No items in the cart.</p>
+//       )}
+//     </div>
+//   );
+// }
+
+// export default Cart;
+// import {FaMinus, FaPlus} from "react-icons/fa";
+// import React, {useEffect} from "react";
+// import {useSelector, useDispatch} from "react-redux";
+// import {
+//   fetchCart,
+//   removeItemFromCart,
+//   clearCart,
+//   updateCartItemQuantity,
+// } from "../Redux/cart/cartThunks";
+
+// function Cart() {
+//   const {userId} = useSelector(state => state.auth);
+//   const dispatch = useDispatch();
+//   const cart = useSelector(state => state.cart);
+
+//  useEffect(() => {
+//    if (userId  ) {
+//      dispatch(fetchCart(userId));
+//    }
+//  }, [dispatch, userId, ]);
+
+// const handleRemoveItem = async itemId => {
+//   if (userId) {
+//     await dispatch(removeItemFromCart({ userId, itemId }));
+//     await dispatch(fetchCart(userId));
+//   }
+//   };
+  
+//   const handleClearCart = async () => {
+//     if (userId) {
+//       await dispatch(clearCart(userId));
+   
+//     }
+//   };
+
+//   const handleUpdateQuantity = async (itemId, quantity) => {
+  
+//   if (userId) {
+//     await dispatch(updateCartItemQuantity({ userId, itemId, quantity }));
+//     dispatch(fetchCart(userId));
+    
+//   }
+// };
+
+
+
+//   if (cart.loading) {
+//     return <p>Loading cart...</p>;
+//   }
+
+ 
+
+//   return (
+//     <div className="grid grid-cols-4 gap-7">
+//       {cart &&
+//       cart.items &&
+//       cart.items.cart &&
+//       cart.items.cart.items &&
+//       cart.items.cart.items.length > 0 ? (
+//         cart.items.cart.items.map(cartItem => (
+//           <div key={cartItem._id}>
+//             <h3>{cartItem.item.name}</h3>
+//             <p>Quantity: {cartItem.quantity}</p>
+//             <p>Price: {cartItem.item.price}</p>
+//             <img src={cartItem.item.image} alt={cartItem.item.name} />
+//             <div>
+//          <span onClick={() => handleUpdateQuantity(cartItem.item._id, cartItem.quantity - 1)}>
+//   <FaMinus />
+// </span>
+// <span>{cartItem.quantity}</span>
+// <span onClick={() => handleUpdateQuantity(cartItem.item._id, cartItem.quantity + 1)}>
+//   <FaPlus />
+// </span>
+//             </div>
+//             <button onClick={() => handleRemoveItem(cartItem.item._id)}>
+//               Remove
+//             </button>
+//           </div>
+//         ))
+//       ) : (
+//         <p>No items in the cart.</p>
+//       )}
+
+//       <button onClick={handleClearCart}>Clear Cart</button>
+//     </div>
+//   );
+// }
+
+// export default Cart;
+import {FaMinus, FaPlus} from "react-icons/fa";
+import React, {useEffect} from "react";
 import {useSelector, useDispatch} from "react-redux";
-import {fetchCart, removeItemFromCart} from "../Redux/cart/cartThunks";
+import {
+  fetchCart,
+  removeItemFromCart,
+  clearCart,
+  updateCartItemQuantity,
+} from "../Redux/cart/cartThunks";
 
 function Cart() {
   const {userId} = useSelector(state => state.auth);
   const dispatch = useDispatch();
-
-  const [cartItems, setCartItems] = useState([]);
-  const [itemImageUrls, setItemImageUrls] = useState([]);
-
-  useEffect(() => {
-    console.log("userId in Cart component:", userId);
-    dispatch(fetchCart(userId));
-  }, [dispatch, userId]);
   const cart = useSelector(state => state.cart);
-  useEffect(() => {
-    if (cart.items && cart.items.cart && cart.items.cart.items) {
-      setCartItems(cart.items.cart.items);
-      setItemImageUrls(
-        cart.items.cart.items.map(cartItem => cartItem.item.image)
-      );
-    }
-  }, [cart]);
 
-  const handleRemoveItem = itemId => {
+  useEffect(() => {
     if (userId) {
-      dispatch(removeItemFromCart({userId, itemId}));
+      dispatch(fetchCart(userId));
+    }
+  }, [dispatch, userId]);
+
+  const handleRemoveItem = async itemId => {
+    if (userId) {
+      await dispatch(removeItemFromCart({userId, itemId}));
+      await dispatch(fetchCart(userId));
     }
   };
 
+  const handleClearCart = async () => {
+    if (userId) {
+      await dispatch(clearCart(userId));
+    }
+  };
+
+  const handleUpdateQuantity = async (itemId, quantity) => {
+    if (userId) {
+      await dispatch(updateCartItemQuantity({ userId, itemId, quantity }));
+      
+   
+
+    }
+  };
+
+  if (cart.loading) {
+    return <p>Loading cart...</p>;
+  }
 
   return (
-    <div>
-      <h2>Your Cart</h2>
-      {cart && cartItems && cartItems.length > 0 ? (
-        cartItems.map((cartItem, index) => (
+    <div className="grid grid-cols-4 gap-7">
+      {cart &&
+      cart.items &&
+      cart.items.cart &&
+      cart.items.cart.items &&
+      cart.items.cart.items.length > 0 ? (
+        cart.items.cart.items.map(cartItem => (
           <div key={cartItem._id}>
             <h3>{cartItem.item.name}</h3>
-            <p>Quantity: {cartItem.quantity}</p>
+            <p>
+              Quantity:{" "}
+              <span
+                onClick={() =>
+                  cartItem.quantity > 1 &&
+                  handleUpdateQuantity(cartItem.item._id, cartItem.quantity - 1)
+                }
+              >
+                <FaMinus />
+              </span>
+              <span>{cartItem.quantity}</span>
+              <span
+                onClick={() =>
+                  handleUpdateQuantity(cartItem.item._id, cartItem.quantity + 1)
+                }
+              >
+                <FaPlus />
+              </span>
+            </p>
             <p>Price: {cartItem.item.price}</p>
-            <img src={itemImageUrls[index]} alt={cartItem.item.name} />
-            <button onClick={() => handleRemoveItem(cartItem._id)}>
+            <img src={cartItem.item.image} alt={cartItem.item.name} />
+            <button onClick={() => handleRemoveItem(cartItem.item._id)}>
               Remove
             </button>
           </div>
@@ -357,11 +582,14 @@ function Cart() {
       ) : (
         <p>No items in the cart.</p>
       )}
+
+      <button onClick={handleClearCart}>Clear Cart</button>
     </div>
   );
 }
 
 export default Cart;
+
 
 
 // import {useEffect} from "react";
