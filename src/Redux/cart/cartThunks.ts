@@ -95,13 +95,12 @@ export const clearCart = createAsyncThunk(
 
 export const updateCartItemQuantity = createAsyncThunk(
   "cart/updateCartItemQuantity",
-  async ({userId, itemId, quantity}, {rejectWithValue, dispatch}) => {
+  async ({userId, itemId, quantity}, {rejectWithValue}) => {
     try {
       const response = await axios.put(
         `http://localhost:1337/cart/updateQuantity/${userId}/${itemId}`,
         {quantity}
       );
-      dispatch(fetchCart());
       return response.data;
     } catch (error) {
       console.log(error.response);

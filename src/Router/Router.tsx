@@ -9,6 +9,7 @@ import Register from "../Auth/Register";
 import Login from "../Auth/Login";
 import Dashboard from "../Home/Dashboard";
 import Cart from "../User/Cart";
+import Checkout from "../User/checkout";
 
 const Router = (): JSX.Element => {
   const {error, loading, isAuthenticated, isAdmin} = useSelector(
@@ -24,6 +25,7 @@ const Router = (): JSX.Element => {
         <Route path="/Register" element={<Register />} />
 
         <Route path="/Login" element={<Login />} />
+        <Route path="/Checkout" element={<Checkout />} />
 
         <Route path="/cart" element={<Cart />} />
         {isAuthenticated && (
