@@ -10,6 +10,7 @@ import Login from "../Auth/Login";
 import Dashboard from "../Home/Dashboard";
 import Cart from "../User/Cart";
 import Checkout from "../User/checkout";
+import Success from "../User/Success";
 
 const Router = (): JSX.Element => {
   const {error, loading, isAuthenticated, isAdmin} = useSelector(
@@ -25,12 +26,14 @@ const Router = (): JSX.Element => {
         <Route path="/Register" element={<Register />} />
 
         <Route path="/Login" element={<Login />} />
-        <Route path="/Checkout" element={<Checkout />} />
 
-        <Route path="/cart" element={<Cart />} />
         {isAuthenticated && (
           <>
+            <Route path="/Checkout" element={<Checkout />} />
+
+            <Route path="/cart" element={<Cart />} />
             <Route path="/menu" element={<Menu />} />
+            <Route path="/success" element={<Success />} />
             <Route path="/menu/:categoryId" element={<Menu />} />
           </>
         )}

@@ -109,6 +109,7 @@ export const fetchUserData = createAsyncThunk<
   const token = localStorage.getItem("token");
 
   if (!token) {
+    thunkAPI.dispatch(logout()); // Logout the user if token is not available
     return thunkAPI.rejectWithValue({
       message: "User is not authenticated",
       error: "",

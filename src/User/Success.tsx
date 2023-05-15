@@ -299,7 +299,7 @@ const steps = [
   },
 ];
 
-function SuccessPage() {
+function Success() {
   const navigate = useNavigate();
   const location = useLocation();
   const {paymentInfo, totalPrice} = location.state;
@@ -467,7 +467,7 @@ function SuccessPage() {
   );
 }
 
-export default SuccessPage;
+export default Success;
 
 // function SuccessPage() {
 //   const navigate = useNavigate();

@@ -13,8 +13,9 @@ interface AuthState {
 
 const initialState: AuthState = {
   user: null,
-  token: null,
-  isAuthenticated: false,
+  token: localStorage.getItem("token") || null,
+
+  isAuthenticated: localStorage.getItem("token") !== null,
   loading: false,
   error: null,
   isAdmin: false,
@@ -46,7 +47,6 @@ const authSlice = createSlice({
         state.isAuthenticated = true;
         state.isAdmin = action.payload.isAdmin;
         state.userId = action.payload.user._id;
-        console.log("userId from server:", action.payload.user._id);
       })
       .addCase(login.rejected, (state, action) => {
         state.loading = false;
@@ -75,9 +75,15 @@ const authSlice = createSlice({
         state.user = action.payload.user;
         state.isAuthenticated = true;
         state.isAdmin = action.payload.isAdmin;
+        state.userId = action.payload.user._id;
       })
       .addCase(fetchUserData.rejected, (state, action) => {
         state.loading = false;
+        state.user = null;
+        state.token = null;
+        state.isAuthenticated = false;
+        state.isAdmin = false;
+        localStorage.removeItem("token");
         state.error = action.payload as unknown as string | null;
       })
       //logout
@@ -89,7 +95,6 @@ const authSlice = createSlice({
         state.loading = false;
         state.user = null;
         state.token = null;
-
         state.isAuthenticated = false;
         state.isAdmin = false;
         localStorage.removeItem("token");
