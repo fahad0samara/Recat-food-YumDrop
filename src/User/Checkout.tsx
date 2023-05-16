@@ -1,92 +1,3 @@
-// import {useState} from "react";
-// import axios from "axios";
-
-// function Checkout() {
-//   const [paymentInfo, setPaymentInfo] = useState({});
-
-//   const handlePaymentInfoChange = event => {
-//     setPaymentInfo({
-//       ...paymentInfo,
-//       [event.target.name]: event.target.value,
-//     });
-//   };
-
-//   const handlePlaceOrderClick = async () => {
-//     try {
-//       // Send the payment information to the server
-//       const response = await axios.post(
-//         "http://localhost:1337/cart/checkout",
-//         paymentInfo
-//       );
-
-//       if (response.status === 200) {
-//         // Payment succeeded, show a success message
-//         console.log("====================================");
-//         console.log();
-//         console.log("====================================");
-//       } else {
-//         // Payment failed, show an error message
-//         console.log("====================================");
-//         console.log(response);
-//       }
-//     } catch (error) {
-//       // Something went wrong, show an error message
-//       console.log("====================================");
-//       console.log(error);
-//       console.log("====================================");
-//     }
-//   };
-
-//   return (
-//     <div>
-//       <h1>Checkout</h1>
-//       <form>
-//         <label>
-//           Name on card:
-//           <input
-//             type="text"
-//             name="nameOnCard"
-//             value={paymentInfo.nameOnCard || ""}
-//             onChange={handlePaymentInfoChange}
-//           />
-//         </label>
-//         <label>
-//           Card number:
-//           <input
-//             type="text"
-//             name="cardNumber"
-//             value={paymentInfo.cardNumber || ""}
-//             onChange={handlePaymentInfoChange}
-//           />
-//         </label>
-//         <label>
-//           Expiration date:
-//           <input
-//             type="text"
-//             name="expirationDate"
-//             value={paymentInfo.expirationDate || ""}
-//             onChange={handlePaymentInfoChange}
-//           />
-//         </label>
-//         <label>
-//           CVV:
-//           <input
-//             type="text"
-//             name="cvv"
-//             value={paymentInfo.cvv || ""}
-//             onChange={handlePaymentInfoChange}
-//           />
-//         </label>
-//         <button type="button" onClick={handlePlaceOrderClick}>
-//           Place order
-//         </button>
-//       </form>
-//     </div>
-//   );
-// }
-
-// export default Checkout;
-
 import React, {useState} from "react";
 import {
   CardElement,
@@ -102,13 +13,39 @@ const stripePromise = loadStripe(
 );
 
 import {useNavigate} from "react-router-dom";
+import {useDispatch, useSelector} from "react-redux";
+import {RootState} from "../Redux/store";
+import {clearCart} from "../Redux/cart/cartThunks";
+interface PaymentInfo {
+  name: string;
+  email: string;
+  address: string;
+  city: string;
+  state: string;
+  zipCode: string;
+}
+
+interface Errors {
+  name: string;
+  email: string;
+  address: string;
+  city: string;
+  state: string;
+  zipCode: string;
+  card: string;
+}
 function CheckoutForm() {
+  const dispatch = useDispatch();
+  const cart = useSelector((state: RootState) => state.cart);
+
+  const {userId} = useSelector((state: RootState) => state.auth);
+
   const navigate = useNavigate();
   const location = useLocation();
   const totalPrice = location.state.totalPrice;
   const stripe = useStripe();
   const elements = useElements();
-  const [paymentInfo, setPaymentInfo] = useState({
+  const [paymentInfo, setPaymentInfo] = useState<PaymentInfo>({
     name: "",
     email: "",
     address: "",
@@ -118,7 +55,7 @@ function CheckoutForm() {
   });
   const [step, setStep] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
-  const [errors, setErrors] = useState({
+  const [errors, setErrors] = useState<Errors>({
     name: "",
     email: "",
     address: "",
@@ -128,7 +65,9 @@ function CheckoutForm() {
     card: "",
   });
 
-  const handlePaymentInfoChange = event => {
+  const handlePaymentInfoChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     setPaymentInfo({
       ...paymentInfo,
       [event.target.name]: event.target.value,
@@ -138,7 +77,7 @@ function CheckoutForm() {
   const validateStep1 = () => {
     const {name, email} = paymentInfo;
     let isValid = true;
-    const errorMessages = {};
+    const errorMessages: Errors = {};
 
     if (!name.trim()) {
       errorMessages.name = "Name is required";
@@ -160,7 +99,7 @@ function CheckoutForm() {
   const validateStep2 = () => {
     const {address, city, state, zipCode} = paymentInfo;
     let isValid = true;
-    const errorMessages = {};
+    const errorMessages: Errors = {};
 
     if (!address.trim()) {
       errorMessages.address = "Address is required";
@@ -188,7 +127,6 @@ function CheckoutForm() {
     setErrors(errorMessages);
     return isValid;
   };
-
   const validateStep3 = () => {
     const cardElement = elements.getElement(CardElement);
     let isValid = true;
@@ -271,7 +209,8 @@ function CheckoutForm() {
       }
 
       if (response && response.status === 200) {
-        // Redirect to success page
+        // if the checkout is successful, clear the cart from both the client-side store and the server
+        await dispatch(clearCart(userId));
 
         // Redirect to the success page with the paymentInfo
         navigate("/success", {
@@ -545,12 +484,16 @@ function CheckoutForm() {
   );
 }
 
-function Checkout({totalPrice}) {
+interface CheckoutProps {
+  totalPrice: number;
+}
+
+const Checkout: React.FC<CheckoutProps> = ({totalPrice}) => {
   return (
     <Elements stripe={stripePromise}>
       <CheckoutForm totalPrice={totalPrice} />
     </Elements>
   );
-}
+};
 
 export default Checkout;

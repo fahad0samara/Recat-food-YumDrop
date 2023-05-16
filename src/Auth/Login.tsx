@@ -13,6 +13,8 @@ import {
 import {RiUserSettingsFill, RiGitRepositoryPrivateFill} from "react-icons/ri";
 import {AiOutlineWarning} from "react-icons/ai";
 import {login} from "../Redux/Auth/authThunks";
+import {setItemCount} from "../Redux/cart/cartSlice";
+
 interface data {
   email: string;
   password: string;
@@ -39,7 +41,13 @@ const LoginForm = () => {
     e.preventDefault();
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     //@ts-ignore
+
     await dispatch(login(formData) as unknown);
+    // Restore the item count from local storage
+    const storedItemCount = localStorage.getItem("itemCount");
+    if (storedItemCount !== null) {
+      dispatch(setItemCount(parseInt(storedItemCount)));
+    }
   };
 
   useEffect(() => {

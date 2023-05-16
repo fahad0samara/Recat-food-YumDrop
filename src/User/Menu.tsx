@@ -254,12 +254,11 @@ function Menu() {
   ///////////////////////////////////////////////////////////
   // Component code
   const {userId} = useSelector(state => state.auth);
-  console.log("userId from store:", userId);
+
 
   const dispatch = useDispatch();
 
   const handleAddToCart = product => {
-    console.log("userId from store:", userId);
     dispatch(
       addItemToCart({
         itemId: product._id,
@@ -268,6 +267,7 @@ function Menu() {
       })
     );
   };
+  
   return (
     <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
       <h1 className="text-3xl font-extrabold text-gray-900">Menu</h1>

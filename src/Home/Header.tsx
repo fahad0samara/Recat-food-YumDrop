@@ -8,11 +8,13 @@ import {RootState} from "../Redux/store";
 
 const Header = () => {
   const {isAuthenticated, isAdmin} = useSelector((state: any) => state.auth);
-  const cartItems = useSelector((state: RootState) => state.cart.items);
 
-  const [cartItemsCount, setCartItemsCount] = useState(0);
-  const [isAnimating, setIsAnimating] = useState(false);
+  const [itemCount, setItemCount] = useState(0);
+  const cart = useSelector((state: RootState) => state.cart);
 
+  useEffect(() => {
+    setItemCount(cart.itemCount);
+  }, [cart]);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -24,26 +26,6 @@ const Header = () => {
       console.log(error);
     }
   };
-
-  // useEffect(() => {
-  //   const currentCount = cartItems.reduce((total, item) => {
-  //     if (typeof item.quantity === "number") {
-  //       return total + item.quantity;
-  //     } else {
-  //       console.error(`Invalid quantity for item ${item.id}: ${item.quantity}`);
-  //       return total;
-  //     }
-  //   }, 0);
-
-  //   if (currentCount !== cartItemsCount) {
-  //     setIsAnimating(true);
-  //     setTimeout(() => {
-  //       setIsAnimating(false);
-  //     }, 1000);
-  //   }
-
-  //   setCartItemsCount(currentCount);
-  // }, [cartItems, cartItemsCount]);
 
   return (
     <header
@@ -85,18 +67,9 @@ const Header = () => {
             </li>
           )}
           <li className={"md:mr-12"}>
-            <Link to="/cart" className="relative flex items-center">
-              <FiShoppingCart className="text-2xl" />
-              {cartItemsCount > 0 && (
-                <span className="absolute top-0 right-0 inline-block bg-red-500 text-white rounded-full px-1 text-xs">
-                  {cartItemsCount}
-                </span>
-              )}
-              {isAnimating && (
-                <span className="absolute top-0 right-0 inline-block bg-green-500 text-white rounded-full px-1 text-xs animate-ping">
-                  +
-                </span>
-              )}
+            <Link to="/cart">
+              Cart
+              {itemCount > 0 && <span className="badge">{itemCount}</span>}
             </Link>
           </li>
           {!isAuthenticated && (

@@ -2,6 +2,8 @@ import {Link} from "react-router-dom";
 import SVGComponent from "../SVg/SVGComponent";
 import SVGComponent0 from "../SVg/SVGComponent0";
 import Swiper from "../Swiper";
+import {useSelector} from "react-redux";
+import {useEffect, useState} from "react";
 
 const Hero = () => {
   return (
