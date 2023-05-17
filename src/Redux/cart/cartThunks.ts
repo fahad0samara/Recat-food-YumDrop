@@ -1,7 +1,6 @@
 import {createAsyncThunk} from "@reduxjs/toolkit";
 import axios from "axios";
 import {setItemCount} from "./cartSlice";
-
 export const addItemToCart = createAsyncThunk(
   "cart/addItem",
   async (
@@ -19,11 +18,9 @@ export const addItemToCart = createAsyncThunk(
         quantity,
       });
       const newCount = response.data.cart.items;
-      dispatch(setItemCount(newCount));
-      return response.data.cart.items; // Return the updated cart items
+      dispatch(setItemCount(newCount.length)); // update itemCount
+      return response.data.cart.items;
     } catch (error) {
-      console.log(error);
-
       if (axios.isAxiosError(error)) {
         const message =
           (error.response &&

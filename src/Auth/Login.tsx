@@ -13,7 +13,7 @@ import {
 import {RiUserSettingsFill, RiGitRepositoryPrivateFill} from "react-icons/ri";
 import {AiOutlineWarning} from "react-icons/ai";
 import {login} from "../Redux/Auth/authThunks";
-import {setItemCount} from "../Redux/cart/cartSlice";
+
 
 interface data {
   email: string;
@@ -43,11 +43,6 @@ const LoginForm = () => {
     //@ts-ignore
 
     await dispatch(login(formData) as unknown);
-    // Restore the item count from local storage
-    const storedItemCount = localStorage.getItem("itemCount");
-    if (storedItemCount !== null) {
-      dispatch(setItemCount(parseInt(storedItemCount)));
-    }
   };
 
   useEffect(() => {

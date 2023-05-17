@@ -1,6 +1,7 @@
 import {createAsyncThunk} from "@reduxjs/toolkit";
 import axios from "axios";
 import {clearUserData} from "./authSlice";
+import {resetCart, setItemCount} from "../cart/cartSlice";
 
 export interface UserData {
   _id?: string;
@@ -90,6 +91,7 @@ export const logout = createAsyncThunk<void, void, {rejectValue: string}>(
         },
       });
       dispatch(clearUserData());
+      dispatch(resetCart());
       return;
     } catch (error) {
       if (axios.isAxiosError(error)) {

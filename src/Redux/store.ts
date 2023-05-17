@@ -1,25 +1,38 @@
-import {configureStore, ThunkAction, Action} from "@reduxjs/toolkit";
+import {
+  configureStore,
+  ThunkAction,
+  Action,
+  combineReducers,
+} from "@reduxjs/toolkit";
+import {persistStore, persistReducer} from "redux-persist";
+import storage from "redux-persist/lib/storage";
 import authReducer from "./Auth/authSlice";
 import cartReducer from "./cart/cartSlice";
 
-export const store = configureStore({
-  reducer: {
+const persistConfig = {
+  key: "root",
+  storage,
+};
+
+const persistedReducer = persistReducer(
+  persistConfig,
+  combineReducers({
     auth: authReducer,
     cart: cartReducer,
-  },
+  })
+);
+
+export const store = configureStore({
+  reducer: persistedReducer,
 });
 
-// Define the root state type
-export type RootState = ReturnType<typeof store.getState>;
+export const persistor = persistStore(store);
 
-// Define the AppThunk and AppDispatch types
+export type RootState = ReturnType<typeof store.getState>;
 export type AppThunk<ReturnType = void> = ThunkAction<
   ReturnType,
   RootState,
   unknown,
   Action<string>
 >;
-
 export type AppDispatch = typeof store.dispatch;
-
-export default store;
