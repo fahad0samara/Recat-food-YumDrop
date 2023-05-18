@@ -253,20 +253,19 @@ function Menu() {
 
   ///////////////////////////////////////////////////////////
   // Component code
-  const {userId} = useSelector(state => state.auth);
+const {userId} = useSelector(state => state.auth);
 
-
-  const dispatch = useDispatch();
-
-  const handleAddToCart = product => {
-    dispatch(
-      addItemToCart({
-        itemId: product._id,
-        quantity: 1,
-        userId, // Make sure to pass the correct userId
-      })
-    );
-  };
+const dispatch = useDispatch();
+const handleAddToCart = menuItem => {
+  dispatch(
+    addItemToCart({
+      itemId: menuItem._id,
+      quantity: 1,
+      userId, // Make sure to pass the correct userId
+    })
+  );
+  console.log("====================================", "menuItem: ", menuItem);
+};
   
   return (
     <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">

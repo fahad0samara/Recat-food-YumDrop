@@ -1,22 +1,32 @@
 import {useState, useEffect} from "react";
 import {FiShoppingCart} from "react-icons/fi";
-import {Link} from "react-router-dom";
+import {Link, useLocation} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {logout} from "../Redux/Auth/authThunks";
 import {useNavigate} from "react-router-dom";
 import {RootState} from "../Redux/store";
+import {fetchCart} from "../Redux/cart/cartThunks";
 
 const Header = () => {
-  const {isAuthenticated, isAdmin} = useSelector((state: any) => state.auth);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const {isAuthenticated, isAdmin} = useSelector(
+    (state: RootState) => state.auth
+  );
 
-  const [itemCount, setItemCount] = useState(0);
+  const {userId} = useSelector((state: RootState) => state.auth);
+
+  // Access the cart data from the Redux store
   const cart = useSelector((state: RootState) => state.cart);
 
   useEffect(() => {
-    setItemCount(cart.itemCount);
-  }, [cart]);
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
+    dispatch(fetchCart(userId));
+  }, [dispatch, userId]);
+
+  // Access the itemCount value from the cart data
+  const itemCount = cart.items?.length || 0;
+
+  console.log(itemCount, isAuthenticated);
 
   const handleLogout = async () => {
     try {
@@ -26,7 +36,6 @@ const Header = () => {
       console.log(error);
     }
   };
-
   return (
     <header
       className={
