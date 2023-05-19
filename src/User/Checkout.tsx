@@ -14,7 +14,7 @@ const stripePromise = loadStripe(
 
 import {useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
-import {RootState} from "../Redux/store";
+import {AppDispatch, RootState} from "../Redux/store";
 import {clearCart} from "../Redux/cart/cartThunks";
 interface PaymentInfo {
   name: string;
@@ -35,7 +35,7 @@ interface Errors {
   card: string;
 }
 function CheckoutForm() {
-  const dispatch = useDispatch();
+  const dispatch: AppDispatch = useDispatch();
   const cart = useSelector((state: RootState) => state.cart);
 
   const {userId} = useSelector((state: RootState) => state.auth);

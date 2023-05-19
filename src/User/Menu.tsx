@@ -161,6 +161,7 @@ import {Link, useParams} from "react-router-dom";
 import axios from "axios";
 import {LRUCache} from "lru-cache";
 import {addItemToCart} from "../Redux/cart/cartThunks";
+import {AppDispatch, RootState} from "../Redux/store";
 
 const cache = new LRUCache({
   max: 100, // maximum size of cache
@@ -253,22 +254,25 @@ function Menu() {
 
   ///////////////////////////////////////////////////////////
   // Component code
-const {userId} = useSelector(state => state.auth);
+  const {userId} = useSelector((state: RootState) => state.auth);
 
-const dispatch = useDispatch();
-const handleAddToCart = menuItem => {
-  dispatch(
-    addItemToCart({
-      itemId: menuItem._id,
-      quantity: 1,
-      userId, // Make sure to pass the correct userId
-    })
-  );
-  console.log("====================================", "menuItem: ", menuItem);
-};
-  
+  const dispatch: AppDispatch = useDispatch();
+  const handleAddToCart = (menuItem: MenuItem) => {
+    dispatch(
+      addItemToCart({
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        //@ts-ignore
+        itemId: menuItem._id,
+        quantity: 1,
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        //@ts-ignore
+        userId, // Make sure to pass the correct userId
+      })
+    );
+  };
+
   return (
-    <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className={"max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8"}>
       <h1 className="text-3xl font-extrabold text-gray-900">Menu</h1>
       <div className="my-4">
         <input
@@ -285,10 +289,10 @@ const handleAddToCart = menuItem => {
             <Link
               to={`/menu`}
               className={`
-                col-span-7 px-2 py-1 text-center font-bold text-md hover:bg-green-200 hover:text-green-900
-                ${!categoryId ? "bg-green-200 " : "bg-white "}
-                flex items-center justify-center rounded-md transition-colors duration-300
-              `}
+                  col-span-7 px-2 py-1 text-center font-bold text-md hover:bg-green-200 hover:text-green-900
+                  ${!categoryId ? "bg-green-200 " : "bg-white "}
+                  flex items-center justify-center rounded-md transition-colors duration-300
+                `}
             >
               All
             </Link>
@@ -298,23 +302,33 @@ const handleAddToCart = menuItem => {
               <Link
                 to={`/menu/${category._id}`}
                 className={`
-                  col-span-7 px-2 py-1 text-center font-bold text-md hover:bg-green-200 hover:text-green-900
-                  ${category._id === categoryId ? "bg-green-200 " : "bg-white "}
-                  flex items-center justify-center rounded-md transition-colors duration-300
-                `}
+                    col-span-7 px-2 py-1 text-center font-bold text-md hover:bg-green-200 hover:text-green-900
+                    ${
+                      category._id === categoryId
+                        ? "bg-green-200 "
+                        : "bg-white "
+                    }
+                    flex items-center justify-center rounded-md transition-colors duration-300
+                  `}
               >
                 {category.name}
               </Link>
             </li>
           ))}
           <li key="sort">
-            <div className="col-span-5 sm:col-span-4 md:col-span-3 lg:col-span-2 flex items-center">
+            <div
+              className={
+                "col-span-5 sm:col-span-4 md:col-span-3 lg:col-span-2 flex items-center"
+              }
+            >
               <label htmlFor="sortOption" className="mr-2 font-bold">
                 Sort by:
               </label>
               <select
                 id="sortOption"
-                className="w-full px-3 py-2 border rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-green-500 bg-white text-gray-900 placeholder-gray-500"
+                className={
+                  "w-full px-3 py-2 border rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-green-500 bg-white text-gray-900 placeholder-gray-500"
+                }
                 value={sortOption}
                 onChange={handleSortOptionChange}
               >
@@ -329,7 +343,11 @@ const handleAddToCart = menuItem => {
       {loading ? (
         <p>Loading...</p>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+        <div
+          className={
+            "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6"
+          }
+        >
           {sortedMenuItems.length === 0 ? (
             <p>No items found.</p>
           ) : (

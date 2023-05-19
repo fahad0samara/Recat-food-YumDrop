@@ -1,4 +1,4 @@
-import {createSlice, PayloadAction} from "@reduxjs/toolkit";
+import {createSlice} from "@reduxjs/toolkit";
 import {
   addItemToCart,
   fetchCart,
@@ -8,6 +8,7 @@ import {
 } from "./cartThunks";
 
 interface CartItem {
+  [x: string]: any;
   _id: string;
   quantity: number;
   // add any other properties of the cart item here
@@ -49,7 +50,7 @@ const cartSlice = createSlice({
       })
       .addCase(addItemToCart.fulfilled, (state, action) => {
         state.loading = false;
-        console.log(action.payload);
+
         state.items = action.payload.cart.items || []; // Set default value as an empty array if undefined
         state.error = null;
 
@@ -69,7 +70,7 @@ const cartSlice = createSlice({
       })
       .addCase(fetchCart.fulfilled, (state, action) => {
         state.loading = false;
-        console.log(action.payload);
+
         state.items = action.payload.cart.items || []; // Set default value as an empty array if undefined
         state.error = null;
 
@@ -122,10 +123,5 @@ const cartSlice = createSlice({
 });
 
 export const {resetCart} = cartSlice.actions;
-
-
-
-
-
 
 export default cartSlice.reducer;
