@@ -1,52 +1,64 @@
 import {Routes, Route, Navigate} from "react-router-dom";
 import {useSelector} from "react-redux";
-import Hero from "../Home/Hero";
-import AddMenuItem from "../Menu/AddMenuItem";
-import Menu from "../User/Menu";
-import NotFound from "../Home/NotFound";
+import React, {lazy, Suspense} from "react";
 import Header from "../Home/Header";
-import Register from "../Auth/Register";
-import Login from "../Auth/Login";
-import Dashboard from "../Home/Dashboard";
-import Cart from "../User/Cart";
-import Checkout from "../User/checkout";
-import Success from "../User/Success";
+import NotFound from "../Home/NotFound";
+
+const Hero = lazy(() => import("../Home/Hero"));
+const AddMenuItem = lazy(() => import("../Menu/AddMenuItem"));
+const Menu = lazy(() => import("../User/Menu"));
+const Register = lazy(() => import("../Auth/Register"));
+const Login = lazy(() => import("../Auth/Login"));
+const Cart = lazy(() => import("../User/Cart"));
+const Success = lazy(() => import("../User/Success"));
+const Checkout = lazy(() => import("../User/Checkout"));
+
+interface RootState {
+  auth: {
+    error: any;
+    loading: boolean;
+    isAuthenticated: boolean;
+    isAdmin: boolean;
+  };
+}
 
 const Router = (): JSX.Element => {
   const {error, loading, isAuthenticated, isAdmin} = useSelector(
-    (state: any) => state.auth
+    (state: RootState) => state.auth
   );
 
   return (
     <>
       <Header />
 
-      <Routes>
-        <Route path="/" element={<Hero />} />
-        <Route path="/Register" element={<Register />} />
+      <Suspense fallback={<div>Loading...</div>}>
+        <Routes>
+          <Route path="/" element={<Hero />} />
+          <Route path="/Register" element={<Register />} />
+          <Route path="/Login" element={<Login />} />
 
-        <Route path="/Login" element={<Login />} />
+          {isAuthenticated && (
+            <>
+              <Route path="/Checkout" element={<Checkout totalPrice={0} />} />
+              <Route path="/cart" element={<Cart />} />
+              <Route path="/menu" element={<Menu />} />
+              <Route path="/success" element={<Success />} />
+              <Route path="/menu/:categoryId" element={<Menu />} />
+            </>
+          )}
 
-        {isAuthenticated && (
-          <>
-            <Route path="/Checkout" element={<Checkout />} />
+          {isAuthenticated && isAdmin && (
+            <Route path="/AddMenuItem" element={<AddMenuItem />} />
+          )}
 
-            <Route path="/cart" element={<Cart />} />
-            <Route path="/menu" element={<Menu />} />
-            <Route path="/success" element={<Success />} />
-            <Route path="/menu/:categoryId" element={<Menu />} />
-          </>
-        )}
-
-        {isAuthenticated && isAdmin && (
-          <Route path="/AddMenuItem" element={<AddMenuItem />} />
-        )}
-
-        <Route
-          path="*"
-          element={isAuthenticated ? <NotFound /> : <Navigate to="/Login" />}
-        />
-      </Routes>
+          <Route
+            path="*"
+            element={
+              isAuthenticated ? <NotFound /> : <Navigate to="/Login" replace />
+            }
+          />
+        </Routes>
+      </Suspense>
     </>
   );
 };

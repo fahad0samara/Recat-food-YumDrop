@@ -275,7 +275,7 @@ const AddMenuItem = () => {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center">
+    <div className="flex flex-col items-center justify-center mt-28">
       <form
         onSubmit={handleSubmit}
         encType="multipart/form-data"
