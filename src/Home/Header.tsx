@@ -4,43 +4,70 @@ import {Link, useLocation} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {logout} from "../Redux/Auth/authThunks";
 import {useNavigate} from "react-router-dom";
-import {RootState} from "../Redux/store";
+import {AppDispatch, RootState} from "../Redux/store";
 import {fetchCart} from "../Redux/cart/cartThunks";
+import {resetCart} from "../Redux/cart/cartSlice";
 
 const Header = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const dispatch: AppDispatch = useDispatch();
   const {isAuthenticated, isAdmin} = useSelector(
     (state: RootState) => state.auth
   );
 
   const {userId} = useSelector((state: RootState) => state.auth);
+  console.log("🚀 ~ file: Header.tsx ~ line 23 ~ Header ~ userId", userId);
 
-  // Access the cart data from the Redux store
   const cart = useSelector((state: RootState) => state.cart);
+  console.log(
+    "🚀 ~ file: Header.tsx ~ line 25 ~ Header ~ cart",
+    cart.itemCount
+  );
 
   useEffect(() => {
-    dispatch(fetchCart(userId));
+    if (userId) {
+      dispatch(fetchCart(userId));
+    }
   }, [dispatch, userId]);
 
-  // Access the itemCount value from the cart data
-  const itemCount = cart.items?.length || 0;
+  const itemCount = cart.itemCount;
 
-  console.log(itemCount, isAuthenticated);
+  console.log(itemCount);
 
   const handleLogout = async () => {
     try {
       await dispatch(logout());
+      await dispatch(resetCart());
       navigate("/Login");
     } catch (error) {
       console.log(error);
     }
   };
+
+  // State to track the scroll position
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  // Function to handle scroll event
+  const handleScroll = () => {
+    if (window.scrollY > 0) {
+      setIsScrolled(true);
+    } else {
+      setIsScrolled(false);
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
   return (
     <header
-      className={
-        "relative flex max-w-screen-xl flex-col overflow-hidden px-4 py-4 text-slate-700 md:mx-auto md:flex-row md:items-center"
-      }
+      className={`fixed top-0 left-0 right-0 z-10 flex max-w-screen-xl flex-col overflow-hidden px-4 py-4 text-slate-700 md:mx-auto md:flex-row md:items-center transition-all ${
+        isScrolled ? "bg-white shadow-lg" : "bg-gray-50"
+      }`}
     >
       <Link
         to="/"
@@ -51,47 +78,70 @@ const Header = () => {
       </Link>
       <input type="checkbox" className="peer hidden" id="navbar-open" />
       <label
-        className={"absolute top-5 right-7 cursor-pointer md:hidden"}
+        className="absolute top-5 right-7 cursor-pointer md:hidden"
         htmlFor="navbar-open"
       >
         <span className="sr-only">Toggle Navigation</span>
-        fff
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+        >
+          <path fill="currentColor" d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z" />
+        </svg>
       </label>
       <nav
         aria-label="Header Navigation"
-        className={
-          "flex max-h-0 w-full flex-col items-center justify-between overflow-hidden transition-all peer-checked:mt-8 peer-checked:max-h-56 md:ml-24 md:max-h-full md:flex-row md:items-start"
-        }
+        className="flex max-h-0 w-full flex-col items-center justify-between overflow-hidden transition-all peer-checked:mt-8 peer-checked:max-h-56 md:ml-24 md:max-h-full md:flex-row md:items-start"
       >
         <ul className="flex flex-col items-center space-y-2 md:ml-auto md:flex-row md:space-y-0">
           <li className="font-bold md:mr-12">
-            <Link to="/">Home</Link>
+            <Link to="/" className="text-green-500 hover:text-green-700">
+              Home
+            </Link>
           </li>
           <li className="md:mr-12">
-            <Link to="/menu">Menu</Link>
+            <Link to="/menu" className="text-green-500 hover:text-green-700">
+              Menu
+            </Link>
           </li>
           {isAuthenticated && isAdmin && (
             <li className="md:mr-12">
-              <Link to="/AddMenuItem">AddMenuItem</Link>
+              <Link
+                to="/AddMenuItem"
+                className="text-green-500 hover:text-green-700"
+              >
+                AddMenuItem
+              </Link>
             </li>
           )}
-          <li className={"md:mr-12"}>
-            <Link to="/cart">
-              Cart
-              {itemCount > 0 && <span className="badge">{itemCount}</span>}
+          <li className="md:mr-12 flex items-start">
+            <Link to="/cart" className="text-green-500 hover:text-green-700">
+              <span className="ml-1">
+                <FiShoppingCart className="inline-block text-2xl md:text-2xl" />
+              </span>
+              {isAuthenticated && itemCount > 0 && (
+                <span className="ml-1 text-green-500 bg-black rounded-full">
+                  {itemCount}
+                </span>
+              )}
             </Link>
           </li>
           {!isAuthenticated && (
             <>
               <li className="md:mr-12">
-                <Link to="/Register">Register</Link>
+                <Link
+                  to="/Register"
+                  className="text-green-500 hover:text-green-700"
+                >
+                  Register
+                </Link>
               </li>
               <li className="md:mr-12">
                 <Link
                   to="/Login"
-                  className={
-                    "rounded-full border-2 border-green-500 px-6 py-1 text-green-600 transition-colors hover:bg-green-500 hover:text-white"
-                  }
+                  className="rounded-full border-2 border-green-500 px-6 py-1 text-green-600 transition-colors hover:bg-green-500 hover:text-white"
                 >
                   Login
                 </Link>
@@ -99,7 +149,7 @@ const Header = () => {
             </>
           )}
           {isAuthenticated && (
-            <li className={"md:mr-12"}>
+            <li className="md:mr-12">
               <button
                 onClick={handleLogout}
                 className="rounded-full border-2 border-red-500 px-6 py-1 text-red-600 transition-colors hover:bg-red-500 hover:text-white"

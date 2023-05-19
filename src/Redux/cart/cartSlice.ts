@@ -33,50 +33,12 @@ const cartSlice = createSlice({
   name: "cart",
   initialState,
   reducers: {
-    addItem: (state, action: PayloadAction<CartItem>) => {
-      const itemIndex = state.items.findIndex(
-        item => item._id === action.payload._id
-      );
-      if (itemIndex !== -1) {
-        // Item already exists in cart, update its quantity
-        state.items[itemIndex].quantity += action.payload.quantity;
-      } else {
-        // Item does not exist in cart, add it
-        state.items.push(action.payload);
-      }
-    },
-    removeItem: (state, action: PayloadAction<CartItem>) => {
-      const itemIndex = state.items.findIndex(
-        item => item._id === action.payload._id
-      );
-      if (itemIndex !== -1) {
-        // Item exists in cart, remove it
-        state.items.splice(itemIndex, 1);
-      }
-    },
-    updateQuantity: (
-      state,
-      action: PayloadAction<{_id: string; quantity: number}>
-    ) => {
-      const itemIndex = state.items.findIndex(
-        item => item._id === action.payload._id
-      );
-      if (itemIndex !== -1) {
-        // Item exists in cart, update its quantity
-        state.items[itemIndex].quantity = action.payload.quantity;
-      }
-    },
-    setUserId: (state, action: PayloadAction<string>) => {
-      state.userId = action.payload;
-    },
-    resetCart: state => {
+    resetCart(state) {
       state.items = [];
+      state.loading = false;
+      state.error = null;
+      state.userId = null;
       state.itemCount = 0;
-      localStorage.setItem("itemCount", "0");
-    },
-    setItemCount: (state, action: PayloadAction<number>) => {
-      state.itemCount = action.payload;
-      localStorage.setItem("itemCount", String(action.payload));
     },
   },
   extraReducers: builder => {
@@ -87,9 +49,15 @@ const cartSlice = createSlice({
       })
       .addCase(addItemToCart.fulfilled, (state, action) => {
         state.loading = false;
+        console.log(action.payload);
+        state.items = action.payload.cart.items || []; // Set default value as an empty array if undefined
         state.error = null;
-        state.items = action.payload;
-        state.itemCount = state.items.length;
+
+        // Calculate and store the itemCount
+        state.itemCount = state.items.reduce(
+          (count, item) => count + item.quantity,
+          0
+        );
       })
       .addCase(addItemToCart.rejected, (state, action) => {
         state.loading = false;
@@ -101,8 +69,15 @@ const cartSlice = createSlice({
       })
       .addCase(fetchCart.fulfilled, (state, action) => {
         state.loading = false;
-        state.items = action.payload;
-        state.itemCount = state.items.length;
+        console.log(action.payload);
+        state.items = action.payload.cart.items || []; // Set default value as an empty array if undefined
+        state.error = null;
+
+        // Calculate and store the itemCount
+        state.itemCount = state.items.reduce(
+          (count, item) => count + item.quantity,
+          0
+        );
       })
       .addCase(fetchCart.rejected, (state, action) => {
         state.loading = false;
@@ -146,13 +121,11 @@ const cartSlice = createSlice({
   },
 });
 
-export const {
-  addItem,
-  removeItem,
-  updateQuantity,
-  setUserId,
-  resetCart,
-  setItemCount,
-} = cartSlice.actions;
+export const {resetCart} = cartSlice.actions;
+
+
+
+
+
 
 export default cartSlice.reducer;

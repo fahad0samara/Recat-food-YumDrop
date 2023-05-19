@@ -1,23 +1,20 @@
 import React, {useEffect} from "react";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {useSelector, useDispatch} from "react-redux";
-import {RootState} from "../Redux/store";
-
+import {AppDispatch, RootState} from "../Redux/store";
+import {fetchCart} from "../Redux/cart/cartThunks";
 import {FaMinus, FaPlus, FaShoppingCart} from "react-icons/fa";
-import {useNavigate} from "react-router-dom";
 import {
   clearCart,
-  fetchCart,
   removeItemFromCart,
   updateCartItemQuantity,
 } from "../Redux/cart/cartThunks";
 
-const Cart = () => {
+const Cart: React.FC = () => {
   const {userId} = useSelector((state: RootState) => state.auth);
-  const dispatch = useDispatch();
+  const dispatch: AppDispatch = useDispatch();
   const cart = useSelector((state: RootState) => state.cart);
   const navigate = useNavigate();
-  console.log(cart);
 
   useEffect(() => {
     if (userId) {
@@ -27,8 +24,8 @@ const Cart = () => {
 
   const handleRemoveItem = async (itemId: string) => {
     if (userId) {
-      await dispatch(removeItemFromCart({userId, itemId}));
-      await dispatch(fetchCart(userId));
+      await dispatch(removeItemFromCart({userId, itemId})); // Explicitly type dispatch as 'any'
+      await dispatch(fetchCart(userId)).unwrap();
     }
   };
 
@@ -45,8 +42,10 @@ const Cart = () => {
   ) => {
     e.preventDefault();
     if (userId) {
-      await dispatch(updateCartItemQuantity({userId, itemId, quantity}));
-      await dispatch(fetchCart(userId));
+      await dispatch(
+        updateCartItemQuantity({userId, itemId, quantity})
+      ).unwrap();
+      await dispatch(fetchCart(userId)).unwrap();
     }
   };
 
@@ -60,28 +59,27 @@ const Cart = () => {
     );
   }
 
-  const totalPrice: number =
-    cart.items?.cart?.items?.reduce(
-      (acc: number, cartItem: {item: {price: number}; quantity: number}) =>
-        acc + cartItem.item.price * cartItem.quantity,
-      0
-    ) ?? 0;
+  const totalPrice =
+    cart.items.length > 0
+      ? cart.items
+          .reduce(
+            (acc, cartItem) => acc + cartItem.item.price * cartItem.quantity,
+            0
+          )
+          .toFixed(2)
+      : 0;
 
   return (
     <div className="bg-gray-100 min-h-screen">
       <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
         <h1 className="text-3xl font-bold text-gray-800 mb-8">Your Cart</h1>
 
-        <div className="flex flex-col md:flex-row md:-mx-6">
-          <div className="md:w-2/3 md:mx-6">
-            {cart &&
-            cart.items &&
-            cart.items.cart &&
-            cart.items.cart.items &&
-            cart.items.cart.items.length > 0 ? (
+        {cart.items.length > 0 ? (
+          <div className="flex flex-col md:flex-row md:-mx-6">
+            <div className="md:w-2/3 md:mx-6">
               <div className="bg-white shadow overflow-hidden sm:rounded-lg">
                 <ul>
-                  {cart.items.cart.items.map((cartItem: any) => (
+                  {cart.items.map((cartItem: any) => (
                     <li key={cartItem._id}>
                       <div className="flex px-4 py-5 sm:px-6">
                         <div className="flex-shrink-0">
@@ -157,39 +155,52 @@ const Cart = () => {
                   </button>
                 </div>
               </div>
-            ) : (
-              <p>Your cart is empty.</p>
-            )}
-          </div>
-          <div className="md:w-1/3 md:mx-6 mt-8 md:mt-0">
-            <div className="bg-white shadow overflow-hidden sm:rounded-lg">
-              <div className="px-4 py-5 sm:p-6">
-                <h3 className="text-lg font-medium text-gray-900 mb-4">
-                  Order Summary
-                </h3>
-                <div className="flex justify-between mb-2">
-                  <span>Subtotal:</span>
-                  <span>${totalPrice}</span>
+            </div>
+            <div className="md:w-1/3 md:mx-6 mt-8 md:mt-0">
+              <div className="bg-white shadow overflow-hidden sm:rounded-lg">
+                <div className="px-4 py-5 sm:p-6">
+                  <h3 className="text-lg font-medium text-gray-900 mb-4">
+                    Order Summary
+                  </h3>
+                  <div className="flex justify-between mb-2">
+                    <span>Subtotal:</span>
+                    <span>${totalPrice}</span>
+                  </div>
+                  <div className="border-b border-gray-200 mb-2"></div>
+                  <div className="flex justify-between">
+                    <span>Total:</span>
+                    <span>${totalPrice}</span>
+                  </div>
                 </div>
-                <div className="border-b border-gray-200 mb-2"></div>
-                <div className="flex justify-between">
-                  <span>Total:</span>
-                  <span>${totalPrice}</span>
-                </div>
+                <button
+                  onClick={() => navigate("/checkout", {state: {totalPrice}})}
+                  className="w-full inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                >
+                  <FaShoppingCart className="mr-2" />
+                  Checkout
+                </button>
+                <p className="text-xs text-gray-500 mt-2 text-center">
+                  Taxes and shipping calculated at checkout
+                </p>
               </div>
-              <button
-                onClick={() => navigate("/checkout", {state: {totalPrice}})}
-                className="w-full inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-              >
-                <FaShoppingCart className="mr-2" />
-                Checkout
-              </button>
-              <p className="text-xs text-gray-500 mt-2 text-center">
-                Taxes and shipping calculated at checkout
-              </p>
             </div>
           </div>
-        </div>
+        ) : (
+          <div className="flex flex-col items-center mt-16">
+            <h2 className="text-lg font-bold text-gray-800 mb-4">
+              Your cart is empty.
+            </h2>
+            <p className="text-gray-500 mb-8">
+              Start adding items to your cart to see them here.
+            </p>
+            <Link
+              to="/"
+              className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-md"
+            >
+              Continue Shopping
+            </Link>
+          </div>
+        )}
       </div>
     </div>
   );

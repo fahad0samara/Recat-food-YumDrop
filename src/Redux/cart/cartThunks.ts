@@ -1,14 +1,16 @@
 import {createAsyncThunk} from "@reduxjs/toolkit";
-import axios from "axios";
-import {setItemCount} from "./cartSlice";
+import axios, {AxiosError} from "axios";
+
+interface AddItemToCartArgs {
+  itemId: string;
+  quantity: number;
+  userId: string;
+}
+
 export const addItemToCart = createAsyncThunk(
   "cart/addItem",
   async (
-    {
-      itemId,
-      quantity,
-      userId,
-    }: {itemId: string; quantity: number; userId: string},
+    {itemId, quantity, userId}: AddItemToCartArgs,
     {dispatch, rejectWithValue}
   ) => {
     try {
@@ -17,10 +19,9 @@ export const addItemToCart = createAsyncThunk(
         itemId,
         quantity,
       });
-      const newCount = response.data.cart.items;
-      dispatch(setItemCount(newCount.length)); // update itemCount
-      return response.data.cart.items;
-    } catch (error) {
+      // update itemCount
+      return response.data;
+    } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
         const message =
           (error.response &&
@@ -43,7 +44,7 @@ export const fetchCart = createAsyncThunk(
       );
 
       return response.data;
-    } catch (error) {
+    } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
         const message =
           (error.response &&
@@ -57,19 +58,21 @@ export const fetchCart = createAsyncThunk(
   }
 );
 
+interface RemoveItemFromCartArgs {
+  userId: string;
+  itemId: string;
+}
+
 export const removeItemFromCart = createAsyncThunk(
   "cart/removeItemFromCart",
-  async (
-    {userId, itemId}: {userId: string; itemId: string},
-    {rejectWithValue}
-  ) => {
+  async ({userId, itemId}: RemoveItemFromCartArgs, {rejectWithValue}) => {
     try {
       const response = await axios.delete(
         `http://localhost:1337/cart/delete/${userId}/${itemId}`
       );
 
       return response.data;
-    } catch (error) {
+    } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
         const message =
           (error.response &&
@@ -91,7 +94,7 @@ export const clearCart = createAsyncThunk(
         `http://localhost:1337/cart/clear/${userId}`
       );
       return response.data;
-    } catch (error) {
+    } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
         const message =
           (error.response &&
@@ -105,14 +108,16 @@ export const clearCart = createAsyncThunk(
   }
 );
 
+interface UpdateCartItemQuantityArgs {
+  userId: string;
+  itemId: string;
+  quantity: number;
+}
+
 export const updateCartItemQuantity = createAsyncThunk(
   "cart/updateCartItemQuantity",
   async (
-    {
-      userId,
-      itemId,
-      quantity,
-    }: {userId: string; itemId: string; quantity: number},
+    {userId, itemId, quantity}: UpdateCartItemQuantityArgs,
     {rejectWithValue}
   ) => {
     try {
@@ -123,7 +128,7 @@ export const updateCartItemQuantity = createAsyncThunk(
         }
       );
       return response.data;
-    } catch (error) {
+    } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
         const message =
           (error.response &&
