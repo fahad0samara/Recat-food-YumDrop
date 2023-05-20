@@ -145,10 +145,10 @@ interface Category {
 }
 
 interface MenuItem {
-  _id: Key | null | undefined;
+  _id: string;
   isNew: JSX.Element;
   image: string | undefined;
-  description: ReactNode;
+  description: string;
   id: number;
   name: string;
   price: number;
@@ -422,19 +422,17 @@ function Menu() {
   const [sortOption, setSortOption] = useState<"name" | "price" | "new">(
     "name"
   );
-
+  const {isAuthenticated} = useSelector((state: RootState) => state.auth);
   async function fetchData() {
     try {
       let categoriesData: Category[];
       if (cache.has("categories")) {
         categoriesData = cache.get("categories") as Category[];
-        console.log("Fetching categories from cache");
       } else {
         const response = await axios.get<Category[]>(
           "http://localhost:1337/api/categories"
         );
         categoriesData = response.data;
-        cache.set("categories", categoriesData);
       }
       setCategories(categoriesData);
 
@@ -442,9 +440,6 @@ function Menu() {
       const menuCacheKey = `menuItems-${categoryId || ""}`;
       if (cache.has(menuCacheKey)) {
         menuItemsData = cache.get(menuCacheKey) as MenuItem[];
-        console.log(
-          `Fetching menu items for category ${categoryId} from cache`
-        );
       } else {
         if (categoryId) {
           const response = await axios.get<MenuItem[]>(
@@ -458,7 +453,6 @@ function Menu() {
           menuItemsData = response.data;
         }
         cache.set(menuCacheKey, menuItemsData, (5 * 60 * 1000) as never);
-        console.log(`Fetching menu items for category ${categoryId} from API`);
       }
       setMenuItems(menuItemsData);
 
@@ -501,44 +495,61 @@ function Menu() {
 
   const dispatch: AppDispatch = useDispatch();
   const handleAddToCart = (menuItem: MenuItem) => {
-    dispatch(
-      addItemToCart({
-        itemId: menuItem._id,
-        quantity: 1,
-        userId,
-      })
-    );
-
-    toast.success(
-      "Item added to cart",
-
-      {
-        position: "top-center",
-        autoClose: 2000,
+    if (isAuthenticated) {
+      dispatch(
+        addItemToCart({
+          itemId: menuItem._id,
+          quantity: 1,
+          userId,
+        })
+      );
+      toast.success("😋😋 food add to the cart", {
+        position: "bottom-center",
+        autoClose: 1990,
         hideProgressBar: true,
         closeOnClick: true,
         pauseOnHover: true,
         draggable: false,
         progress: undefined,
         theme: "light",
-      }
-    );
+      });
+    } else {
+      toast.info("Please login or register to add items to the cart.", {
+        position: "bottom-center",
+        autoClose: 2990,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: false,
+        progress: 1,
+        theme: "light",
+      });
+    }
   };
 
   return (
     <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
       <div className="my-4 mt-28">
         <h1 className="text-4xl font-bold text-green-700 mb-2">Our Menu</h1>
-        <p className="text-lg text-gray-700 mb-4">
+        <p
+          className="
+          text-lg text-gray-700 mb-2
+          italic
+        
+          
+        "
+        >
           Welcome to our restaurant! We offer a variety of delicious dishes that
-          will satisfy your taste buds. Our menu features fresh ingredients and
-          bold flavors that will make your dining experience unforgettable.
+          are sure to satisfy your appetite.
         </p>
       </div>
       <div className={"grid md:grid-cols-4 gap-8 grid-cols-1"}>
         <div className="col-span-1">
           <div className="my-4">
-            <p>Use the search bar to find specific menu items</p>
+            <p>
+              Use the search bar to find specific
+              <span className="font-bold text-green-500 ml-1">Food</span>.
+            </p>
             <input
               type="text"
               placeholder="Search menu items..."
@@ -652,4 +663,3 @@ function Menu() {
 }
 
 export default Menu;
-

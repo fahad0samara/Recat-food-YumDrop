@@ -14,8 +14,8 @@ const stripePromise = loadStripe(
 
 import {useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
-import {AppDispatch, RootState} from "../Redux/store";
-import {clearCart} from "../Redux/cart/cartThunks";
+import {AppDispatch, RootState} from "../../Redux/store";
+import {clearCart} from "../../Redux/cart/cartThunks";
 interface PaymentInfo {
   name: string;
   email: string;

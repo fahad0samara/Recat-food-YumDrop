@@ -1,14 +1,14 @@
 import React, {useEffect} from "react";
 import {Link, useNavigate} from "react-router-dom";
 import {useSelector, useDispatch} from "react-redux";
-import {AppDispatch, RootState} from "../Redux/store";
-import {fetchCart} from "../Redux/cart/cartThunks";
+import {AppDispatch, RootState} from "../../Redux/store";
+import {fetchCart} from "../../Redux/cart/cartThunks";
 import {FaMinus, FaPlus, FaShoppingCart} from "react-icons/fa";
 import {
   clearCart,
   removeItemFromCart,
   updateCartItemQuantity,
-} from "../Redux/cart/cartThunks";
+} from "../../Redux/cart/cartThunks";
 
 const Cart: React.FC = () => {
   const {userId} = useSelector((state: RootState) => state.auth);

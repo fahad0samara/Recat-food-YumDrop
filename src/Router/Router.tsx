@@ -9,9 +9,9 @@ const AddMenuItem = lazy(() => import("../Menu/AddMenuItem"));
 const Menu = lazy(() => import("../User/Menu"));
 const Register = lazy(() => import("../Auth/Register"));
 const Login = lazy(() => import("../Auth/Login"));
-const Cart = lazy(() => import("../User/Cart"));
-const Success = lazy(() => import("../User/Success"));
-const Checkout = lazy(() => import("../User/Checkout"));
+const Cart = lazy(() => import("../User/Cart/Cart"));
+const Success = lazy(() => import("../User/Cart/Success"));
+const Checkout = lazy(() => import("../User/Cart/Checkout"));
 
 interface RootState {
   auth: {
@@ -42,12 +42,12 @@ const Router = (): JSX.Element => {
           <Route path="/" element={<Hero />} />
           <Route path="/Register" element={<Register />} />
           <Route path="/Login" element={<Login />} />
-
+          <Route path="/menu" element={<Menu />} />
           {isAuthenticated && (
             <>
               <Route path="/Checkout" element={<Checkout totalPrice={0} />} />
               <Route path="/cart" element={<Cart />} />
-              <Route path="/menu" element={<Menu />} />
+
               <Route path="/success" element={<Success />} />
               <Route path="/menu/:categoryId" element={<Menu />} />
             </>
