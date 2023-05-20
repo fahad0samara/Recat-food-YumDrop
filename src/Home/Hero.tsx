@@ -4,6 +4,8 @@ import SVGComponent0 from "../SVg/SVGComponent0";
 import Swiper from "../Swiper";
 import {useSelector} from "react-redux";
 import {useEffect, useState} from "react";
+import Dashboard from "./About";
+import About from "./About";
 
 const Hero = () => {
   return (
@@ -65,6 +67,8 @@ const Hero = () => {
           </div>
         </div>
       </div>
+
+      <About />
     </>
   );
 };
