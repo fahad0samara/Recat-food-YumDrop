@@ -406,6 +406,8 @@ import {LRUCache} from "lru-cache";
 import {addItemToCart} from "../Redux/cart/cartThunks";
 import {useSelector, useDispatch} from "react-redux";
 import {AppDispatch, RootState} from "../Redux/store";
+import {toast} from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const cache = new LRUCache({
   max: 100, // maximum size of cache
@@ -433,7 +435,6 @@ function Menu() {
         );
         categoriesData = response.data;
         cache.set("categories", categoriesData);
-        console.log("Fetching categories from API");
       }
       setCategories(categoriesData);
 
@@ -507,121 +508,145 @@ function Menu() {
         userId,
       })
     );
+
+    toast.success(
+      "Item added to cart",
+
+      {
+        position: "top-center",
+        autoClose: 2000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: false,
+        progress: undefined,
+        theme: "light",
+      }
+    );
   };
 
   return (
-    <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 mt-28">
-      <h1 className="text-3xl font-extrabold text-gray-900">Menu</h1>
-      <div className="my-4">
-        <p className="text-lg text-gray-700 mb-2">
-          Welcome to our menu! Explore our delicious selection of dishes.
-        </p>
-        <p className="text-sm text-gray-500">
-          Use the search bar to find specific menu items and sort them by name,
-          price, or newest. Enjoy!
+    <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
+      <div className="my-4 mt-28">
+        <h1 className="text-4xl font-bold text-green-700 mb-2">Our Menu</h1>
+        <p className="text-lg text-gray-700 mb-4">
+          Welcome to our restaurant! We offer a variety of delicious dishes that
+          will satisfy your taste buds. Our menu features fresh ingredients and
+          bold flavors that will make your dining experience unforgettable.
         </p>
       </div>
-      <div className="my-4 flex items-center">
-        <input
-          type="text"
-          placeholder="Search menu items..."
-          className="w-full px-3 py-2 border rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-green-500 bg-white text-gray-900 placeholder-gray-500"
-          value={searchQuery}
-          onChange={e => setSearchQuery(e.target.value)}
-        />
-        <label htmlFor="sortOption" className="ml-4 font-bold">
-          Sort by:
-        </label>
-        <select
-          id="sortOption"
-          className="px-3 py-2 border rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-green-500 bg-white text-gray-900"
-          value={sortOption}
-          onChange={handleSortOptionChange}
-        >
-          <option value="name">Name</option>
-          <option value="price">Price</option>
-          <option value="new">Newest</option>
-        </select>
-      </div>
-      <div className="border-b border-green-200">
-        <ul className="grid grid-cols-12 gap-2 mx-3 bg-white rounded-lg shadow-md">
-          <li key="all">
-            <Link
-              to={`/menu`}
-              className={`
-              col-span-7 px-2 py-1 text-center font-bold text-md hover:bg-green-200 hover:text-green-900
-              ${!categoryId ? "bg-green-200 " : "bg-white "}
-              flex items-center justify-center rounded-md transition-colors duration-300
-            `}
+      <div className={"grid md:grid-cols-4 gap-8 grid-cols-1"}>
+        <div className="col-span-1">
+          <div className="my-4">
+            <p>Use the search bar to find specific menu items</p>
+            <input
+              type="text"
+              placeholder="Search menu items..."
+              className="w-full px-3 py-2 border rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-green-500 bg-white text-gray-900 placeholder-gray-500"
+              value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
+            />
+          </div>
+          <div className="my-4 space-x-4">
+            <label htmlFor="sortOption" className="ml-2">
+              Sort by:
+            </label>
+            <select
+              id="sortOption"
+              className="px-3 py-2 border rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-green-500 bg-white text-gray-900"
+              value={sortOption}
+              onChange={handleSortOptionChange}
             >
-              <span className="flex items-center">
-                <span className="mr-1">All</span>
-                <span className="text-xs bg-green-500 text-white rounded-full px-2 py-1 font-semibold">
-                  NEW!
-                </span>
-              </span>
-            </Link>
-          </li>
-          {categories.map(category => (
-            <li key={category._id}>
-              <Link
-                to={`/menu/${category._id}`}
-                className={`
-                col-span-7 px-2 py-1 text-center font-bold text-md hover:bg-green-200 hover:text-green-900
-                ${category._id === categoryId ? "bg-green-200 " : "bg-white "}
-                flex items-center justify-center rounded-md transition-colors duration-300
-              `}
-              >
-                {category.name}
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </div>
-      {loading ? (
-        <p>Loading...</p>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
-          {sortedMenuItems.length === 0 ? (
-            <p>No items found.</p>
+              <option value="name">Name</option>
+              <option value="price">Price</option>
+              <option value="new">Newest</option>
+            </select>
+          </div>
+        </div>
+        <div className="col-span-3">
+          {loading ? (
+            <p>Loading...</p>
           ) : (
-            sortedMenuItems.map(menuItem => (
-              <div
-                key={menuItem._id}
-                className="bg-white overflow-hidden shadow rounded-lg relative"
-              >
-                {menuItem.isNew && (
-                  <span className="absolute top-0 left-0 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-tr-md rounded-bl-md">
-                    New
-                  </span>
-                )}
-                <img
-                  className="w-full h-48 object-cover"
-                  src={menuItem.image}
-                  alt={menuItem.name}
-                />
-                <div className="p-4">
-                  <h2 className="text-lg font-bold text-gray-900">
-                    {menuItem.name}
-                  </h2>
-                  <p className="text-sm text-gray-500 mb-2">
-                    {menuItem.description}
-                  </p>
-                  <p className="text-md font-bold text-green-700">
-                    ${menuItem.price.toFixed(2)}
-                  </p>
-                  <button
-                    className="mt-4 px-4 py-2 bg-green-500 hover:bg-green-600 text-white font-semibold rounded-md transition-colors duration-300"
-                    onClick={() => handleAddToCart(menuItem)}
-                  >
-                    Add to Cart
-                  </button>
+            <>
+              <div className="border-b border-green-200">
+                <div className="overflow-x-auto max-h-32 sm:max-h-48 scrollbar-thin scrollbar-thumb-green-300 scrollbar-track-green-100">
+                  <ul className="flex sm:flex-wrap bg-white py-2 px-1 space-x-2 sm:space-x-4">
+                    <li key="all" className="w-full sm:w-auto">
+                      <Link
+                        to="/menu"
+                        className={`
+              block px-1 py-1 text-center font-semibold italic text-sm sm:text-lg hover:bg-green-200 hover:text-green-900
+              ${!categoryId ? "bg-green-200 " : "bg-white "}
+              rounded-md transition-colors duration-300
+            `}
+                      >
+                        <span className="flex items-center">
+                          <span className="mr-1">All</span>
+                        </span>
+                      </Link>
+                    </li>
+                    {categories.map(category => (
+                      <li key={category._id} className="w-full sm:w-auto">
+                        <Link
+                          to={`/menu/${category._id}`}
+                          className={`
+                block px-1 py-1 text-center font-semibold italic text-sm sm:text-lg hover:bg-green-200 hover:text-green-900
+                ${category._id === categoryId ? "bg-green-200 " : "bg-white "}
+                rounded-md transition-colors duration-300
+              `}
+                        >
+                          {category.name}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               </div>
-            ))
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+                {sortedMenuItems.length === 0 ? (
+                  <p className="text-center">No items found.</p>
+                ) : (
+                  sortedMenuItems.map(menuItem => (
+                    <div
+                      key={menuItem._id}
+                      className="bg-white rounded-lg shadow-md p-4 relative"
+                    >
+                      {menuItem.isNew && (
+                        <span className="absolute top-0 left-0 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-tr-md rounded-bl-md">
+                          New
+                        </span>
+                      )}
+                      <img
+                        className="w-full h-48 object-cover rounded-t-lg"
+                        src={menuItem.image}
+                        alt={menuItem.name}
+                      />
+                      <div className="mt-2">
+                        <h2 className="text-xl font-bold text-gray-900 mb-2">
+                          {menuItem.name}
+                        </h2>
+                        <p className="text-sm text-gray-700 mb-2">
+                          {menuItem.description}
+                        </p>
+                        <p className="text-lg font-bold text-green-700 mb-2">
+                          ${menuItem.price.toFixed(2)}
+                        </p>
+                        <button
+                          className="px-4 py-2 bg-green-500 hover:bg-green-600 text-white font-semibold rounded-md transition-colors duration-300"
+                          onClick={() => handleAddToCart(menuItem)}
+                        >
+                          Add to Cart
+                        </button>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+            </>
           )}
         </div>
-      )}
+      </div>
     </div>
   );
 }

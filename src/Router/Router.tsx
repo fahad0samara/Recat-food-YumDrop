@@ -1,8 +1,8 @@
-import {Routes, Route, Navigate} from "react-router-dom";
+import {Routes, Route, Navigate, useLocation} from "react-router-dom";
 import {useSelector} from "react-redux";
 import React, {lazy, Suspense} from "react";
-import Header from "../Home/Header";
 import NotFound from "../Home/NotFound";
+import Header from "../Home/Header";
 
 const Hero = lazy(() => import("../Home/Hero"));
 const AddMenuItem = lazy(() => import("../Menu/AddMenuItem"));
@@ -27,9 +27,15 @@ const Router = (): JSX.Element => {
     (state: RootState) => state.auth
   );
 
+  const location = useLocation();
+
+  const shouldShowHeader = !(
+    location.pathname === "/Login" || location.pathname === "/Register"
+  );
+
   return (
     <>
-      <Header />
+      {shouldShowHeader && <Header />}
 
       <Suspense fallback={<div>Loading...</div>}>
         <Routes>

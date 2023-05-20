@@ -8,6 +8,7 @@ import {RiUserFill} from "react-icons/ri";
 
 import {MdAlternateEmail} from "react-icons/md";
 import {AiOutlineWarning} from "react-icons/ai";
+import {Link} from "react-router-dom";
 
 const Register = () => {
   const [formData, setFormData] = useState<UserData>({
@@ -56,7 +57,7 @@ const Register = () => {
               </h3>
               <ul className="grid grid-cols-1 mt-10 sm:grid-cols-2 gap-x-8 gap-y-4">
                 <li className="flex items-center space-x-3">
-                  <div className="inline-flex items-center justify-center flex-shrink-0 w-5 h-5 bg-blue-500 rounded-full">
+                  <div className="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 bg-green-500 rounded-full">
                     <FaCheck className="w-3.5 h-3.5 text-white" />
                   </div>
                   <span className="text-lg font-medium text-white">
@@ -65,7 +66,7 @@ const Register = () => {
                   </span>
                 </li>
                 <li className="flex items-center space-x-3">
-                  <div className="inline-flex items-center justify-center flex-shrink-0 w-5 h-5 bg-blue-500 rounded-full">
+                  <div className="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 bg-green-500 rounded-full">
                     <FaCheck className="w-3.5 h-3.5 text-white" />
                   </div>
                   <span className="text-lg font-medium text-white">
@@ -74,7 +75,7 @@ const Register = () => {
                   </span>
                 </li>
                 <li className="flex items-center space-x-3">
-                  <div className="inline-flex items-center justify-center flex-shrink-0 w-5 h-5 bg-blue-500 rounded-full">
+                  <div className="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 bg-green-500 rounded-full">
                     <FaCheck className="w-3.5 h-3.5 text-white" />
                   </div>
                   <span className="text-lg font-medium text-white">
@@ -83,7 +84,7 @@ const Register = () => {
                   </span>
                 </li>
                 <li className="flex items-center space-x-3">
-                  <div className="inline-flex items-center justify-center flex-shrink-0 w-5 h-5 bg-blue-500 rounded-full">
+                  <div className="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 bg-green-500 rounded-full">
                     <FaCheck className="w-3.5 h-3.5 text-white" />
                   </div>
                   <span className="text-lg font-medium text-white">
@@ -103,13 +104,13 @@ const Register = () => {
             </h2>
             <p className="mt-2 text-base text-gray-600">
               Already have an account?{" "}
-              <a
-                href="#"
+              <Link
+                to="/Login"
                 title=""
-                className="font-medium text-blue-600 transition-all duration-200 hover:text-blue-700 focus:text-blue-700 hover:underline"
+                className="font-medium text-green-600 transition-all duration-200 hover:text-green-700 focus:text-green-700 hover:underline"
               >
                 Login
-              </a>
+              </Link>
             </p>
             {error ? (
               <div className="mt-4">
@@ -142,7 +143,7 @@ const Register = () => {
                       name="firstName"
                       id="full-name"
                       placeholder="Enter your full name"
-                      className="block w-full py-4 pl-10 pr-4 text-black placeholder-gray-500 transition-all duration-200 border border-gray-200 rounded-md bg-gray-50 focus:outline-none focus:border-blue-600 focus:bg-white caret-blue-600"
+                      className="block w-full py-4 pl-10 pr-4 text-black placeholder-gray-500 transition-all duration-200 border border-gray-200 rounded-md bg-gray-50 focus:outline-none focus:border-green-600 focus:bg-white caret-green-600"
                       required
                       value={formData.firstName}
                       onChange={handleChange}
@@ -167,7 +168,7 @@ const Register = () => {
                       name="email"
                       id="email"
                       placeholder="Enter email to get started"
-                      className="block w-full py-4 pl-10 pr-4 text-black placeholder-gray-500 transition-all duration-200 border border-gray-200 rounded-md bg-gray-50 focus:outline-none focus:border-blue-600 focus:bg-white caret-blue-600"
+                      className="block w-full py-4 pl-10 pr-4 text-black placeholder-gray-500 transition-all duration-200 border border-gray-200 rounded-md bg-gray-50 focus:outline-none focus:border-green-600 focus:bg-white caret-green-600"
                       required
                       onChange={handleChange}
                     />
@@ -187,7 +188,7 @@ const Register = () => {
                     <a
                       href="#"
                       title=""
-                      className="text-sm font-medium text-blue-600 transition-all duration-200 hover:text-blue-700 focus:text-blue-700 hover:underline"
+                      className="text-sm font-medium text-green-600 transition-all duration-200 hover:text-green-700 focus:text-green-700 hover:underline"
                     >
                       {" "}
                       Forgot password?{" "}
@@ -203,7 +204,7 @@ const Register = () => {
                       name="password"
                       id="password"
                       placeholder="Enter your password"
-                      className="block w-full py-4 pl-10 pr-4 text-black placeholder-gray-500 transition-all duration-200 border border-gray-200 rounded-md bg-gray-50 focus:outline-none focus:border-blue-600 focus:bg-white caret-blue-600"
+                      className="block w-full py-4 pl-10 pr-4 text-black placeholder-gray-500 transition-all duration-200 border border-gray-200 rounded-md bg-gray-50 focus:outline-none focus:border-green-600 focus:bg-white caret-green-600"
                       required
                       onChange={handleChange}
                     />
@@ -213,7 +214,7 @@ const Register = () => {
                 <div>
                   <button
                     type="submit"
-                    className="inline-flex items-center justify-center w-full px-4 py-4 text-base font-semibold text-white transition-all duration-200 border border-transparent rounded-md bg-gradient-to-r from-fuchsia-600 to-blue-600 focus:outline-none hover:opacity-80 focus:opacity-80"
+                    className="inline-flex items-center justify-center w-full px-4 py-4 text-base font-semibold text-white transition-all duration-200 border border-transparent rounded-md bg-gradient-to-r from-green-300 to-green-600 focus:outline-none hover:opacity-80 focus:opacity-80"
                   >
                     {loading ? (
                       <div className="flex items-center justify-center">
@@ -244,7 +245,7 @@ const Register = () => {
               <a
                 href="#"
                 title=""
-                className="text-blue-600 transition-all duration-200 hover:underline hover:text-blue-700"
+                className="text-green-600 transition-all duration-200 hover:underline hover:text-green-700"
               >
                 Privacy Policy
               </a>{" "}
@@ -252,7 +253,7 @@ const Register = () => {
               <a
                 href="#"
                 title=""
-                className="text-blue-600 transition-all duration-200 hover:underline hover:text-blue-700"
+                className="text-green-600 transition-all duration-200 hover:underline hover:text-green-700"
               >
                 Terms of Service
               </a>

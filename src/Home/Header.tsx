@@ -16,13 +16,9 @@ const Header = () => {
   );
 
   const {userId} = useSelector((state: RootState) => state.auth);
-  console.log("🚀 ~ file: Header.tsx ~ line 23 ~ Header ~ userId", userId);
+
 
   const cart = useSelector((state: RootState) => state.cart);
-  console.log(
-    "🚀 ~ file: Header.tsx ~ line 25 ~ Header ~ cart",
-    cart.itemCount
-  );
 
   useEffect(() => {
     if (userId) {
@@ -32,13 +28,11 @@ const Header = () => {
 
   const itemCount = cart.itemCount;
 
-  console.log(itemCount);
-
   const handleLogout = async () => {
     try {
       await dispatch(logout());
       await dispatch(resetCart());
-      navigate("/Login");
+      navigate("/");
     } catch (error) {
       console.log(error);
     }
@@ -116,18 +110,34 @@ const Header = () => {
               </Link>
             </li>
           )}
-          <li className="md:mr-12 flex items-start">
-            <Link to="/cart" className="text-green-500 hover:text-green-700">
-              <span className="ml-1">
-                <FiShoppingCart className="inline-block text-2xl md:text-2xl" />
-              </span>
-              {isAuthenticated && itemCount > 0 && (
-                <span className="ml-1 text-green-500 bg-black rounded-full">
-                  {itemCount}
+          {isAuthenticated && (
+            <li className="md:mr-12 flex items-start">
+              <Link to="/cart" className="text-green-500 hover:text-green-700">
+                <span className="ml-1">
+                  <FiShoppingCart className="inline-block text-2xl md:text-2xl" />
                 </span>
-              )}
-            </Link>
-          </li>
+                {itemCount > 0 && (
+                  <span
+                    className="
+                  inline-block
+                  text-xs
+                  md:text-sm
+                  bg-green-500
+                  text-white
+                  rounded-full
+                  px-2
+                  py-1
+                  ml-1
+                
+                  "
+                  >
+                    {itemCount}
+                  </span>
+                )}
+              </Link>
+            </li>
+          )}
+
           {!isAuthenticated && (
             <>
               <li className="md:mr-12">
