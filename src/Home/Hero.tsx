@@ -6,6 +6,8 @@ import {useSelector} from "react-redux";
 import {useEffect, useState} from "react";
 import Dashboard from "./About";
 import About from "./About";
+import Product from "./Product";
+import AutoPlay from "./AutoPlay";
 
 const Hero = () => {
   return (
@@ -67,8 +69,10 @@ const Hero = () => {
           </div>
         </div>
       </div>
+      <AutoPlay />
 
       <About />
+      <Product />
     </>
   );
 };

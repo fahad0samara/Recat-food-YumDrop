@@ -139,7 +139,7 @@
 // export default Menu;
 
 interface Category {
-  _id: Key | null | undefined;
+  _id: null | undefined;
   id: number;
   name: string;
 }
@@ -500,7 +500,7 @@ function Menu() {
         addItemToCart({
           itemId: menuItem._id,
           quantity: 1,
-          userId,
+          userId: userId || "",
         })
       );
       toast.success("😋😋 food add to the cart", {
