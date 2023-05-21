@@ -1,68 +1,196 @@
-import React, {useState} from "react";
+// // import React, {useState, useEffect, useRef} from "react";
 
-const Slider = () => {
-  const [activeIndex, setActiveIndex] = useState(0);
+// // const Slider = () => {
+// //   const [activeIndex, setActiveIndex] = useState(0);
+// //   const sliderRef = useRef(null);
+// //   const slides = [
+// //     {id: 1, caption: "Slide 1"},
+// //     {id: 2, caption: "Slide 2"},
+// //     {id: 3, caption: "Slide 3"},
+// //     {id: 1, caption: "Slide 1"},
+// //     {id: 2, caption: "Slide 2"},
+// //     {id: 3, caption: "Slide 3"},
+// //   ];
 
-  const slides = [
-    {
-      id: 1,
+// //   const nextSlide = () => {
+// //     setActiveIndex(prevIndex => (prevIndex + 1) % slides.length);
+// //   };
 
-      caption: "Slide 1",
-    },
-    {
-      id: 2,
+// //   useEffect(() => {
+// //     const interval = setInterval(() => {
+// //       nextSlide();
+// //     }, 5000);
 
-      caption: "Slide 2",
-    },
-    {id: 3, caption: "Slide 3"},
-  ];
+// //     return () => clearInterval(interval);
+// //   }, []);
+
+// //   useEffect(() => {
+// //     if (sliderRef.current) {
+// //       sliderRef.current.style.transform = `translateX(-${
+// //         activeIndex * (100 / slides.length)
+// //       }%)`;
+// //     }
+// //   }, [activeIndex]);
+
+// //   return (
+// //     <div className="w-full max-w-screen-lg mx-auto relative mb-8">
+// //       <div
+// //         className="flex overflow-hidden space-x-10"
+// //         ref={sliderRef}
+// //         style={{transition: "transform 0.5s"}}
+// //       >
+// //         {slides.map(slide => (
+// //           <div
+// //             key={slide.id}
+// //             className="w-full"
+// //             style={{width: `${100 / slides.length}%`}}
+// //           >
+// //             <div className="p-4 bg-black bg-opacity-50 text-white text-lg">
+// //               {slide.caption}
+// //             </div>
+// //           </div>
+// //         ))}
+// //       </div>
+// //     </div>
+// //   );
+// // };
+
+// // export default Slider;
+
+// import React, {useState, useEffect, useRef} from "react";
+
+// const Slider = () => {
+//   const [activeIndex, setActiveIndex] = useState(0);
+//   const sliderRef = useRef(null);
+//   const categories = [
+//     {id: 1, name: "Italian Cuisine", color: "#ff6347"},
+//     {id: 2, name: "Asian Delights", color: "#ffd700"},
+//     {id: 3, name: "Mexican Flavors", color: "#00bfff"},
+//     {id: 4, name: "Healthy Salads", color: "#32cd32"},
+//     {id: 5, name: "Sweet Treats", color: "#ff69b4"},
+//     {id: 6, name: "Italian Cuisine", color: "#ff6347"},
+//     {id: 7, name: "Asian Delights", color: "#ffd700"},
+//     {id: 8, name: "Mexican Flavors", color: "#00bfff"},
+//     {id: 9, name: "Healthy Salads", color: "#32cd32"},
+//     {id: 10, name: "Sweet Treats", color: "#ff69b4"},
+//   ];
+
+//   const nextSlide = () => {
+//     setActiveIndex(prevIndex => (prevIndex + 1) % categories.length);
+//   };
+
+//   useEffect(() => {
+//     const interval = setInterval(() => {
+//       nextSlide();
+//     }, 5000);
+
+//     return () => clearInterval(interval);
+//   }, []);
+
+//   useEffect(() => {
+//     if (sliderRef.current) {
+//       sliderRef.current.style.transform = `translateX(-${
+//         activeIndex * (100 / categories.length)
+//       }%)`;
+//     }
+//   }, [activeIndex]);
+
+//   return (
+//     <div className="w-full max-w-screen-lg mx-auto relative mb-8">
+//       <div
+//         className="flex overflow-hidden space-x-10"
+//         ref={sliderRef}
+//         style={{transition: "transform 0.5s"}}
+//       >
+//         {categories.map(category => (
+//           <div
+//             key={category.id}
+//             className="w-full flex-shrink-0 bg-gray-200 rounded-md"
+//             style={{
+//               width: `${100 / categories.length}%`,
+//             }}
+//           >
+//             <div className="bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded-lg transform -skew-x-12 transition duration-300">
+//               {category.name}
+//             </div>
+//           </div>
+//         ))}
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default Slider;
+
+import React, {useState, useEffect, useRef} from "react";
+import axios from "axios";
+
+interface Category {
+  _id: string;
+  name: string;
+}
+
+const Slider: React.FC = () => {
+  const [activeIndex, setActiveIndex] = useState<number>(0);
+  const sliderRef = useRef<HTMLDivElement>(null);
+  const [categories, setCategories] = useState<Category[]>([]);
+
+  const fetchCategories = async () => {
+    try {
+      const response = await axios.get<Category[]>(
+        "http://localhost:1337/api/categories"
+      );
+      setCategories(response.data);
+    } catch (error) {
+      console.error("Error retrieving categories:", error);
+    }
+  };
 
   const nextSlide = () => {
-    setActiveIndex(prevIndex => (prevIndex + 1) % slides.length);
+    setActiveIndex(prevIndex => (prevIndex + 1) % categories.length);
   };
 
-  const prevSlide = () => {
-    setActiveIndex(
-      prevIndex => (prevIndex - 1 + slides.length) % slides.length
-    );
-  };
+  useEffect(() => {
+    fetchCategories();
+  }, []);
 
-  const getItemClass = index => {
-    let className = "w-full transform transition-transform duration-500";
-    if (index === activeIndex) {
-      className += " translate-x-0";
-    } else if (index < activeIndex) {
-      className += " -translate-x-full";
-    } else {
-      className += " translate-x-full";
+  useEffect(() => {
+    const interval = setInterval(() => {
+      nextSlide();
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [categories]);
+
+  useEffect(() => {
+    if (sliderRef.current) {
+      sliderRef.current.style.transform = `translateX(-${
+        activeIndex * (100 / categories.length)
+      }%)`;
     }
-    return className;
-  };
+  }, [activeIndex, categories]);
 
   return (
-    <div className="w-full max-w-screen-lg mx-auto relative">
-      <div className="flex justify-center overflow-hidden">
-        {slides.map((slide, index) => (
-          <div key={slide.id} className={getItemClass(index)}>
-            <div className="p-4 bg-black bg-opacity-50 text-white text-lg">
-              {slide.caption}
+    <div className="w-full max-w-screen-lg mx-auto relative mb-8">
+      <div
+        className="flex overflow-hidden space-x-10"
+        ref={sliderRef}
+        style={{transition: "transform 0.5s"}}
+      >
+        {categories.map(category => (
+          <div
+            key={category._id}
+            className="w-full flex-shrink-0 bg-gray-200 rounded-md"
+            style={{
+              width: `${100 / categories.length}%`,
+            }}
+          >
+            <div className="bg-green-600 hover:bg-green-700 text-white px-4  py-2 rounded-lg transform -skew-x-12 transition duration-300">
+              {category.name}
             </div>
           </div>
         ))}
       </div>
-
-      <button
-        className="absolute top-1/2 transform -translate-y-1/2 left-4 bg-transparent text-white text-xl py-2 px-4"
-        onClick={prevSlide}
-      >
-        Previous
-      </button>
-      <button
-        className="absolute top-1/2 transform -translate-y-1/2 right-4 bg-transparent text-white text-xl py-2 px-4"
-        onClick={nextSlide}
-      >
-        Next
-      </button>
     </div>
   );
 };

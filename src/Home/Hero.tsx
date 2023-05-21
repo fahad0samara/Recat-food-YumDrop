@@ -68,8 +68,8 @@ const Hero = () => {
             <Swiper />
           </div>
         </div>
+        <AutoPlay />
       </div>
-      <AutoPlay />
 
       <About />
       <Product />
