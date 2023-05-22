@@ -1,4 +1,4 @@
-import {FaUtensils} from "react-icons/fa";
+import {FaUtensils, FaUsers, FaClock} from "react-icons/fa";
 
 const AboutSection = () => {
   return (
@@ -7,7 +7,7 @@ const AboutSection = () => {
         <h2 className="text-4xl font-semibold tracking-wide text-center text-gray-800 sm:text-5xl">
           Why Choose Us?
         </h2>
-        <div className="flex flex-col justify-between mt-16 space-y-16 sm:flex-row sm:space-y-0 sm:space-x-10">
+        <div className=" grid grid-cols-1 xl:grid-cols-3  mt-16 space-y-16  xl:space-y-0 xl:space-x-10">
           <div className="flex items-center space-x-6">
             <div className="w-16 h-16 p-3 rounded-full bg-black">
               <FaUtensils className="w-10 h-10 text-green-500" />
@@ -25,16 +25,31 @@ const AboutSection = () => {
           </div>
           <div className="flex items-center space-x-6">
             <div className="w-16 h-16 p-3 rounded-full bg-black">
-              <FaUtensils className="w-10 h-10 text-green-500" />
+              <FaUsers className="w-10 h-10 text-green-500" />
             </div>
             <div>
               <h3 className="text-xl font-semibold text-gray-800">
-                Delicious Recipes
+                Community Support
               </h3>
               <p className="mt-2 text-gray-700">
-                Explore a wide range of delicious recipes from around the world.
-                Our curated collection includes various cuisines, dietary
-                preferences, and cooking styles to suit your taste buds.
+                Join our vibrant community of food enthusiasts, share your
+                recipes, and collaborate with fellow cooks. Get inspired by
+                others and receive valuable feedback on your culinary creations.
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center space-x-6">
+            <div className="w-16 h-16 p-3 rounded-full bg-black">
+              <FaClock className="w-10 h-10 text-green-500" />
+            </div>
+            <div>
+              <h3 className="text-xl font-semibold text-gray-800">
+                Time-Saving Solutions
+              </h3>
+              <p className="mt-2 text-gray-700">
+                We understand the value of your time. Explore our collection of
+                quick and easy recipes designed to fit your busy schedule. Cook
+                delicious meals in no time and make every minute count.
               </p>
             </div>
           </div>

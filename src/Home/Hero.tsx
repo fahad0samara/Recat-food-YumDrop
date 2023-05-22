@@ -8,14 +8,16 @@ import Dashboard from "./About";
 import About from "./About";
 import Product from "./Product";
 import AutoPlay from "./AutoPlay";
+import Step from "./Step";
 
 const Hero = () => {
   return (
     <>
       <div
         className="relative  pt-10 mx-7
+        mt-12
  
-        md:pt-16 lg:pt-8 lg:pb-14 lg:px-8
+        md:pt-16 lg:pt-8  lg:px-8
 
       
       "
@@ -68,11 +70,13 @@ const Hero = () => {
             <Swiper />
           </div>
         </div>
-        <AutoPlay />
       </div>
 
       <About />
+      <AutoPlay />
+
       <Product />
+      <Step />
     </>
   );
 };

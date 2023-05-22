@@ -667,7 +667,7 @@ const Responsive = () => {
         ))}
       </div>
       <div className="mt-4 text-center">
-        <p className="text-gray-600">
+        <p className="italic font-bold">
           Check out our delicious menu items above.
         </p>
       </div>
