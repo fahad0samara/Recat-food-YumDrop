@@ -9,6 +9,7 @@ import About from "./About";
 import Product from "./Product";
 import AutoPlay from "./AutoPlay";
 import Step from "./Step";
+import Contact from "./Contact";
 
 const Hero = () => {
   return (
@@ -77,6 +78,7 @@ const Hero = () => {
 
       <Product />
       <Step />
+      <Contact />
     </>
   );
 };

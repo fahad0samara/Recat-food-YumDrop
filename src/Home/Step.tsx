@@ -56,7 +56,11 @@ const Step = () => {
   };
 
   return (
-    <div className="flex flex-col px-5 items-center bg-gradient-to-b from-green-50 to-green-100">
+    <div
+      className={
+        "flex flex-col px-5 items-center bg-gradient-to-b from-green-50 to-green-100 my-6 md:px-0"
+      }
+    >
       <h1 className="text-3xl font-bold mb-4">Food Ordering Process</h1>
 
       <p className="text-md mb-2 italic font-semibold">
