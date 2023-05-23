@@ -10,6 +10,7 @@ import Product from "./Product";
 import AutoPlay from "./AutoPlay";
 import Step from "./Step";
 import Contact from "./Contact";
+import Footer from "./Footer";
 
 const Hero = () => {
   return (
@@ -79,6 +80,7 @@ const Hero = () => {
       <Product />
       <Step />
       <Contact />
+      <Footer />
     </>
   );
 };
