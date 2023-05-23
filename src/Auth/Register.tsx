@@ -9,8 +9,10 @@ import {RiUserFill} from "react-icons/ri";
 import {MdAlternateEmail} from "react-icons/md";
 import {AiOutlineWarning} from "react-icons/ai";
 import {Link} from "react-router-dom";
+import {useDarkMode} from "../hook/useDarkMode";
 
 const Register = () => {
+  const isDarkMode = useDarkMode();
   const [formData, setFormData] = useState<UserData>({
     firstName: "",
     email: "",
@@ -33,11 +35,15 @@ const Register = () => {
   };
 
   return (
-    <section className="bg-white">
+    <section
+      className={`${
+        isDarkMode ? "bg-black text-white" : "bg-white text-black"
+      } $`}
+    >
       <div className={"grid grid-cols-1 lg:grid-cols-2"}>
         <div
           className={
-            "relative flex items-end px-4 pb-10 pt-60 sm:pb-16 md:justify-center lg:pb-24 bg-gray-50 sm:px-6 lg:px-8"
+            "relative flex items-end px-4 pb-10 pt-60 sm:pb-16 md:justify-center lg:pb-24  sm:px-6 lg:px-8"
           }
         >
           <div className="absolute inset-0">
@@ -97,12 +103,15 @@ const Register = () => {
           </div>
         </div>
 
-        <div className="flex items-center justify-center px-4 py-10 bg-white sm:px-6 lg:px-8 sm:py-16 lg:py-24">
+        <div className="flex items-center justify-center px-4 py-10  sm:px-6 lg:px-8 sm:py-16 lg:py-24">
           <div className="xl:w-full xl:max-w-sm 2xl:max-w-md xl:mx-auto">
-            <h2 className="text-3xl font-bold leading-tight text-black sm:text-4xl">
+            <h2 className="text-3xl font-bold leading-tight  sm:text-4xl">
               Sign up to Celebration
             </h2>
-            <p className="mt-2 text-base text-gray-600">
+            <p
+              className={`
+            text-${isDarkMode ? "gray-400/20" : "gray-500"} mt-4 text-base`}
+            >
               Already have an account?{" "}
               <Link
                 to="/Login"
@@ -143,7 +152,7 @@ const Register = () => {
                       name="firstName"
                       id="full-name"
                       placeholder="Enter your full name"
-                      className="block w-full py-4 pl-10 pr-4 text-black placeholder-gray-500 transition-all duration-200 border border-gray-200 rounded-md bg-gray-50 focus:outline-none focus:border-green-600 focus:bg-white caret-green-600"
+                      className="block w-full py-4 pl-10 pr-4 text-black placeholder-gray-500 transition-all duration-200 border border-gray-200 rounded-md  focus:outline-none focus:border-green-600 focus:bg-white caret-green-600"
                       required
                       value={formData.firstName}
                       onChange={handleChange}
@@ -151,10 +160,7 @@ const Register = () => {
                   </div>
                 </div>
                 <div>
-                  <label
-                    htmlFor=""
-                    className="text-base font-medium text-gray-900"
-                  >
+                  <label htmlFor="" className="text-base font-medium ">
                     {" "}
                     Email address{" "}
                   </label>
@@ -168,7 +174,7 @@ const Register = () => {
                       name="email"
                       id="email"
                       placeholder="Enter email to get started"
-                      className="block w-full py-4 pl-10 pr-4 text-black placeholder-gray-500 transition-all duration-200 border border-gray-200 rounded-md bg-gray-50 focus:outline-none focus:border-green-600 focus:bg-white caret-green-600"
+                      className="block w-full py-4 pl-10 pr-4 text-black placeholder-gray-500 transition-all duration-200 border border-gray-200 rounded-md  focus:outline-none focus:border-green-600 focus:bg-white caret-green-600"
                       required
                       onChange={handleChange}
                     />
@@ -177,10 +183,7 @@ const Register = () => {
 
                 <div>
                   <div className="flex items-center justify-between">
-                    <label
-                      htmlFor=""
-                      className="text-base font-medium text-gray-900"
-                    >
+                    <label htmlFor="" className="text-base font-medium ">
                       {" "}
                       Password{" "}
                     </label>
@@ -204,7 +207,7 @@ const Register = () => {
                       name="password"
                       id="password"
                       placeholder="Enter your password"
-                      className="block w-full py-4 pl-10 pr-4 text-black placeholder-gray-500 transition-all duration-200 border border-gray-200 rounded-md bg-gray-50 focus:outline-none focus:border-green-600 focus:bg-white caret-green-600"
+                      className="block w-full py-4 pl-10 pr-4 text-black placeholder-gray-500 transition-all duration-200 border border-gray-200 rounded-md  focus:outline-none focus:border-green-600 focus:bg-white caret-green-600"
                       required
                       onChange={handleChange}
                     />
@@ -240,7 +243,11 @@ const Register = () => {
                 Sign in with Google
               </button>
             </div>
-            <p className="mt-5 text-sm text-gray-600">
+            <p
+              className={`${
+                isDarkMode ? "text-gray-400" : "text-gray-500"
+              } mt-4 text-base`}
+            >
               This site is protected by reCAPTCHA and the Google{" "}
               <a
                 href="#"

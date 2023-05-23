@@ -5,6 +5,7 @@ import {useNavigate} from "react-router-dom";
 import Router from "./Router/Router";
 import {ToastContainer} from "react-toastify";
 import {AppDispatch, RootState} from "./Redux/store";
+import DarkModeToggle from "./hook/DarkModeToggle";
 
 const App = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -37,6 +38,7 @@ const App = () => {
 
   return (
     <div>
+      <DarkModeToggle />
       <ToastContainer />
       <Router />
     </div>

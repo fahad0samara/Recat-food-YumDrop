@@ -2,27 +2,26 @@ import {Link} from "react-router-dom";
 import SVGComponent from "../SVg/SVGComponent";
 import SVGComponent0 from "../SVg/SVGComponent0";
 import Swiper from "../Swiper";
-import {useSelector} from "react-redux";
-import {useEffect, useState} from "react";
-import Dashboard from "./About";
+
 import About from "./About";
 import Product from "./Product";
 import AutoPlay from "./AutoPlay";
 import Step from "./Step";
 import Contact from "./Contact";
 import Footer from "./Footer";
+import {useDarkMode} from "../hook/useDarkMode";
 
 const Hero = () => {
+  const isDarkMode = useDarkMode();
   return (
     <>
       <div
-        className="relative  pt-10 mx-7
-        mt-12
- 
-        md:pt-16 lg:pt-8  lg:px-8
-
-      
-      "
+        className={`relative ${
+          isDarkMode ? "bg-black text-white" : "bg-white text-black"
+        }   pt-10  mt-12 md:pt-16 lg:pt-8  px-8 
+        
+        
+          `}
       >
         <div className="grid md:grid-cols-2">
           <div className="mb-16 text-center lg:mb-0 lg:max-w-lg lg:text-left">
@@ -39,7 +38,11 @@ const Hero = () => {
                   the World
                 </span>
               </h2>
-              <p className="text-base text-gray-700 md:text-lg">
+              <p
+                className={`${
+                  isDarkMode ? "text-gray-400" : "text-gray-700"
+                } text-base  md:text-lg`}
+              >
                 Craving something delicious? Look no further! With Taste the
                 World, you can find restaurants, food trucks, and more in your
                 area. We have over

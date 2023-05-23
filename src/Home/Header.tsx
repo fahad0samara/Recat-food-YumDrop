@@ -7,8 +7,10 @@ import {useNavigate} from "react-router-dom";
 import {AppDispatch, RootState} from "../Redux/store";
 import {fetchCart} from "../Redux/cart/cartThunks";
 import {resetCart} from "../Redux/cart/cartSlice";
+import {useDarkMode} from "../hook/useDarkMode";
 
 const Header = () => {
+  const isDarkMode = useDarkMode();
   const navigate = useNavigate();
   const dispatch: AppDispatch = useDispatch();
   const {isAuthenticated, isAdmin} = useSelector(
@@ -16,7 +18,6 @@ const Header = () => {
   );
 
   const {userId} = useSelector((state: RootState) => state.auth);
-
 
   const cart = useSelector((state: RootState) => state.cart);
 
@@ -59,8 +60,8 @@ const Header = () => {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-10 flex max-w-screen-xl flex-col overflow-hidden px-4 py-4 text-slate-700 md:mx-auto md:flex-row md:items-center transition-all ${
-        isScrolled ? "bg-white shadow-lg" : "bg-gray-50"
+      className={`fixed top-0 left-0 right-0 z-10 flex max-w-screen-xl flex-col overflow-hidden px-4 py-4   md:flex-row md:items-center  ${
+        isDarkMode ? "bg-black text-white" : "bg-white text-black"
       }`}
     >
       <Link

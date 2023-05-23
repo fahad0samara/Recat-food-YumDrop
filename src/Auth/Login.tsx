@@ -13,12 +13,15 @@ import {
 import {RiUserSettingsFill, RiGitRepositoryPrivateFill} from "react-icons/ri";
 import {AiOutlineWarning} from "react-icons/ai";
 import {login} from "../Redux/Auth/authThunks";
+import {useDarkMode} from "../hook/useDarkMode";
 
 interface data {
   email: string;
   password: string;
 }
 const LoginForm = () => {
+  const isDarkMode = useDarkMode();
+
   const [formData, setFormData] = useState<data>({
     email: "",
     password: "",
@@ -51,11 +54,15 @@ const LoginForm = () => {
   }, [isAuthenticated, navigate]);
 
   return (
-    <section className="bg-white">
+    <section
+      className={`bg-${isDarkMode ? "black" : "white"} text-${
+        isDarkMode ? "white" : "gray-900"
+      }`}
+    >
       <div className={"grid grid-cols-1 lg:grid-cols-2"}>
         <div
           className={
-            "relative flex items-end px-4 pb-10 pt-60 sm:pb-16 md:justify-center lg:pb-24 bg-gray-50 sm:px-6 lg:px-8"
+            "relative flex items-end px-4 pb-10 pt-60 sm:pb-16 md:justify-center lg:pb-24 0 sm:px-6 lg:px-8"
           }
         >
           <div className="absolute inset-0">
@@ -125,18 +132,17 @@ const LoginForm = () => {
         </div>
         <div
           className={
-            "flex items-center justify-center px-4 py-10 bg-white sm:px-6 lg:px-8 sm:py-16 lg:py-24"
+            "flex items-center justify-center px-4 py-10  sm:px-6 lg:px-8 sm:py-16 lg:py-24"
           }
         >
           <div className={"xl:w-full xl:max-w-sm 2xl:max-w-md xl:mx-auto"}>
-            <h2
-              className={
-                "text-3xl font-bold leading-tight text-black sm:text-4xl"
-              }
-            >
+            <h2 className={"text-3xl font-bold leading-tight  sm:text-4xl"}>
               Sign in to your account
             </h2>
-            <p className="mt-2 text-base text-gray-600">
+            <p
+              className={`
+            text-${isDarkMode ? "gray-400/20" : "gray-500"} mt-4 text-base`}
+            >
               Don’t have an account?{" "}
               <Link
                 to="/Register"
@@ -166,8 +172,10 @@ const LoginForm = () => {
               <div className="space-y-5">
                 <div>
                   <label
-                    htmlFor=""
-                    className="text-base font-medium text-gray-900"
+                    className={`text-${
+                      isDarkMode ? "gray-300" : "gray-900"
+                    } text-base font-medium`}
+                    htmlFor="email"
                   >
                     {" "}
                     Email address{" "}
@@ -198,7 +206,9 @@ const LoginForm = () => {
                   <div className="flex items-center justify-between">
                     <label
                       htmlFor=""
-                      className="text-base font-medium text-gray-900"
+                      className={`text-${
+                        isDarkMode ? "gray-300" : "gray-900"
+                      } text-base font-medium`}
                     >
                       {" "}
                       Password{" "}

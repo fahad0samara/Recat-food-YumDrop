@@ -8,11 +8,12 @@ import {persistStore, persistReducer} from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import authReducer from "./Auth/authSlice";
 import cartReducer from "./cart/cartSlice";
+import darkModeReducer from "./Darkmode/darkModeSlice";
 
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["auth", "cart"],
+  whitelist: ["auth", "cart", "darkmode"],
 };
 
 const persistedReducer = persistReducer(
@@ -20,6 +21,7 @@ const persistedReducer = persistReducer(
   combineReducers({
     auth: authReducer,
     cart: cartReducer,
+    darkmode: darkModeReducer,
   })
 );
 
