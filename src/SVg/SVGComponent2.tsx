@@ -1,8 +1,9 @@
 import * as React from "react";
 import {SVGProps} from "react";
+
 const SVGComponent2 = (props: SVGProps<SVGSVGElement>) => (
   <svg
-    className="absolute  -left-12 -bottom-0 hidden w-9 sm:block"
+    className="absolute  to-white -left-12 -bottom-0 hidden w-9 sm:block"
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 399.141 399.141"
     version="1.1"

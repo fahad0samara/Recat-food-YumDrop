@@ -68,8 +68,10 @@
 
 
 import {Link} from "react-router-dom";
+import {useDarkMode} from "../hook/useDarkMode";
 
 const Footer = () => {
+  const isDarkMode = useDarkMode();
   return (
     <footer className="bg-gradient-to-b from-green-400 to-green-500 rounded-lg shadow-lg p-8 relative">
       <svg
@@ -78,7 +80,7 @@ const Footer = () => {
         className="absolute bottom-0 left-0 right-0 "
       >
         <path
-          fill="#fff"
+          fill={`${isDarkMode ? "#000" : "#fff"}`}
           d="M0,256L80,240C160,224,320,192,480,197.3C640,203,800,245,960,240C1120,235,1280,181,1360,154.7L1440,128L1440,320L1360,320C1280,320,1120,320,960,320C800,320,640,320,480,320C320,320,160,320,80,320L0,320Z"
         ></path>
       </svg>

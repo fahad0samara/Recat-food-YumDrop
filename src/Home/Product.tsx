@@ -617,7 +617,9 @@ const Responsive = () => {
         {menuItems.map((menuItem: MenuItem) => (
           <div
             key={menuItem.id}
-            className="relative py-8 rounded-lg hover:shadow-2xl mx-2 slide transform-gpu"
+            className={
+              "relative py-8 rounded-lg hover:shadow-2xl mx-2 slide transform-gpu"
+            }
             style={{
               flex: `0 0 ${100 / slidesToShow}%`,
               scrollSnapAlign: "start",
@@ -638,7 +640,7 @@ const Responsive = () => {
                 className="h-40 w-40 object-cover mx-auto rounded-full shadow-lg transform hover:scale-110 transition duration-300"
               />
             </div>
-            <div className="p-4 bg-white border border-gray-200 rounded-lg shadow-md">
+            <div className="p-4   rounded-lg shadow-md">
               <div className="flex justify-between mx-1">
                 <h3 className="text-lg font-medium text-gray-800 mb-2">
                   {menuItem.name}

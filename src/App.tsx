@@ -6,43 +6,49 @@ import Router from "./Router/Router";
 import {ToastContainer} from "react-toastify";
 import {AppDispatch, RootState} from "./Redux/store";
 import DarkModeToggle from "./hook/DarkModeToggle";
+import {useDarkMode} from "./hook/useDarkMode";
 
 const App = () => {
-  const dispatch: AppDispatch = useDispatch();
-  const navigate = useNavigate();
+    const isDarkMode = useDarkMode();
+    const dispatch: AppDispatch = useDispatch();
+    const navigate = useNavigate();
 
-  const isAuthenticated = useSelector(
-    (state: RootState) => state.auth.isAuthenticated
-  );
-  const token = useSelector((state: RootState) => state.auth.token);
-  const loading = useSelector((state: RootState) => state.auth.loading);
+    const isAuthenticated = useSelector(
+      (state: RootState) => state.auth.isAuthenticated
+    );
+    const token = useSelector((state: RootState) => state.auth.token);
+    const loading = useSelector((state: RootState) => state.auth.loading);
 
-  useEffect(() => {
-    const initializeApp = async () => {
-      if (isAuthenticated || token) {
-        // If the user is already authenticated or a token exists in Redux state, fetch user data
-        dispatch(fetchUserData());
-      } else {
-        // If no token and not authenticated, redirect to the login page
+    useEffect(() => {
+      const initializeApp = async () => {
+        if (isAuthenticated || token) {
+          // If the user is already authenticated or a token exists in Redux state, fetch user data
+          dispatch(fetchUserData());
+        } else {
+          // If no token and not authenticated, redirect to the login page
 
-        navigate("/Login");
-      }
-    };
+          navigate("/Login");
+        }
+      };
 
-    initializeApp();
-  }, [dispatch, isAuthenticated, token]);
+      initializeApp();
+    }, [dispatch, isAuthenticated, token]);
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
+    if (loading) {
+      return <div>Loading...</div>;
+    }
 
-  return (
-    <div>
-      <DarkModeToggle />
-      <ToastContainer />
-      <Router />
-    </div>
-  );
+    return (
+      <div
+        className={` ${
+          isDarkMode ? "bg-black text-white" : "bg-white text-black"
+        }`}
+      >
+        <DarkModeToggle />
+        <ToastContainer />
+        <Router />
+      </div>
+    );
 };
 
 export default App;
