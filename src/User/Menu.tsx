@@ -408,12 +408,14 @@ import {useSelector, useDispatch} from "react-redux";
 import {AppDispatch, RootState} from "../Redux/store";
 import {toast} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import {useDarkMode} from "../hook/useDarkMode";
 
 const cache = new LRUCache({
   max: 100, // maximum size of cache
 });
 
 function Menu() {
+  const isDarkMode = useDarkMode();
   const {categoryId} = useParams<{categoryId?: string}>();
   const [categories, setCategories] = useState<Category[]>([]);
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
@@ -528,12 +530,21 @@ function Menu() {
   };
 
   return (
-    <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
-      <div className="my-4 mt-28">
-        <h1 className="text-4xl font-bold text-green-700 mb-2">Our Menu</h1>
+    <div
+      className={`
+    max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8
+    ${
+      isDarkMode
+        ? "bg-black h-full text-white mt-14"
+        : "bg-white text-gray-900 mt-14"
+    }
+    `}
+    >
+      <div className="my-4 py-10 ">
+        <h1 className="text-4xl font-bold text-green-500 mb-2">Our Menu</h1>
         <p
           className="
-          text-lg text-gray-700 mb-2
+          text-lg  mb-2
           italic
         
           
@@ -574,20 +585,26 @@ function Menu() {
             </select>
           </div>
         </div>
-        <div className="col-span-3">
+        <div className="col-span-3 ">
           {loading ? (
-            <p>Loading...</p>
+            <p
+              className="
+           flex flex-col justify-center items-center
+              "
+            >
+              Loading...
+            </p>
           ) : (
             <>
               <div className="border-b border-green-200">
                 <div className="overflow-x-auto max-h-32 sm:max-h-48 scrollbar-thin scrollbar-thumb-green-300 scrollbar-track-green-100">
-                  <ul className="flex sm:flex-wrap bg-white py-2 px-1 space-x-2 sm:space-x-4">
+                  <ul className="flex sm:flex-wrap  py-2 px-1 space-x-2 sm:space-x-4">
                     <li key="all" className="w-full sm:w-auto">
                       <Link
                         to="/menu"
                         className={`
               block px-1 py-1 text-center font-semibold italic text-sm sm:text-lg hover:bg-green-200 hover:text-green-900
-              ${!categoryId ? "bg-green-200 " : "bg-white "}
+              ${!categoryId ? "bg-green-400 " : " "}
               rounded-md transition-colors duration-300
             `}
                       >
@@ -602,7 +619,7 @@ function Menu() {
                           to={`/menu/${category._id}`}
                           className={`
                 block px-1 py-1 text-center font-semibold italic text-sm sm:text-lg hover:bg-green-200 hover:text-green-900
-                ${category._id === categoryId ? "bg-green-200 " : "bg-white "}
+                ${category._id === categoryId ? "bg-green-400 " : " "}
                 rounded-md transition-colors duration-300
               `}
                         >
@@ -621,7 +638,7 @@ function Menu() {
                   sortedMenuItems.map(menuItem => (
                     <div
                       key={menuItem._id}
-                      className="bg-white rounded-lg shadow-md p-4 relative"
+                      className=" rounded-lg shadow-md p-4 relative"
                     >
                       {menuItem.isNew && (
                         <span className="absolute top-0 left-0 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-tr-md rounded-bl-md">
@@ -634,12 +651,10 @@ function Menu() {
                         alt={menuItem.name}
                       />
                       <div className="mt-2">
-                        <h2 className="text-xl font-bold text-gray-900 mb-2">
+                        <h2 className="text-xl font-bold  mb-2">
                           {menuItem.name}
                         </h2>
-                        <p className="text-sm text-gray-700 mb-2">
-                          {menuItem.description}
-                        </p>
+                        <p className="text-sm  mb-2">{menuItem.description}</p>
                         <p className="text-lg font-bold text-green-700 mb-2">
                           ${menuItem.price.toFixed(2)}
                         </p>

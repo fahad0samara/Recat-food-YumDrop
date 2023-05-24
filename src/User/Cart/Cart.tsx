@@ -52,7 +52,7 @@ const Cart: React.FC = () => {
   if (cart.loading) {
     return (
       <div className="flex items-center h-screen justify-center">
-        <div className="w-8 h-8 bg-blue-400 rounded-full animate-bounce mr-2"></div>
+        <div className="w-8 h-8 bg-green-400 rounded-full animate-bounce mr-2"></div>
         <div className="w-8 h-8 bg-green-400 rounded-full animate-bounce mr-2"></div>
         <div className="w-8 h-8 bg-black rounded-full animate-bounce"></div>
       </div>
@@ -70,14 +70,14 @@ const Cart: React.FC = () => {
       : 0;
 
   return (
-    <div className="bg-gray-100 min-h-screen">
+    <div className="min-h-screen mt-10">
       <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
-        <h1 className="text-3xl font-bold text-gray-800 mb-8">Your Cart</h1>
+        <h1 className="text-3xl font-bold  mb-8">Your Cart</h1>
 
         {cart.items.length > 0 ? (
-          <div className="flex flex-col md:flex-row md:-mx-6">
+          <div className="flex flex-col md:flex-row md:-mx-6 ">
             <div className="md:w-2/3 md:mx-6">
-              <div className="bg-white shadow overflow-hidden sm:rounded-lg">
+              <div className=" overflow-hidden sm:rounded-lg   border-green-500 border-2 shadow-green-500">
                 <ul>
                   {cart.items.map((cartItem: any) => (
                     <li key={cartItem._id}>
@@ -91,7 +91,7 @@ const Cart: React.FC = () => {
                         </div>
                         <div className="ml-6 flex-1 flex flex-col justify-between">
                           <div className="flex justify-between">
-                            <h3 className="text-md font-medium text-gray-800">
+                            <h3 className="text-md font-medium text-green-500">
                               {cartItem.item.name}
                             </h3>
                             <button
@@ -105,9 +105,7 @@ const Cart: React.FC = () => {
                           </div>
                           <div className="flex items-center justify-between mt-2">
                             <div className="flex items-center">
-                              <span className="text-gray-600 mr-2">
-                                Quantity:
-                              </span>
+                              <span className=" mr-2">Quantity:</span>
                               <span
                                 className="bg-gray-200 text-gray-700 px-2 py-1 rounded-l-lg cursor-pointer"
                                 onClick={e =>
@@ -137,16 +135,14 @@ const Cart: React.FC = () => {
                                 <FaPlus />
                               </span>
                             </div>
-                            <span className="text-gray-600">
-                              ${cartItem.item.price}
-                            </span>
+                            <span className="">${cartItem.item.price}</span>
                           </div>
                         </div>
                       </div>
                     </li>
                   ))}
                 </ul>
-                <div className="mt-4 mx-28">
+                <div className=" mx-28 my-6">
                   <button
                     onClick={handleClearCart}
                     className="w-full inline-flex rounded-xl items-center justify-center px-4 py-2 border border-transparent shadow-sm text-base font-medium text-white bg-red-500 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
@@ -157,11 +153,9 @@ const Cart: React.FC = () => {
               </div>
             </div>
             <div className="md:w-1/3 md:mx-6 mt-8 md:mt-0">
-              <div className="bg-white shadow overflow-hidden sm:rounded-lg">
+              <div className="border-2 border-green-500 px-8 shadow overflow-hidden sm:rounded-lg">
                 <div className="px-4 py-5 sm:p-6">
-                  <h3 className="text-lg font-medium text-gray-900 mb-4">
-                    Order Summary
-                  </h3>
+                  <h3 className="text-lg font-medium  mb-4">Order Summary</h3>
                   <div className="flex justify-between mb-2">
                     <span>Subtotal:</span>
                     <span>${totalPrice}</span>
@@ -174,12 +168,12 @@ const Cart: React.FC = () => {
                 </div>
                 <button
                   onClick={() => navigate("/checkout", {state: {totalPrice}})}
-                  className="w-full inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                  className="w-full inline-flex items-center justify-center  py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white  bg-green-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
                 >
                   <FaShoppingCart className="mr-2" />
                   Checkout
                 </button>
-                <p className="text-xs text-gray-500 mt-2 text-center">
+                <p className="text-xs  my-3 text-center">
                   Taxes and shipping calculated at checkout
                 </p>
               </div>
@@ -187,15 +181,13 @@ const Cart: React.FC = () => {
           </div>
         ) : (
           <div className="flex flex-col items-center mt-16">
-            <h2 className="text-lg font-bold text-gray-800 mb-4">
-              Your cart is empty.
-            </h2>
-            <p className="text-gray-500 mb-8">
+            <h2 className="text-lg font-bold  mb-4">Your cart is empty.</h2>
+            <p className=" mb-8">
               Start adding items to your cart to see them here.
             </p>
             <Link
-              to="/"
-              className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-md"
+              to="/menu"
+              className="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-md"
             >
               Continue Shopping
             </Link>

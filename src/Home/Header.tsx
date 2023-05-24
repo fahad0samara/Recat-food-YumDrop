@@ -7,8 +7,11 @@ import {useNavigate} from "react-router-dom";
 import {AppDispatch, RootState} from "../Redux/store";
 import {fetchCart} from "../Redux/cart/cartThunks";
 import {resetCart} from "../Redux/cart/cartSlice";
+import {useDarkMode} from "../hook/useDarkMode";
+import {AiOutlineMenu} from "react-icons/ai";
 
 const Header = () => {
+  const isDarkMode = useDarkMode();
   const navigate = useNavigate();
   const dispatch: AppDispatch = useDispatch();
   const {isAuthenticated, isAdmin} = useSelector(
@@ -58,8 +61,8 @@ const Header = () => {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-10 flex max-w-screen-xl flex-col overflow-hidden px-4 py-4 text-slate-700 md:mx-auto md:flex-row md:items-center transition-all ${
-        isScrolled ? "bg-white shadow-lg" : "bg-gray-50"
+      className={`fixed w-screen  top-0  left-0 right-0  z-10 flex  flex-col overflow-hidden px-12 py-3   md:flex-row md:items-center transition-all ${
+        isDarkMode ? "bg-black shadow-md" : "bg-white shadow-md"
       }`}
     >
       <Link
@@ -76,18 +79,13 @@ const Header = () => {
         htmlFor="navbar-open"
       >
         <span className="sr-only">Toggle Navigation</span>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-        >
-          <path fill="currentColor" d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z" />
-        </svg>
+        <AiOutlineMenu className="text-2xl" />
       </label>
       <nav
         aria-label="Header Navigation"
-        className="flex max-h-0 w-full flex-col items-center justify-between overflow-hidden transition-all peer-checked:mt-8 peer-checked:max-h-56 md:ml-24 md:max-h-full md:flex-row md:items-start"
+        className={
+          "flex max-h-0 w-full flex-col items-center justify-between overflow-hidden transition-all peer-checked:mt-8 peer-checked:max-h-56 md:ml-24 md:max-h-full md:flex-row md:items-start"
+        }
       >
         <ul className="flex flex-col items-center space-y-2 md:ml-auto md:flex-row md:space-y-0">
           <li className="font-bold md:mr-12">
@@ -119,17 +117,17 @@ const Header = () => {
                 {itemCount > 0 && (
                   <span
                     className="
-                  inline-block
-                  text-xs
-                  md:text-sm
-                  bg-green-500
-                  text-white
-                  rounded-full
-                  px-2
-                  py-1
-                  ml-1
-                
-                  "
+                    inline-block
+                    text-xs
+                    md:text-sm
+                    bg-green-500
+                    text-white
+                    rounded-full
+                    px-2
+                    py-1
+                    ml-1
+                  
+                    "
                   >
                     {itemCount}
                   </span>
