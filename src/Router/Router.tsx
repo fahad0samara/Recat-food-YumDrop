@@ -1,6 +1,6 @@
 import {Routes, Route, Navigate, useLocation} from "react-router-dom";
 import {useSelector} from "react-redux";
-import React, {lazy, Suspense} from "react";
+import {lazy, Suspense} from "react";
 import NotFound from "../Home/NotFound";
 import Header from "../Home/Header";
 

@@ -70,8 +70,8 @@ const Header = () => {
         className="flex cursor-pointer items-center whitespace-nowrap text-2xl font-black"
       >
         <span className="mr-2 text-4xl text-green-500"></span>
-        <span className="text-green-500">Food</span>
-        <span className="text-green-700">Ordering</span>
+        <span className="text-green-500">YumDrop</span>
+        
       </Link>
       <input type="checkbox" className="peer hidden" id="navbar-open" />
       <label

@@ -6,7 +6,7 @@ import AddCategory from "./AddCategory";
 import {AiOutlineCloudUpload, AiOutlineFileAdd} from "react-icons/ai";
 import {toast} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import {LRUCache} from "lru-cache";
+
 
 import {useCallback} from "react";
 import {MenuPreviewModal} from "./Model/MenuPreviewModal";
@@ -29,7 +29,7 @@ interface MyErrorType {
 
 
 
-const cache = new LRUCache<string, Category[]>({max: 10});
+
 
 const AddMenuItem = () => {
   const [name, setName] = useState("");
@@ -69,17 +69,13 @@ const AddMenuItem = () => {
         let data;
         const cacheKey = "categories";
 
-        if (cache.has(cacheKey)) {
-          console.log("Fetching categories from cache");
-          data = cache.get(cacheKey);
-        } else {
+   
           console.log("Fetching categories from server");
           const res = await axios.get<Category[]>(
             "http://localhost:1337/api/categories"
           );
           data = res.data;
-          cache.set(cacheKey, data);
-        }
+       
 
         setCategories(data);
         setLoading(false);

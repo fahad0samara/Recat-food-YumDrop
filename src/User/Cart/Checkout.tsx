@@ -418,7 +418,7 @@ function CheckoutForm() {
         flex
         flex-col
         items-center
-        bg-gray-200
+       
         min-h-screen
         p-4
         sm:p-0
@@ -428,7 +428,7 @@ function CheckoutForm() {
     >
       <form
         className="w-full max-w-lg mx-auto
-     bg-white
+    bg-gradient-to-b from-green-50 to-green-100
       shadow-lg
       rounded-xl
 
@@ -438,7 +438,7 @@ function CheckoutForm() {
       mb-4
       mt-4"
       >
-        <h2 className="text-lg font-medium mb-4">Checkout</h2>
+        <h2 className="text-lg font-medium mb-4  text-gray-900">Checkout</h2>
 
         <div className="text-gray-700 font-bold mb-4">
           Step {step} of 3: {getStepName()}
@@ -461,7 +461,7 @@ function CheckoutForm() {
           {step < 3 && (
             <button
               type="button"
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
               onClick={handleNextClick}
               disabled={isLoading}
             >

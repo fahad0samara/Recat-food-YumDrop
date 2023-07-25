@@ -129,7 +129,7 @@
 //                 <div
 //                   className={`flex-shrink-0 rounded-full h-12 w-12 flex items-center justify-center ${
 //                     step.id === currentStep
-//                       ? "bg-indigo-500 text-white"
+//                       ? "bg-green-500 text-white"
 //                       : "bg-gray-200 text-gray-500"
 //                   }`}
 //                 >
@@ -143,7 +143,7 @@
 //                 >
 //                   <div
 //                     className={`${
-//                       step.id === currentStep ? "bg-indigo-500" : "bg-gray-400"
+//                       step.id === currentStep ? "bg-green-500" : "bg-gray-400"
 //                     } h-full rounded-full transition-all duration-500`}
 //                     style={{
 //                       width:
@@ -157,7 +157,7 @@
 
 //               <div
 //                 className={`${
-//                   step.id === currentStep ? "text-indigo-500" : "text-gray-500"
+//                   step.id === currentStep ? "text-green-500" : "text-gray-500"
 //                 } mt-2 font-semibold`}
 //                 onClick={() => handleStepClick(step)}
 //               >
@@ -167,7 +167,7 @@
 //                 <div
 //                   className={`text-xs ${
 //                     step.id === currentStep
-//                       ? "text-indigo-500"
+//                       ? "text-green-500"
 //                       : "text-gray-500"
 //                   }`}
 //                 >
@@ -354,7 +354,7 @@ function Success() {
   };
 
   return (
-    <div className="text-center">
+    <div className="text-center h-screen">
       <h1 className="text-3xl font-semibold mb-4">Order Successful</h1>
       <div className="mt-8">
         <div className="flex items-center justify-between mb-4">
@@ -375,7 +375,7 @@ function Success() {
                 <div
                   className={`flex-shrink-0 rounded-full h-12 w-12 flex items-center justify-center ${
                     step.id === currentStep
-                      ? "bg-indigo-500 text-white"
+                      ? "bg-green-500 text-white"
                       : "bg-gray-200 text-gray-500"
                   }`}
                 >
@@ -389,7 +389,7 @@ function Success() {
                 >
                   <div
                     className={`${
-                      step.id === currentStep ? "bg-indigo-500" : "bg-gray-400"
+                      step.id === currentStep ? "bg-green-500" : "bg-gray-400"
                     } h-full rounded-full transition-all duration-500`}
                     style={{
                       width:
@@ -403,7 +403,7 @@ function Success() {
 
               <div
                 className={`${
-                  step.id === currentStep ? "text-indigo-500" : "text-gray-500"
+                  step.id === currentStep ? "text-green-500" : "text-gray-500"
                 } mt-2 font-semibold`}
                 onClick={() => handleStepClick(step)}
               >
@@ -413,7 +413,7 @@ function Success() {
                 <div
                   className={`text-xs ${
                     step.id === currentStep
-                      ? "text-indigo-500"
+                      ? "text-green-500"
                       : "text-gray-500"
                   }`}
                 >
@@ -447,7 +447,7 @@ function Success() {
                 </div>
               ))}
               <div className="text-sm font-semibold text-gray-500 mt-4">
-                {/* Total: ${totalPrice} */}
+                Total: ${totalPrice}
               </div>
             </div>
           </div>
@@ -456,7 +456,7 @@ function Success() {
       <div className="mt-8">
         {isLoading ? null : (
           <button
-            className="bg-indigo-500 text-white py-2 px-4 rounded"
+            className="bg-green-500 text-white py-2 px-4 rounded"
             onClick={handleGoToHomeClick}
           >
             Back to Home
@@ -533,7 +533,7 @@ export default Success;
 //               className={`${
 //                 location.state.orderType === "fish"
 //                   ? "bg-red-500"
-//                   : "bg-indigo-500"
+//                   : "bg-green-500"
 //               } text-white py-2 px-4 rounded`}
 //               onClick={handleGoToHomeClick}
 //             >
@@ -551,7 +551,7 @@ export default Success;
 //                 <div
 //                   className={`flex-shrink-0 rounded-full h-12 w-12 flex items-center justify-center ${
 //                     step.id === currentStep
-//                       ? "bg-indigo-500 text-white"
+//                       ? "bg-green-500 text-white"
 //                       : "bg-gray-200 text-gray-500"
 //                   }`}
 //                 >
@@ -565,7 +565,7 @@ export default Success;
 //                 >
 //                   <div
 //                     className={`${
-//                       step.id === currentStep ? "bg-indigo-500" : "bg-gray-400"
+//                       step.id === currentStep ? "bg-green-500" : "bg-gray-400"
 //                     } h-full rounded-full transition-all duration-500`}
 //                     style={{
 //                       width:
@@ -579,7 +579,7 @@ export default Success;
 
 //               <div
 //                 className={`${
-//                   step.id === currentStep ? "text-indigo-500" : "text-gray-500"
+//                   step.id === currentStep ? "text-green-500" : "text-gray-500"
 //                 } mt-2 font-semibold`}
 //                 onClick={() => handleStepClick(step)}
 //               >
@@ -589,7 +589,7 @@ export default Success;
 //                 <div
 //                   className={`text-xs ${
 //                     step.id === currentStep
-//                       ? "text-indigo-500"
+//                       ? "text-green-500"
 //                       : "text-gray-500"
 //                   }`}
 //                 >
@@ -632,7 +632,7 @@ export default Success;
 //       <div className="mt-8">
 //         {isLoading ? null : (
 //           <button
-//             className="bg-indigo-500 text-white py-2 px-4 rounded"
+//             className="bg-green-500 text-white py-2 px-4 rounded"
 //             onClick={handleHomeClick}
 //           >
 //             Back to Home
