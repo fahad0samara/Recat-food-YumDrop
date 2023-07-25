@@ -1,5 +1,5 @@
 import {createAsyncThunk} from "@reduxjs/toolkit";
-import axios, {AxiosError} from "axios";
+import axios from "axios";
 
 interface AddItemToCartArgs {
   itemId: string;
@@ -11,7 +11,7 @@ export const addItemToCart = createAsyncThunk(
   "cart/addItem",
   async (
     {itemId, quantity, userId}: AddItemToCartArgs,
-    {dispatch, rejectWithValue}
+    { rejectWithValue}
   ) => {
     try {
       const response = await axios.post("http://localhost:1337/cart/add", {

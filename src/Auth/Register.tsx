@@ -1,6 +1,6 @@
 import {useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {register, UserData} from "../Redux/Auth/authThunks";
+import {login, register, UserData} from "../Redux/Auth/authThunks";
 import {RootState} from "../Redux/store";
 import {FaCheck, FaGoogle} from "react-icons/fa";
 import {RiGitRepositoryPrivateFill} from "react-icons/ri";
@@ -8,11 +8,14 @@ import {RiUserFill} from "react-icons/ri";
 
 import {MdAlternateEmail} from "react-icons/md";
 import {AiOutlineWarning} from "react-icons/ai";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {useDarkMode} from "../hook/useDarkMode";
+import { toast } from "react-toastify";
+import { clearError } from "../Redux/Auth/authSlice";
 
 const Register = () => {
   const isDarkMode = useDarkMode();
+    const navigate = useNavigate();
   const [formData, setFormData] = useState<UserData>({
     firstName: "",
     email: "",
@@ -21,11 +24,57 @@ const Register = () => {
   });
 
   const dispatch = useDispatch();
-  const {error, loading} = useSelector((state: RootState) => state.auth);
+  const {error, loading, isAdmin} = useSelector(
+    (state: RootState) => state.auth
+  );
 
-  const handleSubmit = (e: {preventDefault: () => void}) => {
+  const handleSubmit = async (e: {preventDefault: () => void}) => {
     e.preventDefault();
-    dispatch(register(formData) as any);
+    if (!formData.firstName || !formData.email || !formData.password) {
+      toast.error("Please fill in all fields");
+      return;
+    }
+
+    try {
+      // Dispatch the register thunk and wait for it to complete
+      await dispatch(register(formData) as any);
+
+      // Registration was successful, show success message
+
+      // Extract email and password from the formData for login
+      const {email, password} = formData;
+
+      // first show massing yor good to registerDispatch the login thunk with only email and password fields and wait for it to complete
+      await dispatch(login({
+        email, password,
+        firstName: "",
+        role: ""
+      }) as any);
+
+      //navigate to redirection
+      setTimeout(() => {
+        // Redirect based on user role
+        if (isAdmin) {
+          toast.success("Registration successful!");
+          navigate("/"); // Redirect admin to the admin dashboard
+        } else {
+          toast.success("Registration successful!");
+
+          navigate("/Menu"); // Redirect regular user to the menumenu
+        }
+      }, 100);
+
+      // Login was successful, handle the redirection after a slight delay
+      // Adjust the delay time as needed
+
+      // Clear error after 5 seconds
+      setTimeout(() => {
+        dispatch(clearError());
+      }, 5000);
+    } catch (error) {
+      // Handle any error that occurs during registration or login
+      toast.error("Registration or login failed. Please try again later.");
+    }
   };
 
   const handleChange = (
@@ -121,7 +170,7 @@ const Register = () => {
                 Login
               </Link>
             </p>
-            {error ? (
+            {error && (
               <div className="mt-4">
                 <div className="flex items-center justify-between w-full p-4 mb-4 text-sm font-bold text-white bg-red-500 rounded-lg shadow-md focus:outline-none focus:shadow-outline-red">
                   <div className="flex items-center">
@@ -130,7 +179,7 @@ const Register = () => {
                   </div>
                 </div>
               </div>
-            ) : null}
+            )}
 
             <form onSubmit={handleSubmit} className="mt-8">
               <div className="space-y-5">

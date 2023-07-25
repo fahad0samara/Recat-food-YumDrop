@@ -23,7 +23,7 @@ interface RootState {
 }
 
 const Router = (): JSX.Element => {
-  const {error, loading, isAuthenticated, isAdmin} = useSelector(
+  const { isAuthenticated, isAdmin} = useSelector(
     (state: RootState) => state.auth
   );
 

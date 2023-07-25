@@ -2,7 +2,6 @@ import {createAsyncThunk} from "@reduxjs/toolkit";
 import axios from "axios";
 import {clearUserData} from "./authSlice";
 
-
 export interface UserData {
   _id?: string;
   firstName: string;
@@ -12,13 +11,13 @@ export interface UserData {
   role: string;
 }
 interface LoginResponse {
-  user: any;
+  user: unknown;
   isAdmin: boolean;
   token: string;
 }
 
 interface User {
-  user: any;
+  user: unknown;
   isAdmin: boolean;
   id: number;
   email: string;
@@ -33,7 +32,7 @@ export const register = createAsyncThunk<
 >("auth/register", async (userData, {rejectWithValue}) => {
   try {
     const response = await axios.post<User>(
-      "http://localhost:1337/auth/register",
+      " https://api-api-arab.azurewebsites.net/auth/register",
       userData
     );
     return response.data;
@@ -58,7 +57,7 @@ export const login = createAsyncThunk<
 >("auth/login", async (credentials, {rejectWithValue}) => {
   try {
     const response = await axios.post<LoginResponse>(
-      "http://localhost:1337/auth/login",
+      " https://api-api-arab.azurewebsites.net/auth/login",
       credentials
     );
     return response.data;
@@ -85,11 +84,15 @@ export const logout = createAsyncThunk<void, void, {rejectValue: string}>(
       return;
     }
     try {
-      await axios.post("http://localhost:1337/auth/logout", null, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      await axios.post(
+        " https://api-api-arab.azurewebsites.net/auth/logout",
+        null,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       dispatch(clearUserData());
 
       return;
@@ -119,12 +122,15 @@ export const fetchUserData = createAsyncThunk<
   }
 
   try {
-    const response = await axios.get<User>("http://localhost:1337/auth/me", {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const response = await axios.get<User>(
+      " https://api-api-arab.azurewebsites.net/auth/me",
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
 
     return response.data;
   } catch (error) {
@@ -137,5 +143,3 @@ export const fetchUserData = createAsyncThunk<
     throw error;
   }
 });
-
-

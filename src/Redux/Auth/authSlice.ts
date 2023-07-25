@@ -33,6 +33,9 @@ const authSlice = createSlice({
       state.isAuthenticated = false;
       state.isAdmin = false;
     },
+    clearError: state => {
+      state.error = null;
+    },
   },
   extraReducers: builder => {
     builder
@@ -47,7 +50,7 @@ const authSlice = createSlice({
         localStorage.setItem("token", action.payload.token);
         state.isAuthenticated = true;
         state.isAdmin = action.payload.isAdmin;
-        state.userId = action.payload.user._id;
+   state.userId = (action.payload.user as {_id: string})._id;
       })
       .addCase(login.rejected, (state, action) => {
         state.loading = false;
@@ -76,7 +79,7 @@ const authSlice = createSlice({
         state.user = action.payload.user;
         state.isAuthenticated = true;
         state.isAdmin = action.payload.isAdmin;
-        state.userId = action.payload.user._id;
+        state.userId = (action.payload.user as {_id: string})._id;
       })
       .addCase(fetchUserData.rejected, (state, action) => {
         state.loading = false;
@@ -84,7 +87,7 @@ const authSlice = createSlice({
         state.token = null;
         state.isAuthenticated = false;
         state.isAdmin = false;
-  
+
         state.error = action.payload as unknown as string | null;
       })
       //logout
@@ -94,11 +97,13 @@ const authSlice = createSlice({
       })
       .addCase(logout.fulfilled, state => {
         state.loading = false;
+        localStorage.removeItem("token");
+
         state.user = null;
         state.token = null;
         state.isAuthenticated = false;
+
         state.isAdmin = false;
-      
       })
       .addCase(logout.rejected, (state, action) => {
         state.loading = false;
@@ -107,6 +112,6 @@ const authSlice = createSlice({
   },
 });
 
-export const {clearUserData} = authSlice.actions;
+export const {clearUserData, clearError} = authSlice.actions;
 
 export default authSlice.reducer;

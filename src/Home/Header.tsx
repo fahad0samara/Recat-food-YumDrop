@@ -1,6 +1,6 @@
 import {useState, useEffect} from "react";
 import {FiShoppingCart} from "react-icons/fi";
-import {Link, useLocation} from "react-router-dom";
+import {Link} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {logout} from "../Redux/Auth/authThunks";
 import {useNavigate} from "react-router-dom";
@@ -63,7 +63,10 @@ const Header = () => {
     <header
       className={`fixed w-screen  top-0  left-0 right-0  z-10 flex  flex-col overflow-hidden px-12 py-3   md:flex-row md:items-center transition-all ${
         isDarkMode ? "bg-black shadow-md" : "bg-white shadow-md"
-      }`}
+        }
+        ${isScrolled && "bg-opacity-90"}
+
+      `}
     >
       <Link
         to="/"

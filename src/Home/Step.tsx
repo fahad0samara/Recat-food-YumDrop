@@ -1,6 +1,6 @@
-import React, {useState} from "react";
+import  {useState} from "react";
 import {animated, useTrail} from "@react-spring/web";
-import {Link, useLocation} from "react-router-dom";
+import {Link} from "react-router-dom";
 const Step = () => {
   const [activeStep, setActiveStep] = useState(0);
 

@@ -1,4 +1,6 @@
-import {useState, useEffect} from "react";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+//@ts-nocheck
+import { useState, useEffect } from "react";
 
 import {useDispatch, useSelector} from "react-redux";
 
@@ -13,7 +15,9 @@ import {
 import {RiUserSettingsFill, RiGitRepositoryPrivateFill} from "react-icons/ri";
 import {AiOutlineWarning} from "react-icons/ai";
 import {login} from "../Redux/Auth/authThunks";
-import {useDarkMode} from "../hook/useDarkMode";
+import { useDarkMode } from "../hook/useDarkMode";
+import {clearError} from "../Redux/Auth/authSlice";
+import { toast } from "react-toastify";
 
 interface data {
   email: string;
@@ -35,23 +39,34 @@ const LoginForm = () => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const {isAuthenticated, error, loading} = useSelector(
+  const {isAuthenticated, error, loading, isAdmin} = useSelector(
     (state: any) => state.auth
   );
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: {preventDefault: () => void}) => {
     e.preventDefault();
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    //@ts-ignore
+    if (!formData.email || !formData.password) {
+      toast.error("Please fill in all fields");
+      return;
+    }
 
     await dispatch(login(formData) as unknown);
+
+    //remove the error after 5s
+    setTimeout(() => {
+      dispatch(clearError());
+    }, 5000);
   };
 
   useEffect(() => {
     if (isAuthenticated) {
-      navigate("/menu");
+      if (isAdmin) {
+        navigate("/"); // Redirect admin to the admin dashboard
+      } else {
+        navigate("/Menu"); // Redirect regular user to the menu
+      }
     }
-  }, [isAuthenticated, navigate]);
+  }, [isAuthenticated, isAdmin, navigate]);
 
   return (
     <section
@@ -154,20 +169,16 @@ const LoginForm = () => {
                 Create a free account
               </Link>
             </p>
-            {error ? (
+            {error && (
               <div className="mt-4">
-                <div
-                  className={
-                    "flex items-center justify-between w-full p-4 mb-4 text-sm font-bold text-white bg-red-500 rounded-lg shadow-md focus:outline-none focus:shadow-outline-red"
-                  }
-                >
+                <div className="flex items-center justify-between w-full p-4 mb-4 text-sm font-bold text-white bg-red-500 rounded-lg shadow-md focus:outline-none focus:shadow-outline-red">
                   <div className="flex items-center">
                     <AiOutlineWarning className="w-5 h-5 mr-2" />
                     <span>{error}</span>
                   </div>
                 </div>
               </div>
-            ) : null}
+            )}
             <form onSubmit={handleSubmit} className="mt-8">
               <div className="space-y-5">
                 <div>

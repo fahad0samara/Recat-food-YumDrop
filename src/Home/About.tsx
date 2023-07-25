@@ -1,8 +1,6 @@
 import {FaUtensils, FaUsers, FaClock} from "react-icons/fa";
-import {useDarkMode} from "../hook/useDarkMode";
-
 const AboutSection = () => {
-  const isDarkMode = useDarkMode();
+
   return (
     <div className={`w-screen bg-gradient-to-b from-green-50 to-green-100`}>
       <div className="mx-auto px-4 py-12 max-w-screen-xl">

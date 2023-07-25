@@ -1,7 +1,6 @@
-import * as React from "react";
-import {SVGProps} from "react";
 
-const SVGComponent2 = (props: SVGProps<SVGSVGElement>) => (
+
+const SVGComponent2 = () => (
   <svg
     className="absolute  to-white -left-12 -bottom-0 hidden w-9 sm:block"
     xmlns="http://www.w3.org/2000/svg"

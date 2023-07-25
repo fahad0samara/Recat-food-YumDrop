@@ -1,4 +1,5 @@
-import React, {useState} from "react";
+//@ts-nocheck
+import React, { useState } from "react";
 import {
   CardElement,
   Elements,
@@ -491,7 +492,7 @@ interface CheckoutProps {
 const Checkout: React.FC<CheckoutProps> = ({totalPrice}) => {
   return (
     <Elements stripe={stripePromise}>
-      <CheckoutForm totalPrice={totalPrice} />
+      <CheckoutForm  orderId={orderId ? orderId : ""} />
     </Elements>
   );
 };

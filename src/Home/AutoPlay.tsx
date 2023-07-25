@@ -310,7 +310,7 @@
 // export default Slider;
 
 import React, {useState, useEffect, useRef} from "react";
-import {FiChevronLeft, FiChevronRight, FiTag} from "react-icons/fi";
+import {FiChevronLeft, FiChevronRight} from "react-icons/fi";
 import axios from "axios";
 
 interface Category {
@@ -380,7 +380,7 @@ const Slider: React.FC = () => {
           ref={sliderRef}
           style={{transition: "transform 0.5s"}}
         >
-          {categories.map((category, index) => (
+          {categories.map((category) => (
             <div
               key={category._id}
               className="flex-shrink-0 bg-gray-200 rounded-md inline-block w-32"

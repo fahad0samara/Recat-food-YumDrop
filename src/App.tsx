@@ -1,6 +1,6 @@
 import {useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {fetchUserData, logout} from "./Redux/Auth/authThunks";
+import {fetchUserData} from "./Redux/Auth/authThunks";
 import {useNavigate} from "react-router-dom";
 import Router from "./Router/Router";
 import {ToastContainer} from "react-toastify";

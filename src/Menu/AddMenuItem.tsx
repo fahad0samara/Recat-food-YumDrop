@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 
 import {useState, useEffect} from "react";
-import axios, {AxiosError} from "axios";
+import axios from "axios";
 import AddCategory from "./AddCategory";
 import {AiOutlineCloudUpload, AiOutlineFileAdd} from "react-icons/ai";
 import {toast} from "react-toastify";
@@ -51,7 +51,7 @@ const AddMenuItem = () => {
     formData.append("name", name);
     formData.append("description", description);
     formData.append("category", category);
-    formData.append("price", parseFloat(price));
+    formData.append("price", price);
     if (image) {
       formData.append("image", image);
     }
@@ -66,15 +66,19 @@ const AddMenuItem = () => {
   useEffect(() => {
     async function fetchCategories() {
       try {
-        let data;
-        const cacheKey = "categories";
+ 
 
    
           console.log("Fetching categories from server");
           const res = await axios.get<Category[]>(
             "http://localhost:1337/api/categories"
-          );
-          data = res.data;
+        );
+        const data = res.data;
+
+
+  
+        
+        
        
 
         setCategories(data);
@@ -119,7 +123,7 @@ const AddMenuItem = () => {
       formData.append("name", name);
       formData.append("description", description);
       formData.append("category", category);
-      formData.append("price", parseFloat(price));
+      formData.append("price",price);
 
       if (image) {
         formData.append("image", image);
@@ -180,7 +184,7 @@ const AddMenuItem = () => {
         setDescription("");
         setCategory("");
         setPrice("");
-        setImage(null);
+        setImage(undefined);
         setSubmitSuccess(true);
         setLoading(false);
         toast.success("Menu item added successfully!", {
@@ -234,7 +238,7 @@ const AddMenuItem = () => {
     [name, description, category, price, image]
   );
 
-  const handleImageChange = event => {
+  const handleImageChange = (event: { target: { files: any[]; }; }) => {
     const file = event.target.files[0];
     if (file && !file.type.startsWith("image/")) {
       toast.error("Only image files are allowed.");
@@ -450,8 +454,13 @@ const AddMenuItem = () => {
                   <button
                     className="bg-red-500 hover:bg-red-600 text-white font-medium py-2 px-4 rounded-lg"
                     onClick={() => {
-                      setImage(null);
-                      setImagePreview(null);
+                      setImage(
+                     undefined
+
+                      );
+                      setImagePreview(
+                        undefined
+                      );
                     }}
                   >
                     Cancel or Change

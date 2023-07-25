@@ -1,7 +1,7 @@
 import SVGComponent3 from "../SVg/SVGComponent3";
 import SVGComponent4 from "../SVg/SVGComponent4";
 import SVGComponent5 from "../SVg/SVGComponent5";
-import {useDarkMode} from "../hook/useDarkMode";
+
 
 const Contact = () => {
   return (
