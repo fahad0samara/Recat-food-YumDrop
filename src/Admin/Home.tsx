@@ -2,7 +2,17 @@
 
 const Home = () => {
     return (
-        <div>
+        <div
+            className="bg-black
+            text-white
+            h-screen
+            flex
+
+
+    "
+            
+        
+        >
             <h1>Home</h1>
         </div>
   

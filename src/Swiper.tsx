@@ -1,41 +1,36 @@
-import {useState, useEffect} from "react";
-
-const images = [
-  {
-    id: 1,
-    src: "https://www.foodiesfeed.com/wp-content/uploads/2023/04/green-spring-salad-with-a-turquoise-background.jpg",
-  },
-  {
-    id: 2,
-    src: "https://www.foodiesfeed.com/wp-content/uploads/2023/04/fresh-fruit-salad-with-mint.jpg",
-  },
-  {
-    id: 3,
-    src: "https://www.foodiesfeed.com/wp-content/uploads/2021/05/fresh-coconut.jpg",
-  },
-  {
-    id: 4,
-    src: "https://www.foodiesfeed.com/wp-content/uploads/2021/10/carrot-cake-with-fresh-fruits.jpg",
-  },
-  {
-    id: 5,
-    src: "https://www.foodiesfeed.com/wp-content/uploads/2021/06/small-donut-with-raspberry-on-top.jpg",
-  },
-];
+import  {useState, useEffect} from "react";
+import axios from "axios";
+import { FETCH_MENU_URL } from "./urls";
 
 const Swiper = () => {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [menuItems, setMenuItems] = useState([]);
+
+  useEffect(() => {
+    fetchMenuItems();
+  }, []);
+
+  const fetchMenuItems = async () => {
+    try {
+      const response = await axios.get(FETCH_MENU_URL);
+      // Extracting image URLs from the response data
+      const imageUrls = response.data.map((item: { image: any; }) => item.image);
+      setMenuItems(imageUrls);
+    } catch (error) {
+      console.error(error);
+      // Handle error state or display an error message
+    }
+  };
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setActiveIndex(prev => (prev === images.length - 1 ? 0 : prev + 1));
-    }, 5000);
+      setActiveIndex(prev => (prev === menuItems.length - 1 ? 0 : prev + 1));
+    }, 2000);
 
     return () => {
       clearInterval(interval);
     };
-  }, []);
-
+  }, [menuItems]);
   return (
     <div className="w-full h-full relative">
       <svg
@@ -48,10 +43,13 @@ const Swiper = () => {
             <image
               x="0"
               y="0"
-              width="100%"
-              height="100%"
+              width="200px"
+              height="200px"
+
+            
               preserveAspectRatio="xMaxYMax slice"
-              href={images[activeIndex].src}
+              xlinkHref={menuItems[activeIndex]}
+            
             />
           </pattern>
         </defs>

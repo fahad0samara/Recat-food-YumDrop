@@ -1,6 +1,6 @@
 import {useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {fetchUserData} from "./Redux/Auth/authThunks";
+import {fetchUserData, logout} from "./Redux/Auth/authThunks";
 import {useNavigate} from "react-router-dom";
 import Router from "./Router/Router";
 import {ToastContainer} from "react-toastify";
@@ -19,23 +19,27 @@ const App = () => {
     const token = useSelector((state: RootState) => state.auth.token);
     const loading = useSelector((state: RootState) => state.auth.loading);
 
-    useEffect(() => {
-      const initializeApp = async () => {
-        if (isAuthenticated || token) {
-          // If the user is already authenticated or a token exists in Redux state, fetch user data
-          dispatch(fetchUserData());
-        } else {
-          // If no token and not authenticated, redirect to the login page
+ useEffect(() => {
+   const initializeApp = async () => {
+     if (isAuthenticated || token) {
+       // If the user is already authenticated or a token exists in Redux state, fetch user data
+       dispatch(fetchUserData());
+     } else {
+       // If the user is not authenticated and no token exists in Redux state, logout
+       dispatch(logout());
+       navigate("/Login");
+     }
+   };
 
-          navigate("/Login");
-        }
-      };
-
-      initializeApp();
-    }, [dispatch, isAuthenticated, token]);
+   initializeApp();
+ }, [dispatch, isAuthenticated, token]);
 
     if (loading) {
-      return <div>Loading...</div>;
+      return <div
+        className={`
+      ${isDarkMode ? "bg-black text-white " : "bg-white text-black"}`}
+        
+      >Loading...</div>;
     }
 
     return (

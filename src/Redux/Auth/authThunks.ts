@@ -82,7 +82,7 @@ export const logout = createAsyncThunk<void, void, {rejectValue: string}>(
   async (_, {dispatch, rejectWithValue}) => {
     const token = localStorage.getItem("token");
     if (!token) {
-      console.log("User is already logged out");
+      
       return;
     }
     try {

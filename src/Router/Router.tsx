@@ -35,7 +35,7 @@ const Router = (): JSX.Element => {
 
   return (
     <>
-      {shouldShowHeader && <Header />}
+      {shouldShowHeader && !isAdmin && <Header />}
 
       <Suspense fallback={<div>Loading...</div>}>
         <Routes>

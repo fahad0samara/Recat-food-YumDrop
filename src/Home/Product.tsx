@@ -407,6 +407,7 @@ import {addItemToCart} from "../Redux/cart/cartThunks";
 import {AppDispatch, RootState} from "../Redux/store";
 import {useSelector} from "react-redux";
 import {useDispatch} from "react-redux";
+import { FETCH_MENU_URL } from "../urls";
 
 const Responsive = () => {
   const sliderRef = useRef<HTMLDivElement>(null);
@@ -424,8 +425,9 @@ const Responsive = () => {
 
   const fetchMenuItems = async () => {
     try {
-      const response = await axios.get("http://localhost:1337/api/menu");
-      console.log(response.data);
+      const response = await axios.get(FETCH_MENU_URL);
+     
+      
 
       setMenuItems(response.data);
     } catch (error) {

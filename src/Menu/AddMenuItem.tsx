@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-
+import {ChangeEventHandler} from "react";
 import {useState, useEffect} from "react";
 import axios from "axios";
 import AddCategory from "./AddCategory";
@@ -7,10 +7,9 @@ import {AiOutlineCloudUpload, AiOutlineFileAdd} from "react-icons/ai";
 import {toast} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-
 import {useCallback} from "react";
 import {MenuPreviewModal} from "./Model/MenuPreviewModal";
-import { FETCH_CATEGORIES_URL, FETCH_MENU_URL } from "../urls";
+import {FETCH_CATEGORIES_URL, FETCH_MENU_URL} from "../urls";
 interface Category {
   [x: string]: string | number | readonly string[] | undefined;
   _id: string;
@@ -28,16 +27,12 @@ interface MyErrorType {
   };
 }
 
-
-
-
-
 const AddMenuItem = () => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
   const [price, setPrice] = useState("");
-  const [image, setImage] = useState();
+ const [image, setImage] = useState<FileList | null>(null);
   const [categories, setCategories] = useState<Category[]>([]);
   const [showAddCategory, setShowAddCategory] = useState(false);
   const [error, setError] = useState<{[key: string]: string | unknown}>({});
@@ -54,7 +49,7 @@ const AddMenuItem = () => {
     formData.append("category", category);
     formData.append("price", price);
     if (image) {
-      formData.append("image", image);
+        formData.append("image", image[0]);
     }
     setMenuPreview(Object.fromEntries(formData));
     setShowPreviewModal(true);
@@ -67,18 +62,8 @@ const AddMenuItem = () => {
   useEffect(() => {
     async function fetchCategories() {
       try {
- 
-
-   
-          console.log("Fetching categories from server");
-          const res = await axios.get<Category[]>(FETCH_CATEGORIES_URL);
+        const res = await axios.get<Category[]>(FETCH_CATEGORIES_URL);
         const data = res.data;
-
-
-  
-        
-        
-       
 
         setCategories(data);
         setLoading(false);
@@ -122,10 +107,10 @@ const AddMenuItem = () => {
       formData.append("name", name);
       formData.append("description", description);
       formData.append("category", category);
-      formData.append("price",price);
+      formData.append("price", price);
 
       if (image) {
-        formData.append("image", image);
+         formData.append("image", image[0]);
       }
 
       // Check for missing required fields and image
@@ -168,22 +153,19 @@ const AddMenuItem = () => {
       setLoading(true);
 
       try {
-        const res = await axios.post(
-           FETCH_MENU_URL,
-          formData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
+        await axios.post(FETCH_MENU_URL, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
 
         // reset form fields
         setName("");
         setDescription("");
         setCategory("");
         setPrice("");
-        setImage(undefined);
+        setImage(null);
+       
         setSubmitSuccess(true);
         setLoading(false);
         toast.success("Menu item added successfully!", {
@@ -197,9 +179,6 @@ const AddMenuItem = () => {
           theme: "colored",
         });
       } catch (error: any) {
-        console.log("====================================");
-        console.log("error.response.status", error);
-        console.log("====================================");
         let errorMessage = "An error occurred while adding the menu item.";
         if (error.response) {
           if (error.response.status === 400) {
@@ -237,15 +216,20 @@ const AddMenuItem = () => {
     [name, description, category, price, image]
   );
 
-  const handleImageChange = (event: { target: { files: any[]; }; }) => {
-    const file = event.target.files[0];
-    if (file && !file.type.startsWith("image/")) {
-      toast.error("Only image files are allowed.");
-      return;
-    }
-    setImage(file);
-    setImagePreview(URL.createObjectURL(file));
-  };
+const handleImageChange: ChangeEventHandler<HTMLInputElement> = event => {
+  const files = event.target.files;
+  if (files && files.length > 0) {
+    const file = files[0];
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setImagePreview(reader.result as string);
+    };
+    reader.readAsDataURL(file);
+    setImage(files);
+    
+    
+  }
+};
 
   if (submitSuccess) {
     return (
@@ -453,13 +437,9 @@ const AddMenuItem = () => {
                   <button
                     className="bg-red-500 hover:bg-red-600 text-white font-medium py-2 px-4 rounded-lg"
                     onClick={() => {
-                      setImage(
-                     undefined
-
-                      );
-                      setImagePreview(
-                        undefined
-                      );
+                      setImage(null);
+                      
+                      setImagePreview(undefined);
                     }}
                   >
                     Cancel or Change
@@ -520,6 +500,7 @@ const AddMenuItem = () => {
 
       {showPreviewModal && (
         <MenuPreviewModal
+          //@ts-ignore
           previewData={menuPreview}
           onClose={handleClosePreviewModal}
         />

@@ -312,6 +312,7 @@
 import React, {useState, useEffect, useRef} from "react";
 import {FiChevronLeft, FiChevronRight} from "react-icons/fi";
 import axios from "axios";
+import { FETCH_CATEGORIES_URL } from "../urls";
 
 interface Category {
   _id: string;
@@ -326,9 +327,7 @@ const Slider: React.FC = () => {
 
   const fetchCategories = async () => {
     try {
-      const response = await axios.get<Category[]>(
-        "http://localhost:1337/api/categories"
-      );
+      const response = await axios.get<Category[]>(FETCH_CATEGORIES_URL);
       setCategories(response.data);
     } catch (error) {
       console.error("Error retrieving categories:", error);
