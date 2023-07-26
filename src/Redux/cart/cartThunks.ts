@@ -1,6 +1,12 @@
 import {createAsyncThunk} from "@reduxjs/toolkit";
 import axios from "axios";
-
+import {
+  ADD_TO_CART_URL,
+  FETCH_CART_URL,
+  REMOVE_ITEM_FROM_CART_URL,
+  CLEAR_CART_URL,
+  UPDATE_CART_ITEM_QUANTITY_URL,
+} from "../../urls";
 interface AddItemToCartArgs {
   itemId: string;
   quantity: number;
@@ -14,7 +20,9 @@ export const addItemToCart = createAsyncThunk(
     { rejectWithValue}
   ) => {
     try {
-      const response = await axios.post("http://localhost:1337/cart/add", {
+      const response = await axios.post(
+        ADD_TO_CART_URL
+        , {
         userId,
         itemId,
         quantity,
@@ -40,7 +48,8 @@ export const fetchCart = createAsyncThunk(
   async (userId: string, {rejectWithValue}) => {
     try {
       const response = await axios.get(
-        `http://localhost:1337/cart/cart/${userId}`
+        FETCH_CART_URL(userId)
+       
       );
 
       return response.data;
@@ -68,7 +77,8 @@ export const removeItemFromCart = createAsyncThunk(
   async ({userId, itemId}: RemoveItemFromCartArgs, {rejectWithValue}) => {
     try {
       const response = await axios.delete(
-        `http://localhost:1337/cart/delete/${userId}/${itemId}`
+        REMOVE_ITEM_FROM_CART_URL(userId, itemId)
+       
       );
 
       return response.data;
@@ -91,7 +101,7 @@ export const clearCart = createAsyncThunk(
   async (userId: string, {rejectWithValue}) => {
     try {
       const response = await axios.delete(
-        `http://localhost:1337/cart/clear/${userId}`
+        CLEAR_CART_URL(userId)
       );
       return response.data;
     } catch (error: unknown) {
@@ -122,7 +132,8 @@ export const updateCartItemQuantity = createAsyncThunk(
   ) => {
     try {
       const response = await axios.put(
-        `http://localhost:1337/cart/updateQuantity/${userId}/${itemId}`,
+        UPDATE_CART_ITEM_QUANTITY_URL(userId, itemId),
+      
         {
           quantity,
         }

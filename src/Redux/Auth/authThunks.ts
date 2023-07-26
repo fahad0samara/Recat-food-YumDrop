@@ -1,6 +1,7 @@
 import {createAsyncThunk} from "@reduxjs/toolkit";
 import axios from "axios";
-import {clearUserData} from "./authSlice";
+import { clearUserData } from "./authSlice";
+import {REGISTER_URL, LOGIN_URL, LOGOUT_URL, FETCH_USER_URL} from "../../urls";
 
 export interface UserData {
   _id?: string;
@@ -32,7 +33,7 @@ export const register = createAsyncThunk<
 >("auth/register", async (userData, {rejectWithValue}) => {
   try {
     const response = await axios.post<User>(
-      " https://api-api-arab.azurewebsites.net/auth/register",
+      REGISTER_URL,
       userData
     );
     return response.data;
@@ -57,7 +58,8 @@ export const login = createAsyncThunk<
 >("auth/login", async (credentials, {rejectWithValue}) => {
   try {
     const response = await axios.post<LoginResponse>(
-      " https://api-api-arab.azurewebsites.net/auth/login",
+      LOGIN_URL,
+  
       credentials
     );
     return response.data;
@@ -85,7 +87,8 @@ export const logout = createAsyncThunk<void, void, {rejectValue: string}>(
     }
     try {
       await axios.post(
-        " https://api-api-arab.azurewebsites.net/auth/logout",
+        LOGOUT_URL
+      ,
         null,
         {
           headers: {
@@ -123,7 +126,8 @@ export const fetchUserData = createAsyncThunk<
 
   try {
     const response = await axios.get<User>(
-      " https://api-api-arab.azurewebsites.net/auth/me",
+      FETCH_USER_URL,
+   
       {
         headers: {
           "Content-Type": "application/json",

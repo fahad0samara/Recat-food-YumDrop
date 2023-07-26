@@ -10,6 +10,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 import {useCallback} from "react";
 import {MenuPreviewModal} from "./Model/MenuPreviewModal";
+import { FETCH_CATEGORIES_URL, FETCH_MENU_URL } from "../urls";
 interface Category {
   [x: string]: string | number | readonly string[] | undefined;
   _id: string;
@@ -70,9 +71,7 @@ const AddMenuItem = () => {
 
    
           console.log("Fetching categories from server");
-          const res = await axios.get<Category[]>(
-            "http://localhost:1337/api/categories"
-        );
+          const res = await axios.get<Category[]>(FETCH_CATEGORIES_URL);
         const data = res.data;
 
 
@@ -170,7 +169,7 @@ const AddMenuItem = () => {
 
       try {
         const res = await axios.post(
-          "http://localhost:1337/api/menu",
+           FETCH_MENU_URL,
           formData,
           {
             headers: {

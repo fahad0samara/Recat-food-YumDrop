@@ -3,7 +3,9 @@ import {useState} from "react";
 import axios from "axios";
 import {toast} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import {memo} from "react";
+import { memo } from "react";
+import { FETCH_CATEGORIES_URL } from "../urls";
+
 interface MyErrorType {
   response: {
     [x: string]: any;
@@ -47,7 +49,7 @@ const AddCategory: React.FC<AddCategoryProps> = ({
 
     try {
       const res = await axios.post<Category>(
-        "http://localhost:1337/api/categories",
+       FETCH_CATEGORIES_URL,
         {
           name,
           description,
@@ -55,9 +57,7 @@ const AddCategory: React.FC<AddCategoryProps> = ({
       );
 
       // Fetch the updated category list from the server
-      const categoryRes = await axios.get<Category[]>(
-        "http://localhost:1337/api/categories"
-      );
+      const categoryRes = await axios.get<Category[]>(FETCH_CATEGORIES_URL);
 
       setCategories(categoryRes.data);
       setName("");

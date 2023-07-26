@@ -409,6 +409,7 @@ import {AppDispatch, RootState} from "../Redux/store";
 import {toast} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {useDarkMode} from "../hook/useDarkMode";
+import { FETCH_CATEGORIES_URL, FETCH_MENU_BY_CATEGORY_URL, FETCH_MENU_URL } from "../urls";
 
 const cache = new LRUCache({
   max: 100, // maximum size of cache
@@ -427,35 +428,27 @@ function Menu() {
   const {isAuthenticated} = useSelector((state: RootState) => state.auth);
   async function fetchData() {
     try {
-      let categoriesData: Category[];
-      if (cache.has("categories")) {
-        categoriesData = cache.get("categories") as Category[];
-      } else {
-        const response = await axios.get<Category[]>(
-          "http://localhost:1337/api/categories"
-        );
+      
+   
+        const response = await axios.get<Category[]>(FETCH_CATEGORIES_URL);
+      const
         categoriesData = response.data;
-      }
+      
       setCategories(categoriesData);
 
       let menuItemsData: MenuItem[];
-      const menuCacheKey = `menuItems-${categoryId || ""}`;
-      if (cache.has(menuCacheKey)) {
-        menuItemsData = cache.get(menuCacheKey) as MenuItem[];
-      } else {
+    
         if (categoryId) {
           const response = await axios.get<MenuItem[]>(
-            `http://localhost:1337/api/menu/${categoryId}`
+            FETCH_MENU_BY_CATEGORY_URL(categoryId)
           );
           menuItemsData = response.data;
         } else {
-          const response = await axios.get<MenuItem[]>(
-            "http://localhost:1337/api/menu"
-          );
+          const response = await axios.get<MenuItem[]>(FETCH_MENU_URL);
           menuItemsData = response.data;
         }
-        cache.set(menuCacheKey, menuItemsData, (5 * 60 * 1000) as never);
-      }
+       
+      
       setMenuItems(menuItemsData);
 
       setLoading(false);
