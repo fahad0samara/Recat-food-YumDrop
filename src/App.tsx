@@ -7,6 +7,7 @@ import {ToastContainer} from "react-toastify";
 import {AppDispatch, RootState} from "./Redux/store";
 import DarkModeToggle from "./hook/DarkModeToggle";
 import {useDarkMode} from "./hook/useDarkMode";
+import Loder from "./Loder";
 
 const App = () => {
     const isDarkMode = useDarkMode();
@@ -39,7 +40,9 @@ const App = () => {
         className={`
       ${isDarkMode ? "bg-black text-white " : "bg-white text-black"}`}
         
-      >Loading...</div>;
+      >
+        <Loder/>
+      </div>;
     }
 
     return (

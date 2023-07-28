@@ -12,8 +12,9 @@ import {
   FaBox,
   FaBoxOpen,
   FaUserFriends,
-  FaBlog,
+  
 } from "react-icons/fa";
+import {IoMdAddCircleOutline} from "react-icons/io";
 import { useSelector } from "react-redux";
 import { useDarkMode } from "../hook/useDarkMode";
 
@@ -100,6 +101,13 @@ const Sidebar = () => {
 
               <nav className="flex-1 space-y-6">
                 <Link
+                  to="/AddMenuItem"
+                  className="flex cursor-pointer items-center border-l-green-600 py-2 px-4 text-sm font-medium  outline-none transition-all duration-100 ease-in-out hover:border-l-4 hover:border-l-green-600 hover:text-green-500 focus:border-l-4"
+                >
+                  <IoMdAddCircleOutline className="mr-4 h-5 w-5 align-middle" />
+                  Add Menu
+                </Link>
+                <Link
                   to="/Products"
                   className="flex cursor-pointer items-center border-l-green-600 py-2 px-4 text-sm font-medium  outline-none transition-all duration-100 ease-in-out hover:border-l-4 hover:border-l-green-600 hover:text-green-500 focus:border-l-4"
                 >
@@ -109,24 +117,19 @@ const Sidebar = () => {
 
                 <Link
                   to="/Orders"
-               
                   className="flex cursor-pointer items-center border-l-green-600 py-2 px-4 text-sm font-medium  outline-none transition-all duration-100 ease-in-out hover:border-l-4 hover:border-l-green-600 hover:text-green-500 focus:border-l-4"
                 >
                   <FaBoxOpen className="mr-4 h-5 w-5 align-middle" />
                   Orders
                 </Link>
                 <Link
-                  to="/Customers"
-          
+                  to="/UserManagement"
                   className="flex cursor-pointer items-center border-l-green-600 py-2 px-4 text-sm font-medium  outline-none transition-all duration-100 ease-in-out hover:border-l-4 hover:border-l-green-600 hover:text-green-500 focus:border-l-4"
                 >
                   <FaUserFriends className="mr-4 h-5 w-5 align-middle" />
                   Suppliers
                 </Link>
               </nav>
-
-            
-
             </div>
           </div>
           <div className="mb-14 text-center">

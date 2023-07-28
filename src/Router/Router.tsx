@@ -4,6 +4,7 @@ import {lazy, Suspense} from "react";
 import NotFound from "../Home/NotFound";
 import Header from "../Home/Header";
 import Sidebar from "../Admin/Sidebar";
+import UserManagement from "../Admin/UserManagement";
 
 const Hero = lazy(() => import("../Home/Hero"));
 const AddMenuItem = lazy(() => import("../Menu/AddMenuItem"));
@@ -60,6 +61,7 @@ const Router = (): JSX.Element => {
             {isAuthenticated && isAdmin && (
               <>
                 <Route path="/AddMenuItem" element={<AddMenuItem />} />
+                <Route path="/UserManagement" element={<UserManagement />} />
               </>
             )}
 
