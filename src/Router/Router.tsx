@@ -3,6 +3,7 @@ import {useSelector} from "react-redux";
 import {lazy, Suspense} from "react";
 import NotFound from "../Home/NotFound";
 import Header from "../Home/Header";
+import Sidebar from "../Admin/Sidebar";
 
 const Hero = lazy(() => import("../Home/Hero"));
 const AddMenuItem = lazy(() => import("../Menu/AddMenuItem"));
@@ -34,38 +35,48 @@ const Router = (): JSX.Element => {
   );
 
   return (
-    <>
+    <div className="flex">
       {shouldShowHeader && !isAdmin && <Header />}
 
-      <Suspense fallback={<div>Loading...</div>}>
-        <Routes>
-          <Route path="/" element={<Hero />} />
-          <Route path="/Register" element={<Register />} />
-          <Route path="/Login" element={<Login />} />
-          <Route path="/menu" element={<Menu />} />
-          {isAuthenticated && (
-            <>
-              <Route path="/Checkout" element={<Checkout totalPrice={0} />} />
-              <Route path="/cart" element={<Cart />} />
+      {isAdmin && <Sidebar />}
+      <div className={`${isAdmin ? " md:pl-16 flex-grow" : "w-full"}`}>
+        <Suspense fallback={<div>Loading...</div>}>
+          <Routes>
+            <Route path="/" element={<Hero />} />
+            <Route path="/Register" element={<Register />} />
+            <Route path="/Login" element={<Login />} />
+            <Route path="/menu" element={<Menu />} />
 
-              <Route path="/success" element={<Success />} />
-              <Route path="/menu/:categoryId" element={<Menu />} />
-            </>
-          )}
+            {isAuthenticated && !isAdmin && (
+              <>
+                <Route path="/menu" element={<Menu />} />
+                <Route path="/Checkout" element={<Checkout totalPrice={0} />} />
+                <Route path="/cart" element={<Cart />} />
+                <Route path="/success" element={<Success />} />
+                <Route path="/menu/:categoryId" element={<Menu />} />
+              </>
+            )}
 
-          {isAuthenticated && isAdmin && (
-            <Route path="/AddMenuItem" element={<AddMenuItem />} />
-          )}
+            {isAuthenticated && isAdmin && (
+              <>
+                <Route path="/AddMenuItem" element={<AddMenuItem />} />
+              </>
+            )}
 
-          <Route
-            path="*"
-            element={
-              isAuthenticated ? <NotFound /> : <Navigate to="/Login" replace />
-            }
-          />
-        </Routes>
-      </Suspense>
-    </>
+            <Route
+              path="*"
+              element={
+                isAuthenticated ? (
+                  <NotFound />
+                ) : (
+                  <Navigate to="/Login" replace />
+                )
+              }
+            />
+          </Routes>
+        </Suspense>
+      </div>
+    </div>
   );
 };
 
