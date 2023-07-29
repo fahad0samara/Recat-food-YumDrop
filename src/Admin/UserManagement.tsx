@@ -160,54 +160,55 @@ const UserManagement: React.FC = () => {
   };
 
   // Function to handle the action of promoting a user to an admin or vice versa
-  const handleUpdateRole = async (
-    userId: string,
-    currentRole: "user" | "admin"
-  ) => {
-    const newRole = currentRole === "user" ? "admin" : "user"; // Determine the new role based on the current role of the user
+const handleUpdateRole = async (
+  userId: string,
+  currentRole: "user" | "admin"
+) => {
+  const newRole = currentRole === "user" ? "admin" : "user";
 
-    const token = localStorage.getItem("token"); // Get the token from local storage for authentication
+  const token = localStorage.getItem("token");
 
-    // Show a confirmation dialog before proceeding
-    const shouldPromote = window.confirm(
-      `Are you sure you want to promote this user to ${newRole}?`
+  const shouldPromote = window.confirm(
+    `Are you sure you want to promote this user to ${newRole}?`
+  );
+
+  if (!shouldPromote) {
+    return;
+  }
+
+  setLoadingUpdate(userId);
+
+  try {
+    await axios.put(
+      MAKE_ADMIN_URL(userId),
+      {},
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
     );
 
-    if (!shouldPromote) {
-      return; // If the user cancels the confirmation, do nothing
-    }
-
-    setLoadingUpdate(userId); // Set loading state for the specific user being updated
-    try {
-      const response = await axios.put(
-        MAKE_ADMIN_URL(userId),
-        {},
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
+    // Update the local state to reflect the role change
+    setUsers(prevUsers =>
+      prevUsers.map(user => {
+        if (user._id === userId) {
+          return {...user, role: newRole};
         }
-      );
-      console.log(response.data);
-      toast.success(
-        `User ${response.data.user.firstName} has been promoted to ${response.data.user.role}!`
-      );
-      setTimeout(() => window.location.reload(), 2000);
+        return user;
+      })
+    );
 
-      // After promoting the user to admin, fetch the updated list of admins from the backend
-      const updatedAdminListResponse = await axios.get(
-        FETCH_USERS_URL(currentPage, filterBy)
-      );
-      setUsers(updatedAdminListResponse.data.users); // Update the user list with the new admin
-    } catch (error: any) {
-      console.error("Error updating user role:", error);
-      toast.error("Error updating user role!", error.response.data.message);
-    } finally {
-      setLoadingUpdate("");
-      // Reset loading state for the specific user after updating
-    }
-  };
+    toast.success(`User role updated successfully!`);
+  } catch (error: any) {
+    console.error("Error updating user role:", error);
+    toast.error("Error updating user role!", error.response.data.message);
+  } finally {
+    setLoadingUpdate("");
+  }
+};
+
 
   // Function to handle the action of deleting a user
   const handleDeleteUser = async (userId: string) => {
@@ -387,7 +388,7 @@ const UserManagement: React.FC = () => {
               <td className="border px-4 py-2 ">
                 {user.created_at.split("T")[0]}
               </td>
-              <td className="border px-4 py-2   hidden sm:grid">
+              <td className="px-4  text-center hidden sm:inline-grid w-full">
                 {user.email}
               </td>
               <td className="border px-4 py-2">
@@ -415,12 +416,9 @@ const UserManagement: React.FC = () => {
                           (loggedInAdmin && loggedInAdmin._id === user._id)
                         }
                       >
-                        {loadingUpdate === user._id ? (
-                          "Loading..."
-                        ) : (
-                          <FaUserPlus />
-                        )}
-                        Promote to Admin
+                        {loadingUpdate === user._id
+                          ? "Loading..."
+                          : " Promote to Admin"}
                       </button>
                     )}
                   </>
