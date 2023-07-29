@@ -16,30 +16,42 @@ export const UPDATE_CART_ITEM_QUANTITY_URL = (userId: string, itemId: string) =>
   `${BASE_URL}/cart/updateQuantity/${userId}/${itemId}`; 
 export const FETCH_CATEGORIES_URL = `${BASE_URL}/api/categories`;
 export const FETCH_MENU_URL = `${BASE_URL}/api/menu`;
-
-
 export const FETCH_MENU_BY_CATEGORY_URL = (categoryId: string) =>
   `${BASE_URL}/api/menu/${categoryId}`;
 
-// auth/users-admins?page=${currentPage}&filterBy=${filterBy}`
 export const FETCH_USERS_URL = (currentPage: number, filterBy: string) =>
   `${BASE_URL}/auth/users-admins?page=${currentPage}&filterBy=${filterBy}`;
-  
-
-  
-
-
 // `https://api-api-arab.azurewebsites.net/auth/make-admin/${userId}`,
 export const MAKE_ADMIN_URL = (userId: string) =>
   `${BASE_URL}/auth/make-admin/${userId}`;
-
 //`https://api-api-arab.azurewebsites.net/auth/users/${userId}`,
 export const DELETE_USER_URL = (userId: string) =>
   `${BASE_URL}/auth/users/${userId}`;
-
 // `https://api-api-arab.azurewebsites.net/auth/admins/${adminId}`,
 export const DELETE_ADMIN_URL = (adminId: string) =>
   `${BASE_URL}/auth/admins/${adminId}`;
+
+//`https://food-yumdrop0.azurewebsites.net/api/menu?page=${page}&limit=${itemsPerPage}&search=${searchQuery}&sortColumn=${sortColumn}&sortDirection=${sortDirection}`
+export const FETCH_MENU_ITEMS_URL = (
+  page: number,
+  itemsPerPage: number,
+  searchQuery: string,  
+  sortColumn: string,
+  sortDirection: string
+) =>
+  `${BASE_URL}/api/menu?page=${page}&limit=${itemsPerPage}&search=${searchQuery}&sortColumn=${sortColumn}&sortDirection=${sortDirection}`;
+
+//`https://food-yumdrop0.azurewebsites.net/api/menu/${deletingCatId}`
+export const DELETE_CATEGORY_URL = (deletingCatId: string) =>
+  `${BASE_URL}/api/menu/${deletingCatId}`;
+
+//  "https://api-api-arab.azurewebsites.net/api/categories"
+export const ADD_CATEGORY_URL = `${BASE_URL}/api/categories`;
+
+// `https://api-api-arab.azurewebsites.net/api/menu/${itemId}`,
+export const DELETE_MENU_ITEM_URL = (itemId: string) =>
+  `${BASE_URL}/api/menu/${itemId}`;
+  
   
       
         

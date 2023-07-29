@@ -107,11 +107,12 @@ const Sidebar = () => {
                   Add Menu
                 </Link>
                 <Link
-                  to="/Products"
+                  to="/ListMenu"
                   className="flex cursor-pointer items-center border-l-green-600 py-2 px-4 text-sm font-medium  outline-none transition-all duration-100 ease-in-out hover:border-l-4 hover:border-l-green-600 hover:text-green-500 focus:border-l-4"
                 >
                   <FaBox className="mr-4 h-5 w-5 align-middle" />
-                  Products
+                  List Menu
+                  
                 </Link>
 
                 <Link

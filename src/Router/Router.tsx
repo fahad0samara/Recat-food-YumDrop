@@ -5,6 +5,7 @@ import NotFound from "../Home/NotFound";
 import Header from "../Home/Header";
 import Sidebar from "../Admin/Sidebar";
 import UserManagement from "../Admin/UserManagement";
+import ListMenu from "../Menu/ListMenu";
 
 const Hero = lazy(() => import("../Home/Hero"));
 const AddMenuItem = lazy(() => import("../Menu/AddMenuItem"));
@@ -62,6 +63,7 @@ const Router = (): JSX.Element => {
               <>
                 <Route path="/AddMenuItem" element={<AddMenuItem />} />
                 <Route path="/UserManagement" element={<UserManagement />} />
+                <Route path="/ListMenu" element={<ListMenu />} />
               </>
             )}
 
