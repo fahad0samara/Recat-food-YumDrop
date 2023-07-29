@@ -18,9 +18,29 @@ export const FETCH_CATEGORIES_URL = `${BASE_URL}/api/categories`;
 export const FETCH_MENU_URL = `${BASE_URL}/api/menu`;
 
 
-// `https://food-yumdrop0.azurewebsites.net/api/menu/${categoryId}`
 export const FETCH_MENU_BY_CATEGORY_URL = (categoryId: string) =>
   `${BASE_URL}/api/menu/${categoryId}`;
+
+// auth/users-admins?page=${currentPage}&filterBy=${filterBy}`
+export const FETCH_USERS_URL = (currentPage: number, filterBy: string) =>
+  `${BASE_URL}/auth/users-admins?page=${currentPage}&filterBy=${filterBy}`;
+  
+
   
 
 
+// `https://api-api-arab.azurewebsites.net/auth/make-admin/${userId}`,
+export const MAKE_ADMIN_URL = (userId: string) =>
+  `${BASE_URL}/auth/make-admin/${userId}`;
+
+//`https://api-api-arab.azurewebsites.net/auth/users/${userId}`,
+export const DELETE_USER_URL = (userId: string) =>
+  `${BASE_URL}/auth/users/${userId}`;
+
+// `https://api-api-arab.azurewebsites.net/auth/admins/${adminId}`,
+export const DELETE_ADMIN_URL = (adminId: string) =>
+  `${BASE_URL}/auth/admins/${adminId}`;
+  
+      
+        
+        

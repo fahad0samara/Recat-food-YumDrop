@@ -8,7 +8,6 @@ import {
   FaBars,
   FaRegTimesCircle,
   FaTachometerAlt,
-  FaEnvelope,
   FaBox,
   FaBoxOpen,
   FaUserFriends,
