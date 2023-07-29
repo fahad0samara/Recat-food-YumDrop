@@ -51,7 +51,7 @@ const Step = () => {
     config: {mass: 1, tension: 170, friction: 26, clamp: true, precision: 0.01},
   });
 
-  const handleStepClick = index => {
+  const handleStepClick = (index:any) => {
     setActiveStep(index);
   };
 

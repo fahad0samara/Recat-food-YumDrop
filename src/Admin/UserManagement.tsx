@@ -32,7 +32,7 @@ const UserManagement: React.FC = () => {
   const [loadingUsers, setLoadingUsers] = useState<boolean>(false);
   const [loadingUpdate, setLoadingUpdate] = useState<string>("");
   const [filterBy, setFilterBy] = useState("all");
-  const ITEMS_PER_PAGE = 10;
+  
 
   // Using the useSelector hook from React Redux to extract data from the global state
   const {userId} = useSelector((state: RootState) => state.auth);

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import {useDispatch} from "react-redux";
 import {useSelector} from "react-redux";
 import {toggleDarkMode} from "../Redux/Darkmode/darkModeSlice";
@@ -8,6 +9,7 @@ const DarkModeToggle = () => {
   const dispatch = useDispatch();
 
   const handleToggle = () => {
+    //@ts-ignore
     dispatch(toggleDarkMode(isDarkMode ? false : true));
   };
 

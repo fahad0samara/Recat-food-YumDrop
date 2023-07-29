@@ -402,7 +402,7 @@ interface MenuItem {
 import {useState, useEffect} from "react";
 import {Link, useParams} from "react-router-dom";
 import axios from "axios";
-import {LRUCache} from "lru-cache";
+
 import {addItemToCart} from "../Redux/cart/cartThunks";
 import {useSelector, useDispatch} from "react-redux";
 import {AppDispatch, RootState} from "../Redux/store";
@@ -411,9 +411,7 @@ import "react-toastify/dist/ReactToastify.css";
 import {useDarkMode} from "../hook/useDarkMode";
 import { FETCH_CATEGORIES_URL, FETCH_MENU_BY_CATEGORY_URL, FETCH_MENU_URL } from "../urls";
 
-const cache = new LRUCache({
-  max: 100, // maximum size of cache
-});
+
 
 function Menu() {
   const isDarkMode = useDarkMode();
