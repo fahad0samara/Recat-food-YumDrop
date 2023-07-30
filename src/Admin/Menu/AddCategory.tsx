@@ -5,6 +5,7 @@ import {toast} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { memo } from "react";
 import { FETCH_CATEGORIES_URL } from "../../urls";
+import { useDarkMode } from "../../hook/useDarkMode";
 
 interface MyErrorType {
   response: {
@@ -41,7 +42,7 @@ const AddCategory: React.FC<AddCategoryProps> = ({
   const [error, setError] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [successMessage, setSuccessMessage] = useState<string>("");
-
+  const isDarkMode = useDarkMode();
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
@@ -105,13 +106,15 @@ const AddCategory: React.FC<AddCategoryProps> = ({
   };
 
   return (
-    <div className="fixed z-10 inset-0 overflow-y-auto">
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="fixed inset-0 transition-opacity">
-          <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
-        </div>
-
-        <div className="bg-white rounded-lg p-8 shadow-md z-20">
+    <div className="fixed bg-slate-400 inset-0 flex items-center justify-center z-50 bg-opacity-50">
+      <div
+        className={`
+          rounded-lg shadow-lg  ${
+          isDarkMode ? "bg-gray-900 text-white" : "bg-white text-black"
+          
+        }`}
+      >
+        <div className="px-6 py-4">
           <h2 className="text-lg font-medium mb-4">Add Category</h2>
           {error && (
             <div className="bg-red-200 text-red-800 p-2 mb-4 rounded-md">
@@ -126,13 +129,14 @@ const AddCategory: React.FC<AddCategoryProps> = ({
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
               <label
-                className="block text-gray-700 font-medium mb-2"
+                className="block  font-medium mb-2"
                 htmlFor="name"
               >
                 Name:
               </label>
               <input
-                className={`appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${
+                className={`appearance-none border rounded w-full text-black py-2 px-3 
+             leading-tight focus:outline-none focus:shadow-outline ${
                   error ? "border-red-500" : ""
                 }`}
                 type="text"
@@ -147,13 +151,13 @@ const AddCategory: React.FC<AddCategoryProps> = ({
             </div>
             <div className="mb-4">
               <label
-                className="block text-gray-700 font-medium mb-2"
+                className="block  font-medium mb-2"
                 htmlFor="description"
               >
                 Description:
               </label>
               <textarea
-                className="border border-gray-400 rounded-md p-2 w-full"
+                className="border border-green-500 rounded-md text-black p-2 w-full"
                 id="description"
                 value={description}
                 onChange={e => setDescription(e.target.value)}
@@ -161,14 +165,14 @@ const AddCategory: React.FC<AddCategoryProps> = ({
             </div>
 
             <button
-              className="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-md"
+              className="bg-green-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-md"
               type="submit"
               disabled={isLoading}
             >
               {isLoading ? "Loading..." : "Add category"}
             </button>
             <button
-              className="bg-gray-500 hover:bg-gray-600 text-white font-medium py-2 px-4 rounded-md ml-2"
+              className="bg-red-500 hover:bg-gray-600 text-white font-medium py-2 px-4 rounded-md ml-2"
               onClick={() => setShowAddCategory(false)}
               disabled={isLoading}
             >

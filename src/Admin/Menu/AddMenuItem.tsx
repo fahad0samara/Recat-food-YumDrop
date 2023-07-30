@@ -32,7 +32,7 @@ const AddMenuItem = () => {
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
   const [price, setPrice] = useState("");
- const [image, setImage] = useState<FileList | null>(null);
+  const [image, setImage] = useState<FileList | null>(null);
   const [categories, setCategories] = useState<Category[]>([]);
   const [showAddCategory, setShowAddCategory] = useState(false);
   const [error, setError] = useState<{[key: string]: string | unknown}>({});
@@ -49,7 +49,7 @@ const AddMenuItem = () => {
     formData.append("category", category);
     formData.append("price", price);
     if (image) {
-        formData.append("image", image[0]);
+      formData.append("image", image[0]);
     }
     setMenuPreview(Object.fromEntries(formData));
     setShowPreviewModal(true);
@@ -110,7 +110,7 @@ const AddMenuItem = () => {
       formData.append("price", price);
 
       if (image) {
-         formData.append("image", image[0]);
+        formData.append("image", image[0]);
       }
 
       // Check for missing required fields and image
@@ -165,7 +165,7 @@ const AddMenuItem = () => {
         setCategory("");
         setPrice("");
         setImage(null);
-       
+
         setSubmitSuccess(true);
         setLoading(false);
         toast.success("Menu item added successfully!", {
@@ -216,30 +216,28 @@ const AddMenuItem = () => {
     [name, description, category, price, image]
   );
 
-const handleImageChange: ChangeEventHandler<HTMLInputElement> = event => {
-  const files = event.target.files;
-  if (files && files.length > 0) {
-    const file = files[0];
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setImagePreview(reader.result as string);
-    };
-    reader.readAsDataURL(file);
-    setImage(files);
-    
-    
-  }
-};
+  const handleImageChange: ChangeEventHandler<HTMLInputElement> = event => {
+    const files = event.target.files;
+    if (files && files.length > 0) {
+      const file = files[0];
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+      setImage(files);
+    }
+  };
 
   if (submitSuccess) {
     return (
-      <div className="flex flex-col items-center justify-center">
+      <div className="flex flex-col items-center justify-center h-full">
         <h1 className="text-2xl font-semibold mb-4">Add Menu Item</h1>
         <p className="text-green-500 text-xl mb-4">Menu item added!</p>
         <button
           onClick={() => setSubmitSuccess(false)}
           className={
-            "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            "bg-green-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
           }
         >
           Add another menu item
@@ -250,7 +248,7 @@ const handleImageChange: ChangeEventHandler<HTMLInputElement> = event => {
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center">
+      <div className="flex flex-col items-center justify-center h-screen">
         <h1 className="text-2xl font-semibold mb-4">Add Menu Item</h1>
         <p className="text-green-500 text-xl mb-4">Loading...</p>
       </div>
@@ -258,11 +256,28 @@ const handleImageChange: ChangeEventHandler<HTMLInputElement> = event => {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center mt-28">
+    <div className="flex flex-col items-center justify-center mt-9">
+      <h1 className="text-2xl font-semibold mb-4">Add Menu Item</h1>
+      <div
+        className="flex
+        flex-col
+        items-center
+      justify-start
+        "
+      >
+        <p className=" text-xl mb-4 italic">
+          Fill in the form below to add a new menu item. All fields are required
+          unless otherwise state,
+        </p>
+        <p className=" text-xl mb-4 italic">
+          Click "Preview" to preview the menu item before adding it.
+        </p>
+      </div>
+
       <form
         onSubmit={handleSubmit}
         encType="multipart/form-data"
-        className="w-full max-w-md"
+        className="w-full max-w-xl shadow-xl shadow-green-500 px-9"
       >
         <div className="mb-4">
           {/* Enter the name of the item */}
@@ -272,18 +287,15 @@ const handleImageChange: ChangeEventHandler<HTMLInputElement> = event => {
             <p className="text-red-500 text-sm mb-2">{error.error}</p>
           ) : null}
 
-          <label
-            className="block text-gray-700 font-medium mb-2"
-            htmlFor="name"
-          >
+          <label className="block  font-medium mb-2" htmlFor="name">
             Name of the Food:
-            <span className="text-gray-500 text-sm ml-2">
+            <span className="text-green-500 text-sm ml-2">
               (e.g. Burger, Pizza, Salad)
             </span>
           </label>
 
           <input
-            className={`appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
+            className={`appearance-none border-green-500 border-2  text-black rounded w-full py-2 px-3  leading-tight focus:outline-none focus:shadow-outline`}
             onChange={e => {
               setName(e.target.value);
               setError(prevErrors => ({...prevErrors, name: ""}));
@@ -298,12 +310,9 @@ const handleImageChange: ChangeEventHandler<HTMLInputElement> = event => {
 
         <div className="mb-4">
           {/* Enter a brief description of the item */}
-          <label
-            className="block text-gray-700 font-medium mb-2"
-            htmlFor="description"
-          >
+          <label className="block  font-medium mb-2" htmlFor="description">
             Description:
-            <span className="text-gray-500 text-sm ml-2">
+            <span className="text-green-500 text-sm ml-2">
               (e.g.
               <span className="italic">
                 A delicious burger with a juicy patty and fresh vegetables.
@@ -313,7 +322,7 @@ const handleImageChange: ChangeEventHandler<HTMLInputElement> = event => {
           </label>
 
           <textarea
-            className={`appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
+            className={`appearance- text-black  border-green-500 border-2 rounded w-full py-2 px-3  leading-tight focus:outline-none focus:shadow-outline`}
             placeholder="Enter a brief description of the food"
             required
             id="description"
@@ -328,18 +337,15 @@ const handleImageChange: ChangeEventHandler<HTMLInputElement> = event => {
         </div>
         <div className="mb-4">
           {/* Select the category that the item belongs to */}
-          <label
-            className="block text-gray-700 font-medium mb-2"
-            htmlFor="category"
-          >
+          <label className="block  font-medium mb-2" htmlFor="category">
             Category:
-            <span className="text-gray-500 text-sm ml-2">
+            <span className="text-green-500 text-sm ml-2">
               (e.g. Burgers, Salads, Drinks)
             </span>
           </label>
 
           <select
-            className={`appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
+            className={`appearance-none text-black border-green-500 border-2 rounded w-full py-2 px-3  leading-tight focus:outline-none focus:shadow-outline`}
             id="category"
             onChange={e => {
               setCategory(e.target.value);
@@ -358,7 +364,7 @@ const handleImageChange: ChangeEventHandler<HTMLInputElement> = event => {
           </select>
           {/* If the category does not exist yet, click "Add Category" and enter the new category name in the prompt */}
           {categories.length === 0 && (
-            <p className="text-gray-500 text-sm mt-2">
+            <p className=" text-sm mt-2">
               No categories found. Click "Add Category" to create a new
               category.
             </p>
@@ -366,11 +372,11 @@ const handleImageChange: ChangeEventHandler<HTMLInputElement> = event => {
 
           {/* If the category does not exist yet, add it using the "Add Category" button */}
 
-          <p className="text-gray-500 text-sm mt-2">
+          <p className=" text-sm mt-2">
             Can't find the category you're looking for? Click
             <span
               className={
-                "inline-block bg-blue-500 hover:bg-blue-700 text-white font-bold py-[3px] px-2 rounded cursor-pointer text-xs mx-1"
+                "inline-block bg-green-500 hover:bg-blue-700 text-white font-bold py-[3px] px-2 rounded cursor-pointer text-xs mx-1"
               }
               onClick={handleAddCategory}
               aria-label="Add Category"
@@ -384,18 +390,15 @@ const handleImageChange: ChangeEventHandler<HTMLInputElement> = event => {
 
         <div className="mb-4">
           {/* Enter the price of the item in dollars and cents, without the currency symbol */}
-          <label
-            className="block text-gray-700 font-medium mb-2"
-            htmlFor="price"
-          >
+          <label className="block  font-medium mb-2" htmlFor="price">
             Price:
-            <span className="text-gray-500 text-sm ml-2">
+            <span className="text-green-500 text-sm ml-2">
               (e.g. 5.99, 10, 15.50)
             </span>
           </label>
 
           <input
-            className={`appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
+            className={`appearance-none border rounded text-black border-green-500 border-2  w-full py-2 px-3  leading-tight focus:outline-none focus:shadow-outline`}
             placeholder="Enter the price of the food"
             required
             id="price"
@@ -412,14 +415,12 @@ const handleImageChange: ChangeEventHandler<HTMLInputElement> = event => {
           />
         </div>
         <div className="mb-4">
-          <label
-            className="block text-gray-700 font-medium mb-2"
-            htmlFor="image"
-          >
+          <label className="block  font-medium mb-2" htmlFor="image">
             Image:
           </label>
-          <div className="relative border-dashed border-2 border-gray-400 rounded-lg h-44">
+          <div className="relative border-dashed border-2 border-green-500 rounded-lg h-44">
             <input
+              key={image ? image.name : ""}
               className="h-full w-full opacity-0"
               id="image"
               type="file"
@@ -438,7 +439,7 @@ const handleImageChange: ChangeEventHandler<HTMLInputElement> = event => {
                     className="bg-red-500 hover:bg-red-600 text-white font-medium py-2 px-4 rounded-lg"
                     onClick={() => {
                       setImage(null);
-                      
+
                       setImagePreview(undefined);
                     }}
                   >
@@ -449,7 +450,7 @@ const handleImageChange: ChangeEventHandler<HTMLInputElement> = event => {
             ) : (
               <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
                 <div className="flex flex-col items-center justify-center">
-                  <AiOutlineCloudUpload className="text-gray-400 w-12 h-12" />
+                  <AiOutlineCloudUpload className=" w-12 h-12" />
 
                   <span className="block text-gray-400 font-normal">
                     Select a file or drag and drop it here
@@ -470,8 +471,8 @@ const handleImageChange: ChangeEventHandler<HTMLInputElement> = event => {
             className={`
           ${
             isFormEmpty
-              ? "bg-gray-300 cursor-not-allowed text-white font-medium py-2 px-4 rounded-md"
-              : "bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-md"
+              ? "bg-gray-300 cursor-not-allowed  font-medium py-2 px-4 rounded-md"
+              : "bg-green-500 hover:bg-blue-600  font-medium py-2 px-4 rounded-md"
           }
         `}
             type="button"
@@ -480,7 +481,7 @@ const handleImageChange: ChangeEventHandler<HTMLInputElement> = event => {
           </button>
           <button
             className={
-              "bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-md"
+              "bg-green-500 hover:bg-blue-600  font-medium py-2 px-4 rounded-md"
             }
             type="submit"
             disabled={loading}
