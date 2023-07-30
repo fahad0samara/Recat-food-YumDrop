@@ -4,8 +4,9 @@ import {MdClose} from "react-icons/md";
 import {toast} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-import {useDarkMode} from "../../hook/useDarkMode";
-import { ADD_CATEGORY_URL, DELETE_MENU_ITEM_URL } from "../../urls";
+
+import { ADD_CATEGORY_URL, DELETE_MENU_ITEM_URL } from "../../../urls";
+import { useDarkMode } from "../../../hook/useDarkMode";
 
 interface MenuItem {
   _id: string;

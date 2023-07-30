@@ -13,11 +13,14 @@ import {
   AiOutlineFile,
   BsSearch,
 } from "react-icons/all";
-import {useDarkMode} from "../hook/useDarkMode";
+
 import UpdateMenuItemForm from "./Model/UpdateMenu";
 import ViewItem from "./Model/ViewItem";
-import {DELETE_CATEGORY_URL, FETCH_MENU_ITEMS_URL} from "../urls";
-import {MenuItem} from "../Type";
+import { useDarkMode } from "../../hook/useDarkMode";
+import { DELETE_CATEGORY_URL, FETCH_MENU_ITEMS_URL } from "../../urls";
+import { MenuItem } from "../../Type";
+
+
 
 interface DataItem extends MenuItem {
   createdAt: string | number | Date;
@@ -213,7 +216,7 @@ const ListMenu: React.FC = () => {
                 <input
                   type="text"
                   name="search"
-                  className="h-12 w-full border-b bg-transparent py-4 pl-12 text-sm outline-none focus:border-b-2 placeholder:text-[#caacfb]
+                  className="h-12 w-full border-b bg-transparent py-4 pl-12 text-sm outline-none focus:border-b-2 placeholder:text-green-500
                 "
                   placeholder="Search by 
                  Name, Category ,Price
@@ -240,7 +243,7 @@ const ListMenu: React.FC = () => {
                   name="
                     sort
                     "
-                  className="block w-full px-3 py-2 border-2 border-[#caacfb] text-black sm:w-36 whitespace-pre rounded-lg  p-1 pr-2 text-base outline-none focus:shadow sm:text-sm"
+                  className="block w-full px-3 py-2 border-2 border-green-500 bg-green-500 text-white sm:w-36 whitespace-pre rounded-lg  p-1 pr-2 text-base outline-none focus:shadow sm:text-sm"
                   value={sortColumn}
                   onChange={e => {
                     setSortColumn(e.target.value);
@@ -255,7 +258,7 @@ const ListMenu: React.FC = () => {
                 </select>
                 <AiOutlineSortAscending
                   className="
-                  text-[#caacfb] hover:text-gray-700 cursor-pointer
+                  text-green-500 hover:text-gray-700 cursor-pointer
                   transition-all duration-150
                   text-2xl
                   hidden
@@ -266,7 +269,7 @@ const ListMenu: React.FC = () => {
               </div>
               <button
                 type="button"
-                className="inline-flex cursor-pointer items-center rounded-lgb  py-2 px-3 text-center text-sm border-2 border-[#caacfb] hover:text-black  font-medium  shadow hover:bg-gray-100 focus:shadow mt-4 sm:mt-0"
+                className="inline-flex cursor-pointer items-center rounded-lgb  py-2 px-3 text-center text-sm bg-green-500 hover:text-black  font-medium  shadow hover:bg-gray-100 focus:shadow mt-4 sm:mt-0"
                 onClick={exportToCSV}
               >
                 <AiOutlineFile className="mr-1 h-4 w-4 hidden sm:block" />
@@ -279,16 +282,20 @@ const ListMenu: React.FC = () => {
             <table
               className="min-w-full border-2
 
-                border-[#caacfb]
-                divide-y divide-[#caacfb]
+            border-green-500
+                divide-y divide-green-500
 
                 "
               aria-label="Menu Items"
             >
               <thead
-                className="hidden border-2
+                className="hidden 
+                rounded-2xl
+                bg-green-500
 
-                border-[#caacfb]
+           shadow-xl
+           border
+            text-white
 
                  lg:table-header-group"
               >
@@ -483,14 +490,14 @@ const ListMenu: React.FC = () => {
             <button
               onClick={handlePrevPage}
               disabled={page === 1}
-              className="mr-2 h-12 w-12 rounded-full bg-[#caacfb] text-black border text-md font-semibold transition duration-150 hover:bg-gray-100"
+              className="mr-2 h-12 w-12 rounded-full text-white bg-green-500 text-black border text-md font-semibold transition duration-150 hover:bg-gray-100"
             >
               Prev
             </button>
             <button
               onClick={handleNextPage}
               disabled={page === totalPages}
-              className="h-12 w-12 rounded-full border bg-[#caacfb] text-black text-md font-semibold transition duration-150 hover:bg-gray-100"
+              className="h-12 w-12 rounded-full border text-white  bg-green-500 text-black text-md font-semibold transition duration-150 hover:bg-gray-100"
             >
               Next
             </button>
@@ -503,7 +510,7 @@ const ListMenu: React.FC = () => {
               </label>
               <select
                 id="itemsPerPage"
-                className="px-2 py-1 border rounded-md bg-[#caacfb] text-black"
+                className="px-2 py-1 border rounded-md  bg-green-500 text-white"
                 value={itemsPerPage}
                 onChange={e => {
                   setItemsPerPage(Number(e.target.value));
@@ -525,7 +532,7 @@ const ListMenu: React.FC = () => {
                 type="number"
                 min={1}
                 max={totalPages}
-                className="px-2 py-1 border rounded-md w-16 bg-[#caacfb] text-black"
+                className="px-2 py-1 border rounded-md w-16  bg-green-500 text-white"
                 value={page}
                 onChange={e => {
                   setPage(Number(e.target.value));

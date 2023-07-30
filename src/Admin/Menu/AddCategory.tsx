@@ -4,7 +4,7 @@ import axios from "axios";
 import {toast} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { memo } from "react";
-import { FETCH_CATEGORIES_URL } from "../urls";
+import { FETCH_CATEGORIES_URL } from "../../urls";
 
 interface MyErrorType {
   response: {

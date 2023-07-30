@@ -5,10 +5,11 @@ import NotFound from "../Home/NotFound";
 import Header from "../Home/Header";
 import Sidebar from "../Admin/Sidebar";
 import UserManagement from "../Admin/UserManagement";
-import ListMenu from "../Menu/ListMenu";
+import AddMenuItem from "../Admin/Menu/AddMenuItem";
+import ListMenu from "../Admin/Menu/ListMenu";
 
 const Hero = lazy(() => import("../Home/Hero"));
-const AddMenuItem = lazy(() => import("../Menu/AddMenuItem"));
+
 const Menu = lazy(() => import("../User/Menu"));
 const Register = lazy(() => import("../Auth/Register"));
 const Login = lazy(() => import("../Auth/Login"));

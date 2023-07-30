@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
-import {useDarkMode} from "../../hook/useDarkMode";
+import { useDarkMode } from "../../../hook/useDarkMode";
+
 
 interface Item {
   name: string;
