@@ -7,6 +7,7 @@ import Sidebar from "../Admin/Sidebar";
 import UserManagement from "../Admin/UserManagement";
 import AddMenuItem from "../Admin/Menu/AddMenuItem";
 import ListMenu from "../Admin/Menu/ListMenu";
+import OrderList from "../Admin/OrderList";
 
 const Hero = lazy(() => import("../Home/Hero"));
 
@@ -65,6 +66,7 @@ const Router = (): JSX.Element => {
                 <Route path="/AddMenuItem" element={<AddMenuItem />} />
                 <Route path="/UserManagement" element={<UserManagement />} />
                 <Route path="/ListMenu" element={<ListMenu />} />
+                <Route path="/OrderList" element={<OrderList />} />
               </>
             )}
 

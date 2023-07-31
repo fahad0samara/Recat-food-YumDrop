@@ -15,7 +15,7 @@ export const CLEAR_CART_URL = (userId: string) =>
 export const UPDATE_CART_ITEM_QUANTITY_URL = (userId: string, itemId: string) =>
   `${BASE_URL}/cart/updateQuantity/${userId}/${itemId}`; 
 export const FETCH_CATEGORIES_URL = `${BASE_URL}/api/categories`;
-export const FETCH_MENU_URL = `${BASE_URL}/api/menu`;
+export const FETCH_MENU_URL = `${BASE_URL}/api/menu/user`;
 export const FETCH_MENU_BY_CATEGORY_URL = (categoryId: string) =>
   `${BASE_URL}/api/menu/${categoryId}`;
 

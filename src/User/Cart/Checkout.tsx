@@ -1,5 +1,4 @@
-//@ts-nocheck
-import React, { useState } from "react";
+import React, {useState, useEffect} from "react";
 import {
   CardElement,
   Elements,
@@ -7,12 +6,13 @@ import {
   useElements,
 } from "@stripe/react-stripe-js";
 import axios from "axios";
-import {loadStripe} from "@stripe/stripe-js";
+import {PaymentMethod, loadStripe} from "@stripe/stripe-js";
+
 import {useLocation} from "react-router-dom";
 const stripePromise = loadStripe(
   "pk_test_51L9ELNKirGI4xLuFje5nhKydtSWAratO6zSb0HdHA0csOt16sFWs0x247vpjbrFr7HWPcgGHKETaIOUOzYoGUhtL00O0jbZYVV"
 );
-
+import {toast} from "react-toastify";
 import {useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {AppDispatch, RootState} from "../../Redux/store";
@@ -38,9 +38,10 @@ interface Errors {
 function CheckoutForm() {
   const dispatch: AppDispatch = useDispatch();
   const cart = useSelector((state: RootState) => state.cart);
+  console.log(cart);
 
   const {userId} = useSelector((state: RootState) => state.auth);
-
+  const [isPaymentCompleted, setPaymentCompleted] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const totalPrice = location.state.totalPrice;
@@ -54,8 +55,8 @@ function CheckoutForm() {
     state: "",
     zipCode: "",
   });
-  const [step, setStep] = useState(1);
-  const [isLoading, setIsLoading] = useState(false);
+  const [step, setStep] = useState<number>(1);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [errors, setErrors] = useState<Errors>({
     name: "",
     email: "",
@@ -65,6 +66,16 @@ function CheckoutForm() {
     zipCode: "",
     card: "",
   });
+
+  // behavior of the window when a payment is completed. */
+  useEffect(() => {
+    if (isPaymentCompleted) {
+      // Prevent the user from navigating back to the checkout page
+      window.onbeforeunload = null;
+    } else {
+      window.onbeforeunload = () => true;
+    }
+  }, [isPaymentCompleted]);
 
   const handlePaymentInfoChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -78,7 +89,15 @@ function CheckoutForm() {
   const validateStep1 = () => {
     const {name, email} = paymentInfo;
     let isValid = true;
-    const errorMessages: Errors = {};
+    const errorMessages: Errors = {
+      name: "",
+      email: "",
+      address: "",
+      city: "",
+      state: "",
+      zipCode: "",
+      card: "",
+    };
 
     if (!name.trim()) {
       errorMessages.name = "Name is required";
@@ -100,7 +119,15 @@ function CheckoutForm() {
   const validateStep2 = () => {
     const {address, city, state, zipCode} = paymentInfo;
     let isValid = true;
-    const errorMessages: Errors = {};
+    const errorMessages: Errors = {
+      name: "",
+      email: "",
+      address: "",
+      city: "",
+      state: "",
+      zipCode: "",
+      card: "",
+    };
 
     if (!address.trim()) {
       errorMessages.address = "Address is required";
@@ -128,12 +155,40 @@ function CheckoutForm() {
     setErrors(errorMessages);
     return isValid;
   };
-  const validateStep3 = () => {
-    const cardElement = elements.getElement(CardElement);
-    let isValid = true;
-    const errorMessages = {};
 
-    if (!cardElement._complete) {
+  const validateStep3 = async () => {
+    let isValid = true;
+    const errorMessages: Errors = {
+      name: "",
+      email: "",
+      address: "",
+      city: "",
+      state: "",
+      zipCode: "",
+      card: "",
+    };
+
+    if (!stripe || !elements) {
+      return false;
+    }
+
+    // Get the cardElement
+    const cardElement = elements.getElement(CardElement);
+    if (!cardElement) {
+      return false;
+    }
+
+    // Use stripe.createPaymentMethod to check the card's validity
+    const {paymentMethod, error}: {paymentMethod?: PaymentMethod; error?: any} =
+      await stripe.createPaymentMethod({
+        type: "card",
+        card: cardElement,
+      });
+
+    if (error) {
+      errorMessages.card = error.message;
+      isValid = false;
+    } else if (!paymentMethod || !paymentMethod.id) {
       errorMessages.card = "Card information is incomplete";
       isValid = false;
     }
@@ -155,7 +210,8 @@ function CheckoutForm() {
           isValid = validateStep2();
           break;
         case 3:
-          isValid = validateStep3();
+          isValid = await validateStep3();
+
           break;
         default:
           break;
@@ -178,6 +234,8 @@ function CheckoutForm() {
     setStep(step - 1);
   };
 
+  // ... (previous code)
+
   const handlePlaceOrderClick = async () => {
     setIsLoading(true);
 
@@ -188,50 +246,68 @@ function CheckoutForm() {
       }
 
       const cardElement = elements.getElement(CardElement);
+      if (!cardElement) {
+        setIsLoading(false);
+        return;
+      }
+
       const {error, paymentMethod} = await stripe.createPaymentMethod({
         type: "card",
         card: cardElement,
       });
 
       if (error) {
-        setErrors({card: error.message});
+        setErrors({...errors, card: error.message || ""});
         setIsLoading(false);
         return;
       }
 
-      let response;
-      if (step === 3) {
-        // Send the payment information and total price to the server
-        response = await axios.post("http://localhost:1337/cart/checkout", {
-          paymentMethodId: paymentMethod.id,
-          totalAmount: totalPrice,
-          ...paymentInfo,
-        });
+      // Ensure userId is not null before making the request
+      if (step === 3 && userId !== null) {
+        const response = await axios.post(
+          "https://food-yumdrop0.azurewebsites.net/cart/checkout",
+          {
+            paymentMethodId: paymentMethod.id,
+            totalAmount: totalPrice,
+            userId: userId,
+            items: cart.items.map(item => item.item),
+          }
+        );
+
+        if (response && response.status === 200) {
+          // if the checkout is successful, clear the cart from both the client-side store and the server
+          await dispatch(clearCart(userId));
+          setPaymentCompleted(true);
+          // Show a success message
+          toast.success("Payment successful");
+
+          // Redirect to the success page with the paymentInfo and not allowed the back again
+          navigate("/success", {
+            replace: true,
+            state: {
+              paymentInfo,
+              totalPrice,
+              orderTime: new Date().getTime(),
+              items: cart.items.map(item => item.item),
+            },
+          });
+        } else if (step === 3) {
+          // Payment failed, show an error message
+          toast.error("Payment failed. Please try again later.");
+        }
       }
 
-      if (response && response.status === 200) {
-        // if the checkout is successful, clear the cart from both the client-side store and the server
-        await dispatch(clearCart(userId));
-
-        // Redirect to the success page with the paymentInfo
-        navigate("/success", {
-          state: {
-            paymentInfo,
-            totalPrice,
-            orderTime: new Date().getTime(),
-          },
-        });
-      } else if (step === 3) {
-        // Payment failed, show an error message
-        console.log(response);
-      }
       // handle other steps here
       setIsLoading(false);
-    } catch (error) {
-      console.log(error);
+    } catch (error:any) {
+      toast.error(
+        "Something went wrong. Please try again later. " + error.message
+      );
       setIsLoading(false);
     }
   };
+
+  // ... (rest of the code)
 
   const getStepName = () => {
     switch (step) {
@@ -296,121 +372,117 @@ function CheckoutForm() {
   };
 
   const renderStep2 = () => {
-    return (
-      <>
-        <div className="w-full px-3 mb-6">
+    return <>
+      <div className="w-full px-3 mb-6">
+        <label
+          className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+          htmlFor="address"
+        >
+          Address
+        </label>
+        <input
+          className={`appearance-none block w-full bg-gray-200 text-gray-700 border ${
+            errors.address ? "border-red-500" : "border-gray-200"
+          } rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white`}
+          type="text"
+          id="address"
+          name="address"
+          value={paymentInfo.address}
+          onChange={handlePaymentInfoChange}
+        />
+        {errors.address && (
+          <p className="text-red-500 text-xs italic">{errors.address}</p>
+        )}
+      </div>
+      <div className="flex w-full">
+        <div className={'w-full px-3 mb-6 md:w-1/2 md:mb-0'}>
           <label
-            className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-            htmlFor="address"
+            className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2 text-center"
+            htmlFor="city"
           >
-            Address
+            City
           </label>
           <input
             className={`appearance-none block w-full bg-gray-200 text-gray-700 border ${
-              errors.address ? "border-red-500" : "border-gray-200"
+              errors.city ? "border-red-500" : "border-gray-200"
             } rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white`}
             type="text"
-            id="address"
-            name="address"
-            value={paymentInfo.address}
+            id="city"
+            name="city"
+            value={paymentInfo.city}
             onChange={handlePaymentInfoChange}
           />
-          {errors.address && (
-            <p className="text-red-500 text-xs italic">{errors.address}</p>
+          {errors.city && (
+            <p className="text-red-500 text-xs italic">{errors.city}</p>
           )}
         </div>
-        <div className="flex w-full">
-          <div className="w-full px-3 mb-6 md:w-1/2 md:mb-0">
-            <label
-              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2 text-center"
-              htmlFor="city"
-            >
-              City
-            </label>
-            <input
-              className={`appearance-none block w-full bg-gray-200 text-gray-700 border ${
-                errors.city ? "border-red-500" : "border-gray-200"
-              } rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white`}
-              type="text"
-              id="city"
-              name="city"
-              value={paymentInfo.city}
-              onChange={handlePaymentInfoChange}
-            />
-            {errors.city && (
-              <p className="text-red-500 text-xs italic">{errors.city}</p>
-            )}
-          </div>
-          <div className="w-full px-3 mb-6 md:w-1/2">
-            <label
-              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2 text-center"
-              htmlFor="state"
-            >
-              State
-            </label>
-            <input
-              className={`appearance-none block w-full bg-gray-200 text-gray-700 border ${
-                errors.state ? "border-red-500" : "border-gray-200"
-              } rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white`}
-              type="text"
-              id="state"
-              name="state"
-              value={paymentInfo.state}
-              onChange={handlePaymentInfoChange}
-            />
-            {errors.state && (
-              <p className="text-red-500 text-xs italic">{errors.state}</p>
-            )}
-          </div>
-          <div className="w-full px-3 mb-6 md:w-1/2 md:mb-0">
-            <label
-              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2 text-center"
-              htmlFor="zipCode"
-            >
-              Zip Code
-            </label>
-            <input
-              className={`appearance-none block w-full bg-gray-200 text-gray-700 border ${
-                errors.zipCode ? "border-red-500" : "border-gray-200"
-              } rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white`}
-              type="text"
-              id="zipCode"
-              name="zipCode"
-              value={paymentInfo.zipCode}
-              onChange={handlePaymentInfoChange}
-            />
-            {errors.zipCode && (
-              <p className="text-red-500 text-xs italic">{errors.zipCode}</p>
-            )}
-          </div>
+        <div className={'w-full px-3 mb-6 md:w-1/2'}>
+          <label
+            className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2 text-center"
+            htmlFor="state"
+          >
+            State
+          </label>
+          <input
+            className={`appearance-none block w-full bg-gray-200 text-gray-700 border ${
+              errors.state ? "border-red-500" : "border-gray-200"
+            } rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white`}
+            type="text"
+            id="state"
+            name="state"
+            value={paymentInfo.state}
+            onChange={handlePaymentInfoChange}
+          />
+          {errors.state && (
+            <p className="text-red-500 text-xs italic">{errors.state}</p>
+          )}
         </div>
-      </>
-    );
+        <div className="w-full px-3 mb-6 md:w-1/2 md:mb-0">
+          <label
+            className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2 text-center"
+            htmlFor="zipCode"
+          >
+            Zip Code
+          </label>
+          <input
+            className={`appearance-none block w-full bg-gray-200 text-gray-700 border ${
+              errors.zipCode ? "border-red-500" : "border-gray-200"
+            } rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white`}
+            type="text"
+            id="zipCode"
+            name="zipCode"
+            value={paymentInfo.zipCode}
+            onChange={handlePaymentInfoChange}
+          />
+          {errors.zipCode && (
+            <p className="text-red-500 text-xs italic">{errors.zipCode}</p>
+          )}
+        </div>
+      </div>
+    </>;
   };
 
   const renderStep3 = () => {
-    return (
-      <>
-        <div className="w-full px-3 mb-6 md:w-2/3">
-          <label
-            className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-            htmlFor="card"
-          >
-            Card Information
-          </label>
-          <div
-            className={`appearance-none block w-full bg-gray-200 text-gray-700 border ${
-              errors.card ? "border-red-500" : "border-gray-200"
-            } rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white`}
-          >
-            <CardElement options={{hidePostalCode: true}} />
-          </div>
-          {errors.card && (
-            <p className="text-red-500 text-xs italic">{errors.card}</p>
-          )}
+    return <>
+      <div className={'w-full px-3 mb-6 md:w-2/3'}>
+        <label
+          className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+          htmlFor="card"
+        >
+          Card Information
+        </label>
+        <div
+          className={`appearance-none block w-full bg-gray-200 text-gray-700 border ${
+            errors.card ? "border-red-500" : "border-gray-200"
+          } rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white`}
+        >
+          <CardElement options={{hidePostalCode: true}} />
         </div>
-      </>
-    );
+        {errors.card && (
+          <p className="text-red-500 text-xs italic">{errors.card}</p>
+        )}
+      </div>
+    </>;
   };
 
   return (
@@ -489,10 +561,10 @@ interface CheckoutProps {
   totalPrice: number;
 }
 
-const Checkout: React.FC<CheckoutProps> = ({totalPrice}) => {
+const Checkout: React.FC<CheckoutProps> = () => {
   return (
     <Elements stripe={stripePromise}>
-      <CheckoutForm  orderId={orderId ? orderId : ""} />
+      <CheckoutForm />
     </Elements>
   );
 };
