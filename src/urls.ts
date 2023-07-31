@@ -55,7 +55,8 @@ export const DELETE_MENU_ITEM_URL = (itemId: string) =>
 //"https://api-api-arab.azurewebsites.net/orders/recent-orders"
 export const FETCH_RECENT_ORDERS_URL = `${BASE_URL}/orders/recent-orders`;
 
-  
+// "https://food-yumdrop0.azurewebsites.net/orders/most-ordered-items"
+export const FETCH_MOST_ORDERED_ITEMS_URL = `${BASE_URL}/orders/most-ordered-items`;
   
       
         

@@ -1,10 +1,12 @@
 import  {useState, useEffect} from "react";
 import axios from "axios";
 import { FETCH_MENU_URL } from "./urls";
+import { BiLoaderCircle } from "react-icons/bi";
 
 const Swiper = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [menuItems, setMenuItems] = useState([]);
+  const [loading ,setloading]=useState(true)
 
   useEffect(() => {
     fetchMenuItems();
@@ -16,10 +18,16 @@ const Swiper = () => {
       // Extracting image URLs from the response data
       const imageUrls = response.data.map((item: { image: any; }) => item.image);
       setMenuItems(imageUrls);
+      setloading(false)
     } catch (error) {
       console.error(error);
-      // Handle error state or display an error message
-    }
+    } finally {
+      setloading(false)
+      }
+
+      
+   
+    
   };
 
   useEffect(() => {
@@ -27,10 +35,22 @@ const Swiper = () => {
       setActiveIndex(prev => (prev === menuItems.length - 1 ? 0 : prev + 1));
     }, 2000);
 
+
     return () => {
       clearInterval(interval);
     };
   }, [menuItems]);
+
+  //loading
+  if (loading) {
+    return (
+      <div className="
+      w-full h-full flex justify-center items-center
+      ">
+        <BiLoaderCircle className="animate-spin text-green-500 text-6xl" />
+      </div>
+    );
+  }
   return (
     <div className="w-full h-full relative">
       <svg

@@ -2,7 +2,7 @@ import {FaUtensils, FaUsers, FaClock} from "react-icons/fa";
 const AboutSection = () => {
 
   return (
-    <div className={`w-screen bg-gradient-to-b from-green-50 to-green-100`}>
+    <div className={` bg-gradient-to-b from-green-50 to-green-100`}>
       <div className="mx-auto px-4 py-12 max-w-screen-xl">
         <h2 className="text-4xl font-semibold tracking-wide text-center text-gray-800 sm:text-5xl">
           Why Choose Us?

@@ -68,7 +68,8 @@
 
 
 import {Link} from "react-router-dom";
-import {useDarkMode} from "../hook/useDarkMode";
+import { useDarkMode } from "../hook/useDarkMode";
+import logo from '../../public/vite.svg'
 
 const Footer = () => {
   const isDarkMode = useDarkMode();
@@ -86,46 +87,24 @@ const Footer = () => {
       </svg>
       <div className="max-w-screen-xl mx-auto relative z-10">
         <div className="flex items-center justify-between mb-8">
-          <Link to="/" className="flex items-center">
+          <Link to="/" className="flex items-center bg-black">
             <img
-              src="https://flowbite.com/docs/images/logo.svg"
+              src={logo}
               className="h-8 mr-3"
-              alt="Flowbite Logo"
+              alt="YumDrop
+ Logo"
             />
-            <span className="text-xl font-semibold text-white">
-              Taste the World
-            </span>
+            <span className="text-xl font-semibold text-white">YumDrop</span>
           </Link>
-          <ul className="flex flex-wrap items-center space-x-4 text-sm font-medium text-gray-800">
-            <li>
-              <Link to="/" className="hover:underline">
-                Home
-              </Link>
-            </li>
-            <li>
-              <Link to="/" className="hover:underline">
-                Menu
-              </Link>
-            </li>
-            <li>
-              <Link to="/" className="hover:underline">
-                About
-              </Link>
-            </li>
-            <li>
-              <Link to="/" className="hover:underline">
-                Contact
-              </Link>
-            </li>
-          </ul>
+       
         </div>
         <hr className="border-green-50 mb-8" />
 
         <div className="flex justify-center">
-          <span className="text-gray-800">
+          <span className="">
             © 2023{" "}
-            <Link to="/" className="hover:underline text-blue-700">
-              Taste the World
+            <Link to="/" className="hover:underline md:text-green-500 md:bg-transparent bg-green-500 text-white">
+              YumDrop
             </Link>
             . All Rights Reserved.
           </span>

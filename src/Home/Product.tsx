@@ -160,12 +160,12 @@
 // //               />
 // //             </div>
 // //             <div className="p-4">
-// //               <h3 className="text-lg font-medium text-gray-800 mb-2">
+// //               <h3 className="text-lg font-medium  mb-2">
 // //                 {product.title}
 // //               </h3>
-// //               <p className="text-gray-500 mb-4">{product.description}</p>
+// //               <p className="mb-4">{product.description}</p>
 // //               <div className="flex justify-between">
-// //                 <span className="text-gray-800 font-medium">
+// //                 <span className=" font-medium">
 // //                   ${product.price.toFixed(2)}
 // //                 </span>
 // //                 <button className="bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded-lg">
@@ -408,11 +408,17 @@ import {AppDispatch, RootState} from "../Redux/store";
 import {useSelector} from "react-redux";
 import {useDispatch} from "react-redux";
 import { FETCH_MENU_URL } from "../urls";
+import { BiLoaderCircle } from "react-icons/bi";
 
 const Responsive = () => {
+    const {userId} = useSelector((state: RootState) => state.auth);
+    const {isAuthenticated} = useSelector((state: RootState) => state.auth);
+    const dispatch: AppDispatch = useDispatch();
+
   const sliderRef = useRef<HTMLDivElement>(null);
   const [slideWidth, setSlideWidth] = useState<number>(0);
   const [isAutoScrolling, setIsAutoScrolling] = useState<boolean>(false);
+  const [loading, setloading] = useState(true);
 
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [slidesToShow, setSlidesToShow] = useState(4);
@@ -426,13 +432,13 @@ const Responsive = () => {
   const fetchMenuItems = async () => {
     try {
       const response = await axios.get(FETCH_MENU_URL);
-     
-      
 
       setMenuItems(response.data);
+      setloading(false);
     } catch (error) {
       console.error(error);
-      // Handle error state or display an error message
+    } finally {
+      setloading(false);
     }
   };
 
@@ -554,9 +560,7 @@ const Responsive = () => {
     setIsAutoScrolling(false);
   };
 
-  const {userId} = useSelector((state: RootState) => state.auth);
-  const {isAuthenticated} = useSelector((state: RootState) => state.auth);
-  const dispatch: AppDispatch = useDispatch();
+
   const handleAddToCart = (menuItem: MenuItem) => {
     if (isAuthenticated) {
       dispatch(
@@ -590,13 +594,25 @@ const Responsive = () => {
     }
   };
 
+  //loading
+  if (loading) {
+    return (
+      <div
+        className="
+      w-full h-full flex justify-center items-center
+      "
+      >
+        <BiLoaderCircle className="animate-spin text-green-500 text-6xl" />
+      </div>
+    );
+  }
+
+
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 my-3">
-      <div className="flex justify-between my-5">
+    <div className={"max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 my-12"}>
+      <div className="flex justify-between mb-10 mt-16">
         <h1>
-          <span className="text-3xl font-medium text-gray-900 mb-4">
-            Food Menu
-          </span>
+          <span className="text-3xl font-medium  mb-4">Food Menu</span>
         </h1>
         <Link
           to="/menu"
@@ -644,9 +660,7 @@ const Responsive = () => {
             </div>
             <div className="p-4   rounded-lg shadow-md">
               <div className="flex justify-between mx-1">
-                <h3 className="text-lg font-medium text-gray-800 mb-2">
-                  {menuItem.name}
-                </h3>
+                <h3 className="text-lg font-medium  mb-2">{menuItem.name}</h3>
                 {menuItem.category.name && (
                   <div className="  px-3 w-16 py-1 text-sm text-green-500 font-medium rounded-tr-lg rounded-bl-lg transform -skew-x-12">
                     {menuItem.category.name}
@@ -654,9 +668,9 @@ const Responsive = () => {
                 )}
               </div>
 
-              <p className="text-gray-500 mb-4"> {menuItem.description}</p>
+              <p className="mb-4"> {menuItem.description}</p>
               <div className="flex justify-between">
-                <span className="text-gray-800 font-medium">
+                <span className=" font-medium">
                   ${menuItem.price.toFixed(2)}
                 </span>
                 <button

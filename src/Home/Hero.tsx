@@ -6,13 +6,14 @@ import Swiper from "../Swiper";
 import About from "./About";
 import Product from "./Product";
 import AutoPlay from "./AutoPlay";
-import Step from "./Step";
+
 import Contact from "./Contact";
 import Footer from "./Footer";
 import {useDarkMode} from "../hook/useDarkMode";
 import { RootState } from "../Redux/store";
 import { useSelector } from "react-redux";
 import Home from "../Admin/Home";
+import MostOrderd from "./MostOrderd";
 
 
 const Hero = () => {
@@ -64,7 +65,8 @@ const Hero = () => {
                 </div>
                 <div className="flex flex-col items-center justify-center space-y-2 sm:flex-row sm:space-y-0 sm:space-x-2 lg:justify-start">
                   <Link
-                    to="/Order"
+                    to="/menu"
+              
                     className="inline-flex h-12 w-full items-center justify-center rounded-full bg-green-500 px-6 font-medium tracking-wide text-white shadow-md outline-none transition duration-200 hover:bg-green-400 focus:ring sm:w-auto"
                   >
                     <span className="relative inline-flex justify-center whitespace-nowrap font-bold mx-2">
@@ -90,7 +92,7 @@ const Hero = () => {
           <AutoPlay />
 
           <Product />
-          <Step />
+          <MostOrderd />
           <Contact />
           <Footer />
         </>

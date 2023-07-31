@@ -357,7 +357,7 @@ const Slider: React.FC = () => {
   }, [activeIndex, categories]);
 
   return (
-    <div className="w-full max-w-screen-lg mb-20 mx-auto relative mb-8 my-3">
+    <div className="w-full max-w-screen-lg mb-20 mx-auto relative  mt-12">
       <div className="flex flex-col items-center justify-center mb-4">
         <h2 className="text-lg font-bold text-green-500 italic">
           Explore Our Categories
@@ -382,7 +382,7 @@ const Slider: React.FC = () => {
           {categories.map((category) => (
             <div
               key={category._id}
-              className="flex-shrink-0 bg-gray-200 rounded-md inline-block w-32"
+              className="flex-shrink-0  rounded-md inline-block w-32"
             >
               <div className="bg-green-600 text-center hover:bg-green-700 text-white px-1 py-1 rounded-lg transform -skew-x-12 transition duration-300">
                 {category.name}
