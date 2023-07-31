@@ -9,7 +9,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 import {useCallback} from "react";
 import {MenuPreviewModal} from "./Model/MenuPreviewModal";
-import {FETCH_CATEGORIES_URL, FETCH_MENU_URL} from "../../urls";
+import {ADD_MENU_URL, FETCH_CATEGORIES_URL, FETCH_MENU_URL} from "../../urls";
 interface Category {
   [x: string]: string | number | readonly string[] | undefined;
   _id: string;
@@ -157,7 +157,7 @@ const AddMenuItem = () => {
       setLoading(true);
 
       try {
-        await axios.post(FETCH_MENU_URL, formData, {
+        await axios.post(ADD_MENU_URL, formData, {
           headers: {
             "Content-Type": "multipart/form-data",
           },

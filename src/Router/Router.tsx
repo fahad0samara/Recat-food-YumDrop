@@ -8,6 +8,7 @@ import UserManagement from "../Admin/UserManagement";
 import AddMenuItem from "../Admin/Menu/AddMenuItem";
 import ListMenu from "../Admin/Menu/ListMenu";
 import OrderList from "../Admin/OrderList";
+import Loder from "../Loder";
 
 const Hero = lazy(() => import("../Home/Hero"));
 
@@ -34,9 +35,8 @@ const Router = (): JSX.Element => {
 
   const location = useLocation();
 
-  const shouldShowHeader = !(
-    location.pathname === "/Login" || location.pathname === "/Register"
-  );
+  const shouldShowHeader =
+    location.pathname !== "/Login" && location.pathname !== "/Register";
 
   return (
     <div className="flex">
@@ -44,7 +44,9 @@ const Router = (): JSX.Element => {
 
       {isAdmin && <Sidebar />}
       <div className={`${isAdmin ? " md:pl-16 flex-grow" : "w-full"}`}>
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<div>
+          <Loder/>
+        </div>}>
           <Routes>
             <Route path="/" element={<Hero />} />
             <Route path="/Register" element={<Register />} />
