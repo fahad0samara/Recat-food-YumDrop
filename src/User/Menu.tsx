@@ -628,7 +628,7 @@ function Menu() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
                 {sortedMenuItems.length === 0 ? (
-                  <p className="text-center">No items found.</p>
+                  <p className="text-center h-screen">No items found.</p>
                 ) : (
                   sortedMenuItems.map(menuItem => (
                     <div

@@ -32,6 +32,7 @@ interface MyErrorType {
 }
 
 const AddMenuItem = () => {
+
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
@@ -169,6 +170,7 @@ const AddMenuItem = () => {
         setCategory("");
         setPrice("");
         setImage(null);
+        setImagePreview(undefined);
 
         setSubmitSuccess(true);
         setLoading(false);
