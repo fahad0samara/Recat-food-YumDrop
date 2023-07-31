@@ -11,17 +11,15 @@ import {
   FaBox,
   FaBoxOpen,
   FaUserFriends,
-  
 } from "react-icons/fa";
 import {IoMdAddCircleOutline} from "react-icons/io";
-import { useSelector } from "react-redux";
-import { useDarkMode } from "../hook/useDarkMode";
+import {useSelector} from "react-redux";
+import {useDarkMode} from "../hook/useDarkMode";
 
 const Sidebar = () => {
-   const isDarkMode = useDarkMode();
+  const isDarkMode = useDarkMode();
   const {user} = useSelector((state: RootState) => state.auth);
 
-  
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const handleToggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -70,10 +68,18 @@ const Sidebar = () => {
         >
           <div className="flex mt-5 items-center px-4">
             <div className="flex ml-3 space-y-2  flex-col">
-              <h3 className="font-medium text-green-500">
+              <h3 className="font-medium ">
+                Welcome
+                <br />
+            
+              
                 {user?.firstName} {user?.lastName}
               </h3>
-              <p className="text-xs ">{user?.email}</p>
+
+              <h2 className="text-lg italic">
+                
+              
+                {user?.email}</h2>
             </div>
           </div>
 
@@ -131,9 +137,9 @@ const Sidebar = () => {
               </nav>
             </div>
           </div>
-          <div className="mb-14 text-center">
+          <div className="mb-20 text-center">
             <button
-              className="bg-red-500 text-white px-4 py-2 rounded-md font-semibold"
+              className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md font-semibold"
               onClick={handleLogout}
             >
               Logout

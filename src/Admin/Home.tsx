@@ -8,6 +8,7 @@ import {useDarkMode} from "../hook/useDarkMode";
 import {MdOutlineAdminPanelSettings} from "react-icons/md";
 
 import ReactApexChart from "react-apexcharts";
+import RecentOrders from "./RecentOrders";
 
 const Home = () => {
   const isDarkMode = useDarkMode();
@@ -425,6 +426,7 @@ const Home = () => {
           />
         </div>
       </div>
+      <RecentOrders/>
     </div>
   );
 };

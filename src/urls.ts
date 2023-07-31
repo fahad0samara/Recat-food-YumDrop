@@ -51,6 +51,10 @@ export const ADD_CATEGORY_URL = `${BASE_URL}/api/categories`;
 // `https://api-api-arab.azurewebsites.net/api/menu/${itemId}`,
 export const DELETE_MENU_ITEM_URL = (itemId: string) =>
   `${BASE_URL}/api/menu/${itemId}`;
+
+//"https://api-api-arab.azurewebsites.net/orders/recent-orders"
+export const FETCH_RECENT_ORDERS_URL = `${BASE_URL}/orders/recent-orders`;
+
   
   
       
