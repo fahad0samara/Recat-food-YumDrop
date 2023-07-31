@@ -38,7 +38,7 @@ interface Errors {
 function CheckoutForm() {
   const dispatch: AppDispatch = useDispatch();
   const cart = useSelector((state: RootState) => state.cart);
-  console.log(cart);
+  
 
   const {userId} = useSelector((state: RootState) => state.auth);
   const [isPaymentCompleted, setPaymentCompleted] = useState(false);
