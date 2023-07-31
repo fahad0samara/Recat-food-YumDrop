@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import {useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {login, register, UserData} from "../Redux/Auth/authThunks";
 import {RootState} from "../Redux/store";
-import {FaCheck, FaGoogle} from "react-icons/fa";
+import {FaCheck} from "react-icons/fa";
 import {RiGitRepositoryPrivateFill} from "react-icons/ri";
 import {RiUserFill} from "react-icons/ri";
 
@@ -10,12 +11,12 @@ import {MdAlternateEmail} from "react-icons/md";
 import {AiOutlineWarning} from "react-icons/ai";
 import {Link, useNavigate} from "react-router-dom";
 import {useDarkMode} from "../hook/useDarkMode";
-import { toast } from "react-toastify";
-import { clearError } from "../Redux/Auth/authSlice";
+import {toast} from "react-toastify";
+import {clearError} from "../Redux/Auth/authSlice";
 
 const Register = () => {
   const isDarkMode = useDarkMode();
-    const navigate = useNavigate();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState<UserData>({
     firstName: "",
     email: "",
@@ -45,24 +46,32 @@ const Register = () => {
       const {email, password} = formData;
 
       // first show massing yor good to registerDispatch the login thunk with only email and password fields and wait for it to complete
-      await dispatch(login({
-        email, password,
-        firstName: "",
-        role: ""
-      }) as any);
+      //@ts-ignore
+      await dispatch(login({email, password}) as any);
 
       //navigate to redirection
       setTimeout(() => {
         // Redirect based on user role
         if (isAdmin) {
-          toast.success("Registration successful!");
+          toast.success(`
+            Registration successful!
+            Redirecting to admin dashboard...
+
+          `);
+
           navigate("/"); // Redirect admin to the admin dashboard
         } else {
-          toast.success("Registration successful!");
+          toast.success(`
+            Registration successful!
+            you are now 
+            Redirecting to menu...
+
+           
+            `);
 
           navigate("/Menu"); // Redirect regular user to the menumenu
         }
-      }, 100);
+      }, 1000);
 
       // Login was successful, handle the redirection after a slight delay
       // Adjust the delay time as needed
@@ -153,13 +162,13 @@ const Register = () => {
         </div>
 
         <div className="flex items-center justify-center px-4 py-10  sm:px-6 lg:px-8 sm:py-16 lg:py-24">
-          <div className="xl:w-full xl:max-w-sm 2xl:max-w-md xl:mx-auto">
+          <div className={"xl:w-full xl:max-w-sm 2xl:max-w-md xl:mx-auto"}>
             <h2 className="text-3xl font-bold leading-tight  sm:text-4xl">
-              Sign up to Celebration
+              Sign up to YumDrop
             </h2>
             <p
               className={`
-            text-${isDarkMode ? "gray-400/20" : "gray-500"} mt-4 text-base`}
+              text-${isDarkMode ? "gray-400/20" : "gray-500"} mt-4 text-base`}
             >
               Already have an account?{" "}
               <Link
@@ -189,7 +198,7 @@ const Register = () => {
                     className="text-base font-medium text-gray-900"
                   >
                     {" "}
-                    Fast & Last name{" "}
+                    Full name{" "}
                   </label>
                   <div className="mt-2.5 relative text-gray-400 focus-within:text-gray-600">
                     <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -201,7 +210,9 @@ const Register = () => {
                       name="firstName"
                       id="full-name"
                       placeholder="Enter your full name"
-                      className="block w-full py-4 pl-10 pr-4 text-black placeholder-gray-500 transition-all duration-200 border border-gray-200 rounded-md  focus:outline-none focus:border-green-600 focus:bg-white caret-green-600"
+                      className={
+                        "block w-full py-4 pl-10 pr-4 text-black placeholder-gray-500 transition-all duration-200 border border-gray-200 rounded-md  focus:outline-none focus:border-green-600 focus:bg-white caret-green-600"
+                      }
                       required
                       value={formData.firstName}
                       onChange={handleChange}
@@ -222,6 +233,10 @@ const Register = () => {
                       type="email"
                       name="email"
                       id="email"
+                      autoComplete="
+                        email
+
+                        "
                       placeholder="Enter email to get started"
                       className="block w-full py-4 pl-10 pr-4 text-black placeholder-gray-500 transition-all duration-200 border border-gray-200 rounded-md  focus:outline-none focus:border-green-600 focus:bg-white caret-green-600"
                       required
@@ -252,6 +267,10 @@ const Register = () => {
                     </div>
 
                     <input
+                      autoComplete="
+                        current-password
+
+                        "
                       type="password"
                       name="password"
                       id="password"
@@ -266,7 +285,9 @@ const Register = () => {
                 <div>
                   <button
                     type="submit"
-                    className="inline-flex items-center justify-center w-full px-4 py-4 text-base font-semibold text-white transition-all duration-200 border border-transparent rounded-md bg-gradient-to-r from-green-300 to-green-600 focus:outline-none hover:opacity-80 focus:opacity-80"
+                    className={
+                      "inline-flex items-center justify-center w-full px-4 py-4 text-base font-semibold text-white transition-all duration-200 border border-transparent rounded-md bg-gradient-to-r from-green-300 to-green-600 focus:outline-none hover:opacity-80 focus:opacity-80"
+                    }
                   >
                     {loading ? (
                       <div className="flex items-center justify-center">
@@ -281,17 +302,6 @@ const Register = () => {
               </div>
             </form>
 
-            <div className="mt-3 space-y-3">
-              <button
-                type="button"
-                className="relative inline-flex items-center justify-center w-full px-4 py-4 text-base font-semibold text-gray-700 transition-all duration-200 bg-white border-2 border-gray-200 rounded-md hover:bg-gray-100 focus:bg-gray-100 hover:text-black focus:text-black focus:outline-none"
-              >
-                <div className="absolute inset-y-0 left-0 p-4">
-                  <FaGoogle className="w-6 h-6 text-rose-500" />
-                </div>
-                Sign in with Google
-              </button>
-            </div>
             <p
               className={`${
                 isDarkMode ? "text-gray-400" : "text-gray-500"
@@ -322,5 +332,3 @@ const Register = () => {
 };
 
 export default Register;
-
-

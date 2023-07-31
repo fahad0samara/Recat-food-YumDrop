@@ -410,6 +410,7 @@ import {toast} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {useDarkMode} from "../hook/useDarkMode";
 import { FETCH_CATEGORIES_URL, FETCH_MENU_BY_CATEGORY_URL, FETCH_MENU_URL } from "../urls";
+import { BiLoaderCircle } from "react-icons/bi";
 
 
 
@@ -580,10 +581,13 @@ function Menu() {
           {loading ? (
             <p
               className="
-           flex flex-col justify-center items-center
+           flex flex-col justify-center items-center h-screen
               "
             >
-              Loading...
+              <BiLoaderCircle
+                className="animate-spin text-green-500 text-6xl"/>
+
+           
             </p>
           ) : (
             <>
@@ -646,7 +650,7 @@ function Menu() {
                           {menuItem.name}
                         </h2>
                         <p className="text-sm  mb-2">{menuItem.description}</p>
-                        <p className="text-lg font-bold text-green-700 mb-2">
+                        <p className="text-lg font-bold italic mb-2">
                           ${menuItem.price.toFixed(2)}
                         </p>
                         <button

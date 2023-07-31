@@ -9,6 +9,7 @@ import {
   removeItemFromCart,
   updateCartItemQuantity,
 } from "../../Redux/cart/cartThunks";
+import {BiLoaderCircle} from "react-icons/bi";
 
 const Cart: React.FC = () => {
   const {userId} = useSelector((state: RootState) => state.auth);
@@ -52,9 +53,7 @@ const Cart: React.FC = () => {
   if (cart.loading) {
     return (
       <div className="flex items-center h-screen justify-center">
-        <div className="w-8 h-8 bg-green-400 rounded-full animate-bounce mr-2"></div>
-        <div className="w-8 h-8 bg-green-400 rounded-full animate-bounce mr-2"></div>
-        <div className="w-8 h-8 bg-black rounded-full animate-bounce"></div>
+        <BiLoaderCircle className="animate-spin text-green-500 text-6xl" />
       </div>
     );
   }
