@@ -6,7 +6,7 @@ import Loader1 from "../Loder";
 import {useSelector} from "react-redux";
 import {toast} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import {FaUserPlus, FaTrash} from "react-icons/fa";
+import { FaTrash} from "react-icons/fa";
 import {
   DELETE_ADMIN_URL,
   DELETE_USER_URL,

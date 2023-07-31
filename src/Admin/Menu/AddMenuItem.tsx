@@ -15,6 +15,10 @@ interface Category {
   _id: string;
   name: string;
   description: string;
+ 
+ 
+
+
 }
 
 interface MyErrorType {
@@ -420,6 +424,7 @@ const AddMenuItem = () => {
           </label>
           <div className="relative border-dashed border-2 border-green-500 rounded-lg h-44">
             <input
+              //@ts-ignorenpm run 
               key={image ? image.name : ""}
               className="h-full w-full opacity-0"
               id="image"
